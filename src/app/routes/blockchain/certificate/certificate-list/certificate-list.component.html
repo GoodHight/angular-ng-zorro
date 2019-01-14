@@ -1,0 +1,138 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>班级管理</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <!-- <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset> -->
+            <ng-template #itemContentTemplate></ng-template>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,addClass,batchIssueAction]">
+                <ng-template #serachActive>
+                    <div *ngIf="showSearch === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchObj.searchKey">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="pageChange(1)" nz-button nzType="primary" nzSearch>
+                                <i class="anticon anticon-search"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="showSearch === 0" (click)="showSearch = 1;">
+                        <span>
+                            <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                    </div>
+                </ng-template>
+                <ng-template #addClass>
+                    <button nz-button nzType="primary" [routerLink]="['/blockchain/certificate/index/add', {status: 'add'}]">
+                        创建班级
+                    </button>
+                </ng-template>
+                <ng-template #batchIssueAction>
+                    <button nz-button nzType="primary" (click)="batchIssue()">
+                        提交签发
+                    </button>
+                    <ng-template #modalContent>
+                        <div nz-row>
+                            <p nzSpan="12" nzOffset="6">本次共计签发{{batchArr.length}}班级，共计{{studentNum}}证书，是否确认签发？</p>
+                        </div>
+                        <div nz-row>
+                            （确认签发后系统会将签发信息推送给审核人及受签学生，双方确认通过后自动完成证书签发及存证。）
+                        </div>
+                    </ng-template>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzPageIndex]="searchObj.pageIndex"
+        [nzPageSize]="searchObj.pageSize" (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                <th>
+                    <span>序号.</span>
+                </th>
+                <th>
+                    <span>班级号</span>
+                </th>
+                <th>
+                    <span>班级名称</span>
+                </th>
+                <th>
+                    <span>培训有效期</span>
+                </th>
+                <th>
+                    <span>导师</span>
+                </th>
+                <th>
+                    <span>学生人数</span>
+                </th>
+                <th>
+                    <span>签发人数</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index">
+                <td nzShowCheckbox [nzDisabled]="item.exitCanIssuer === 0" [(nzChecked)]="item.checked" (click)="$event.stopPropagation();"
+                    (nzCheckedChange)="refreshStatus($event)"></td>
+                <td>{{ no + ((searchObj.pageIndex - 1) * searchObj.pageSize) + 1 }}</td>
+                <td>{{item.classNo}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.startTime | dateTrans:'YYYY年MM月dd日'}} -- {{item.endTime | dateTrans:'YYYY年MM月dd日'}}</td>
+                <td>{{item.tutorName }}</td>
+                <td>{{item.studentNumber}}</td>
+                <td>{{item.issuedNumber}}</td>
+                <td>
+                    <a (click)="gotoDetail(item)">进入班级</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();editClass(item)">编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();deleteClass(item)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <!-- <div *ngFor="let item of thisimg">
+        <img style="width:500px;height: 300px;" src="{{item}}" />
+    </div> -->
+
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="确认签发" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <p>本次共计签发{{batchArr.length}}班级，共计{{studentNum}}证书，是否确认签发？</p>
+    <span>证书模板：</span>
+    <nz-select style="width: 200px;" nzShowSearch nzAllowClear (ngModelChange)="templateChange($event)" nzAllowClear="false"
+        [(ngModel)]="templeId" nzPlaceHolder="请选择模板">
+        <nz-option *ngFor="let item of templates" nzLabel="{{item.templateName}}" nzValue="{{item.guid}}"></nz-option>
+    </nz-select>
+    <span *ngIf="tips === '1'" style="color: red;margin-left: 8px">请先选择模板！</span>
+</nz-modal>
+<div style="position: relative;top:-10000px;">
+    <div class="capture" id="capture" [(ngStyle)]="background">
+        <h4 style="color: #000;">{{title}}</h4>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{content}}</span>
+        </p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{secondContent}}</span>
+        </p>
+        <div nz-row class="erweima">
+            <img nz-col [nzSm]="12" src="" id="image" alt="" class="erweimaimg">
+            <div nz-col [nzSm]="20" style="padding-left: 431px;margin-top: 47px;font-size: 29px">
+                <div style="line-height: 26px;margin-bottom: 10px">{{issuingDate}}</div>
+                <div style="line-height: 26px">{{issuingAgency}}</div>
+            </div>
+        </div>
+    </div>
+</div>

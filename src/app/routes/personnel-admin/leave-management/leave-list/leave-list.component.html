@@ -1,0 +1,162 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div (click)="to(i)">{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #title>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>离职管理</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+      <div>
+        <!-- <div *ngIf="serachType === 1"> -->
+        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+          <input type="text" nz-input placeholder="请输入名字、手机号" [(ngModel)]="key" (keydown)="enterSearch($event)">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button (click)='serachAction()' style="margin-right: 0" nz-button nzType="primary" nzSearch>
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </div>
+      <!-- <div *ngIf="serachType === 0" (click)="showSerach()">
+        <span>
+          <i class="icon iconfont icon-sousuo"></i>搜索</span>
+      </div> -->
+    </ng-template>
+  </nz-card-tab>
+  <div nz-row style="position: relative;">
+    <div nz-col class="employee-update">
+      <nz-table #basicTable [nzFrontPagination]="false" [nzData]="reportList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+        [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+        <thead>
+          <tr>
+            <th>
+              <span>序号</span>
+            </th>
+            <th>
+              <span>姓名</span>
+            </th>
+            <th>
+              <span>工号</span>
+            </th>
+            <th>
+              <span>手机号</span>
+            </th>
+            <th>
+              <span>部门</span>
+            </th>
+            <th>
+              <span>职位</span>
+            </th>
+            <th>
+              <span>入职日期</span>
+            </th>
+            <th>
+              <span>离职日期</span>
+            </th>
+            <th>
+              <span>离职原因</span>
+            </th>
+            <th colspan="4">
+              <span>操作</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody nz-tbody>
+          <tr *ngFor="let i of basicTable.data let no = index">
+            <td>{{ code + no }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.jobNumber }}</td>
+            <td>{{ i.phone }}</td>
+            <td>{{ i.departmentName }}</td>
+            <td>{{ i.position }}</td>
+            <td>{{ i.entryTime | dateTrans:'YYYY年MM月dd日'}}</td>
+            <td>{{ i.dimissionaTime | dateTrans:'YYYY年MM月dd日'}}</td>
+            <td>{{ i.reason }}</td>
+            <td style='text-align: center'>
+              <!-- <a (click)='entryPost(i.guid)'>办理离职</a> -->
+              <!-- <nz-divider nzType="vertical"></nz-divider> -->
+              <a (click)='edit(i.guid,i.dimissionaTime,i.reason)'>办理离职</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)='delete(i.guid)'>删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="删除该条记录" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <p>删除后不可恢复</p>
+</nz-modal>
+<!-- <nz-modal [(nzVisible)]="isVisibles" nzTitle="办理离职" (nzOnCancel)="handleCancels()" (nzOnOk)="handleOks()">
+  <p>确认办理离职</p>
+</nz-modal> -->
+<!-- <nz-modal [(nzVisible)]="editLeave" nzTitle="编辑待离职" (nzOnCancel)="editLeaveqx()" (nzOnOk)="editLeaveOk()">
+  <p class="tc-p"> 离职日期：</p>
+  <nz-date-picker  [(ngModel)]="dimissionaTime" [nzFormat]="dateFormat"></nz-date-picker>
+  <p class="tc-p"> 离职原因：</p>
+  <input  [(ngModel)]="reason" nz-input placeholder="输入离职原因">
+</nz-modal> -->
+<nz-modal [(nzVisible)]="editLeave" nzTitle="办理离职" (nzOnCancel)="editLeaveqx()" (nzOnOk)="editLeaveOk()">
+  <form nz-form [formGroup]="form" (ngSubmit)="editLeaveOk()">
+    <div id="personal-information">
+      <nz-form-item nz-row style=" margin-bottom: 0">
+        <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+          离职类别
+        </nz-form-label>
+        <nz-form-control nz-col [nzSm]="24">
+          <nz-select nzAllowClear nzPlaceHolder="选择" formControlName="dimissionType">
+            <nz-option *ngFor="let option of turnoverList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="form.get('dimissionType').dirty && form.get('dimissionType').hasError('required')">请选择离职类别</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style=" margin-bottom: 0">
+        <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+          离职证明
+        </nz-form-label>
+        <nz-form-control nz-col [nzSm]="24">
+          <nz-select nzAllowClear nzPlaceHolder="选择" formControlName="needDimission">
+            <nz-option *ngFor="let option of categoryList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style=" margin-bottom: 0">
+        <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+          离职日期
+        </nz-form-label>
+        <nz-form-control nz-col [nzSm]="24">
+          <nz-date-picker formControlName="dimissionaTime" [nzFormat]="dateFormat"></nz-date-picker>
+          <nz-form-explain *ngIf="form.get('dimissionaTime').dirty && form.get('dimissionaTime').hasError('required')">请填写批次名称</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style=" margin-bottom: 0">
+        <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+          离职原因
+        </nz-form-label>
+        <nz-form-control nz-col [nzSm]="24">
+          <input nz-input formControlName="reason" placeholder="输入离职原因">
+          <nz-form-explain *ngIf="form.get('reason').dirty && form.get('reason').hasError('required')">请填写批次名称</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style=" margin-bottom: 0">
+        <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+          交接人员
+        </nz-form-label>
+        <nz-form-control nz-col [nzSm]="24">
+          <input nz-input formControlName="handoverName" placeholder="输入交接人员">
+          <nz-form-explain *ngIf="form.get('handoverName').dirty && form.get('handoverName').hasError('required')">请填写批次名称</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+</nz-modal>

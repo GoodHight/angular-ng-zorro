@@ -1,0 +1,141 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submit(1)">
+    <nz-card [nzBordered]="false" [nzTitle]="titleView">
+        <nz-card-tab>
+            <nz-tabset [nzSelectedIndex]="'0'" [nzTabBarExtraContent]="extraTemplate">
+                <nz-tab [nzTitle]="'编辑公告信息'"></nz-tab>
+            </nz-tabset>
+        </nz-card-tab>
+        <section>
+            <nz-form-item>
+                <nz-form-label nzSm="4" nzRequired nzFor="title">标题</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="title" id="title" [(ngModel)]="title" placeholder="标题信息">
+                    <nz-form-explain *ngIf="form.get('title').dirty && form.get('title').errors">请输入标题</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzSm="4" nzRequired nzFor="messageType">类别</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <nz-select formControlName="messageType" [nzDisabled]="'true'" [(ngModel)]="selectMessageType" [nzPlaceHolder]="'请选择类型'">
+                        <nz-option *ngFor="let option of messageTypeOptions" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label nzSm="4">置顶</nz-form-label>
+                    <label nzSm="16" [(ngModel)]="messageIsTop" nz-checkbox [ngModelOptions]="{standalone: true}"></label>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="centent_item">
+                <nz-form-label nzSm="4" nzRequired nzFor="content">正文</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <ueditor formControlName="content" [(ngModel)]="content" [config]="config" [loadingTip]="'加载中……'">
+                    </ueditor>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzSm="4" nzRequired nzFor="messageType">范围</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <div class="choose-people" (click)="showModel()" *ngIf="selectPeopleData.length === 0">
+                        点击选择人员
+                    </div>
+                    <div class="choose-people" (click)="showModel()" *ngIf="selectPeopleData.length > 0">
+                        <span *ngFor="let item of selectPeopleData;let no = index">
+                            <nz-tag nzMode="closeable" (nzOnClose)="$event.stopPropagation();onClose(no)">{{ item.name }}</nz-tag>
+                        </span>
+                    </div>
+                    <!-- <input nz-input formControlName="title" (click)="showModel()" id="title" [(ngModel)]="value" placeholder="选择范围" readonly> -->
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nz-col [nzSm]="4">
+                    上传封面图片
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload [nzAction]="uploaderCoverUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 1"
+                        [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    上传公告附件
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload [nzAction]="uploaderUrl" [(nzFileList)]="fileListNotice" (click)="displayImg()" nzMultiple [nzLimit]="2" (nzChange)="handleChange($event,1)">
+                        <button nz-button type="button">
+                            <i class="anticon anticon-upload"></i>
+                            <span>点击上传</span>
+                        </button>
+                    </nz-upload>
+                    <div *ngFor="let item of fileListNotice;let no = index" class="ant-upload-list-item-infos ">
+                        <span class="ng-tns-c15-8 ng-star-inserted" *ngIf="showImg">
+                            <i class="anticon anticon-paper-clip ng-star-inserted"></i>
+                            <a class="ant-upload-list-item-name ng-tns-c15-8 ng-star-inserted" rel="noopener noreferrer" target="_blank" href="{{ item.url }}"
+                                title="{{ item.name }}">{{ item.name }}</a>
+                        </span>
+                        <i (click)="deleteImge(no)" class="anticon anticon-cross ng-tns-c15-8 ng-star-inserted" title="删除文件"></i>
+                    </div>
+
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContents" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContents>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+        </section>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>公告信息</span>
+        </ng-template>
+        <ng-template #extraTemplate>
+            <button nz-button nzType="primary" type="submit" [nzLoading]="submitting1">提 交</button>
+            <button nz-button (click)="submit(0)" type="button" [nzLoading]="submitting" nzType="primary">保存</button>
+            <button nz-button (click)="back()" type="button">返 回</button>
+        </ng-template>
+    </nz-card>
+</form>
+<!-- 权限弹出框 -->
+<nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="添加人员"
+    (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+    <div>
+        <nz-divider nzDashed [nzText]="text2">
+            <ng-template #text2> 部门 </ng-template>
+        </nz-divider>
+        <nz-tree [(ngModel)]="dataList" [nzCheckable]="false" [nzMultiple]="false" [nzDefaultExpandedKeys]="expandKeys" [nzDefaultCheckedKeys]="checkedKeys"
+            [nzDefaultSelectedKeys]="selectedKeys" [nzDefaultExpandAll]="expandDefault" (nzClick)="mouseAction('click',$event)"
+            (nzDblClick)="mouseAction('dblclick', $event)" (nzCheckBoxChange)="mouseAction('checkout', $event)">
+        </nz-tree>
+    </div>
+    <div>
+        <nz-divider nzDashed [nzText]="text1">
+            <ng-template #text1> 用户列表 </ng-template>
+        </nz-divider>
+        <span *ngFor="let item of peopleData;let no = index">
+            <label *ngIf="item.boundStatus !== '1'" nz-checkbox [nzValue]="item.guid" (ngModelChange)="getChecked(no)" nzDisabled [(ngModel)]="item.checked">{{ item.name }}(该用户未绑定公司)</label>
+        </span>
+        <span *ngFor="let item of peopleData;let no = index">
+            <label *ngIf="item.boundStatus === '1'" nz-checkbox [nzValue]="item.guid" (ngModelChange)="getChecked(no)" [(ngModel)]="item.checked">{{ item.name }}</label>
+        </span>
+    </div>
+    <div>
+        <nz-divider nzDashed [nzText]="text">
+            <ng-template #text> 已选用户 </ng-template>
+        </nz-divider>
+        <div style="overflow: hidden;" row>
+            <span style="margin-bottom: 6px" nz-col nzSpan="4" *ngFor="let item of selectPeopleData">{{ item.name }}</span>
+            <!-- <label *ngFor="let item of selectPeopleData" nz-checkbox nzDisabled [nzValue]="item.guid" (ngModelChange)="updateAllChecked(item.guid)"
+                [(ngModel)]="item.checked">{{ item.name }}</label> -->
+        </div>
+    </div>
+</nz-modal>

@@ -1,0 +1,54 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <div nz-row>
+            <div nz-col nzSpan="10">
+                <p>未读数：<span class="noread">{{notReadcCount}}</span> 条</p>
+            </div>
+            <div nz-col nzSpan="6" nzOffset="8">
+                <button nz-button nzType="primary" (click)="allread()"  [disabled]='disableBtn'  class="floatright">
+                    全部设为已读
+                </button>
+            </div>
+        </div>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>系统消息</span>
+        </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+    <!-- 展示信息 -->
+    <nz-table class="fontstyle" [nzData]="dataList" [nzFrontPagination]="false" [nzPageSize]="paramsData.pageSize" [nzTotal]="total" (nzPageIndexChange)="pageChange($event, 1)"
+        nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>标题</span>
+                </th>
+                <th>
+                    <span>发布日期</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let i of dataList; let no = index">
+                <td><span class="state" *ngIf="i.isRead === 0"></span>{{ i.title }}</td>
+                <td>{{ i.publishTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss' }}</td>
+
+                <td>
+                    <a (click)="detail(i.guid)">查看</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="handleCancelMiddle(i.guid)">删除</a>
+
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="Visible" nzTitle="删除" (nzOnCancel)="canle()"
+        (nzOnOk)="del()">
+        <p>确定删除嘛？</p>
+    </nz-modal>
+</nz-card>

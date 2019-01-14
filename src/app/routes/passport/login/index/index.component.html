@@ -1,0 +1,81 @@
+<div nz-row class="login-box">
+        <!-- <div nz-col nzSpan="12">
+            <div nz-col nzSpan="18" class="login-title-text">
+                <div class="h2-text">区块链重塑人力资源</div>
+                <div class="h5-text" style="margin-top: 30px;">才链云能帮助企业和个人解决信任问题</div>
+                <div class="h5-text">实现公开透明、安全可靠的数据来源</div>
+                <div class="h5-text">一站式解决企业人力资源管理弊端</div>
+            </div>
+        </div>
+        <div class="login-bg-box">
+    
+        </div> -->
+        <div style="margin: 0 auto;width: 452px">
+            <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+                <div class="clearfix personal-register">
+                    <div class="h2">
+                        企业用户登录
+                        <p>欢迎回到，才链云-人力资源SaaS服务平台</p>
+                    </div>
+                    <nz-form-item>
+                        <nz-form-control>
+                            <nz-input-group nzPrefixIcon="">
+                                <input type="text" nz-input formControlName="userName" placeholder="输入手机号/企业账号">
+                            </nz-input-group>
+                            <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">
+                                请输入正确的手机号/企业邮箱
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control nzValidateStatus="{{messageState}}">
+                            <nz-input-group nzPrefixIcon="" style="display: inline-block;width: 256px;vertical-align: middle;">
+                                <input type="text" formControlName="captcha" [(ngModel)]="captcha" nz-input placeholder="输入右侧图形验证码" 
+                                    style="width: 256px;vertical-align: middle;" minlength="4" maxlength="4">
+                            </nz-input-group>
+                            <img src="{{url}}" (click)="getCaptchaCode()" width="150" />
+    
+                        </nz-form-control>
+                        <!--<div nz-form-explain *ngIf="message">{{ message }}</div>-->
+                    </nz-form-item>
+                    <nz-form-item style="margin-bottom: 4px;">
+                        <nz-form-control>
+                            <nz-input-group nzPrefixIcon="">
+                                <input type="password" nz-input formControlName="password" placeholder="输入登录密码" minlength="6" maxlength="16">
+                            </nz-input-group>
+                            <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">
+                                    密码须是字母与数字的组合（6~16位）
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control style="width: 100%">
+                            <span style="float: right">
+                                <a class="remember-password" [routerLink]="['/passport/forget-password/0']">
+                                    <span>忘记密码</span>
+                                </a>
+                            </span>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item style="margin-bottom: 4px;">
+                        <nz-form-control>
+                            <button nz-button [disabled]="!validateForm.valid" class="login-form-button">登录</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control style="width: 100%;margin-bottom:54px">
+                            <a style="float: right" class="login-form-forgot" href="{{ personal_log_url }}" class="login-form-forgot">
+                                <span class="border_login">个人登录</span>
+                            </a>
+                            <span>
+                                <a class="remember-password" [routerLink]="['/passport/register/0']">
+                                    <span class="border_login">免费注册</span>
+                                </a>
+                            </span>
+                           <p style="text-align: center;color: #a8a9ac;margin-top: 40px">© All Rights Reserved.渝ICP备18002151号</p>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+    </div>

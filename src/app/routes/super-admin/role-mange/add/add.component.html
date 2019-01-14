@@ -1,0 +1,40 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div>{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>角色管理</span>
+  </ng-template>
+  <div nz-row>
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()">
+      <nz-form-item>
+        <nz-form-label nzSm="2" nzRequired nzFor="title">角色名称</nz-form-label>
+        <nz-form-control nzSm="16">
+          <input nz-input formControlName="roleName" [(ngModel)]="formData.roleName" placeholder="角色名称">
+          <nz-form-explain *ngIf="form.get('roleName').dirty && form.get('roleName').errors">请输入角色名称</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- <nz-form-item>
+        <nz-form-label nzSm="2" nzRequired nzFor="messageType">角色编码</nz-form-label>
+        <nz-form-control nzSm="16">
+          <input nz-input formControlName="roleCode" [(ngModel)]="formData.roleCode" placeholder="角色编码">
+          <nz-form-explain *ngIf="form.get('roleCode').dirty && form.get('roleCode').errors">请输入角色编码</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item> -->
+    </form>
+  </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+  <button nz-button nzType="primary" (click)="submit()" type="submit" [nzLoading]="submitting">提 交</button>
+  <button nz-button [routerLink]="['/admin/authority/role']" nzType="primary">返回</button>
+</ng-template>

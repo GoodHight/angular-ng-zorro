@@ -1,0 +1,62 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle><div (click)="to(i)">{{i.tab}}</div></ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>权限管理</span>
+    </ng-template>
+    <div nz-row>
+        <nz-table #basicTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="q.total" [nzPageSize]="q.pageSize" (nzPageIndexChange)="pageChange($event, 1)" nzNoResult="没有数据">
+            <thead>
+            <tr>
+
+                <th>
+                    <span>权限名称</span>
+                </th>
+                <th>
+                    <span>权限状态</span>
+                </th>
+                <th>
+                    <span>权限范围</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody nz-tbody>
+            <tr  *ngFor="let i of basicTable.data let no = index"  >
+                <td>{{i.roleName}}</td>
+                <td>{{ i.roleState == 1 ? '开启' : '停用' }}</td>
+                <td>{{i.roleScope}}</td>
+                <td>
+                    <a [routerLink]="['/companyadmin/role/details/',i.guid]" (click)="$event.stopPropagation()">详情</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();changeRoleState(i);">{{ i.roleState == 1 ? '停用' : '开启' }}</a>
+                    <nz-divider nzType="vertical" *ngIf="i.isConfig != 0"></nz-divider>
+                    <a (click)="$event.stopPropagation();maintainFun(i)" *ngIf="i.isConfig != 0">配置权限</a>
+                    <nz-divider nzType="vertical" *ngIf="i.isTemplate != 1"></nz-divider>
+                    <a (click)="$event.stopPropagation();edit(i)" *ngIf="i.isTemplate != 1">编辑</a>
+                    <nz-divider nzType="vertical" *ngIf="i.isTemplate != 1"></nz-divider>
+                    <a (click)="$event.stopPropagation();deleteRole(i)" *ngIf="i.isTemplate != 1">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定"
+              nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除权限"
+              (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <p>确定删除嘛？</p>
+        <p>确定就点下面确定按钮！！！</p>
+    </nz-modal>
+</nz-card>
+<ng-template #tabToolBarTemplate><button nz-button [routerLink]="['/companyadmin/role/add/0']"  nzType="primary">添 加</button></ng-template>

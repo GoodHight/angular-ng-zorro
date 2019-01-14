@@ -1,0 +1,129 @@
+.lalust-card-title {
+    white-space: nowrap;
+    color: rgba(0, 0, 0, .85);
+    font-weight: 600;
+}
+
+.lalust-card-content {
+    min-height: 400px;
+    max-height: 420px;
+    overflow: auto;
+    background: rgba(239, 239, 239, 0.85);
+}
+
+.lalust-content-ul-256416 {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: rgba(239, 239, 239, 0.85);
+}
+
+.lalust-content-ul-256416 li {
+    list-style: none;
+    width: 100%;
+    height: 30px;
+    margin: 5px 0;
+    background: #ffffff;
+    line-height: 30px;
+}
+
+.lalust-content-ul-256416 li.li-select-all-5552522 {
+    text-align: right;
+}
+
+.lalust-content-ul-256416 li.li-error-5552522 {
+    color: rgba(0, 0, 0, .85);
+    font-weight: 600;
+}
+
+:host ::ng-deep .ant-checkbox-group {
+    width: 100%;
+}
+
+:host ::ng-deep .ant-checkbox-group li div {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+}
+
+:host ::ng-deep .ant-checkbox-group li label {
+    /* position: absolute; */
+    float: right;
+    margin-right: 10px;
+    right: 52px;
+}
+
+.lalust-content-ul-256416 .lalust-li-name-2861256 {
+    margin-left: 15px;
+}
+
+.lalust-content-ul-256416 .lalust-li-position-2861256 {
+    /* position: absolute; */
+    right: 70px;
+}
+
+.lalust-content-ul-256416 .lalust-li-status-2861256 {
+    /* position: absolute; */
+    right: -5px;
+}
+
+.lalust-content-ul-256416 .lalust-li-status-2861256>img {
+    width: 40px;
+    height: 13px;
+}
+
+/***
+    select style
+***/
+
+.lalust-select-dept-ul-2546551 {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #cccccc;
+    overflow: hidden;
+    min-height: 40px;
+    -moz-border-radius: 4px;
+    /* Firefox */
+    border-radius: 4px;
+}
+
+.lalust-select-dept-ul-2546551 li {
+    position: relative;
+    list-style: none;
+    width: 120px;
+    height: 30px;
+    float: left;
+    background: rgba(153, 228, 218, 0.356);
+    line-height: 30px;
+    margin: 5px;
+    padding-left: 5px;
+}
+
+.lalust-select-dept-ul-2546551 li:hover>img {
+    display: block;
+}
+
+.lalust-select-dept-ul-2546551 li img {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    display: none;
+}
+
+/** content */
+
+.lalust-select-dept-content-2546544551 {
+    position: relative;
+    margin: 10px 0;
+    border: 1px solid #cccccc;
+    -moz-border-radius: 4px;
+    /* Firefox */
+    border-radius: 4px;
+    -moz-box-shadow: 4px 4px 5px #d5d5d5;
+    /* Firefox */
+    box-shadow: 4px 4px 5px #d5d5d5;
+}

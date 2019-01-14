@@ -1,0 +1,309 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div>工作流程</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>工作流程设置</span>
+  </ng-template>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>工作流管理</span>
+  </ng-template>
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <div class="main-layout-content ant-layout-content">
+        <div nz-row class="main-container">
+          <div>
+            <div class="approval-page-container">
+              <div nz-row nzType="flex" nzJustify="middle">
+                <div nz-col nzSpan="3" class="common-row-title" style="font-size: 14px; color: rgb(50, 51, 52);">
+                  <span id="guide_add_approval_start">默认审批流程</span>
+                </div>
+              </div>
+              <div>
+                <div class="canedit-content">
+                  <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                    <div nz-col nzSpan="3" class="common-row-title" style="margin-top: 10px;">
+                      默认审批人
+                    </div>
+                    <div nz-col nzSpan="21" style="font-size: 14px; color: rgb(50, 51, 52);">
+                      <div nz-row>
+                        <div nz-col nzSpan="24">
+                          <div class="approval-sorted" id="items" [sortablejs]="items">
+                            <div class="stream-user-content-approval" *ngFor="let item of items;let no = index">
+                              <div class="stream-user"><i class="anticon anticon-close stream-user-close"
+                                                          style="font-size: 14px; color: rgb(167, 163, 163);"
+                                                          (click)="deleteStream(no)"></i>
+                                <div nz-col nzSpan="24" class="approval-stream-card">
+                                  <div>
+                                    <div class="node-avatar">
+                                      <img class="common-img"
+                                           src="https://img.alicdn.com/tfs/TB1UiLNSpXXXXcTaXXXXXXXXXXX-50-48.png"
+                                           alt="">
+                                      <span>{{ item.candidateUser }}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <i class="anticon anticon-arrow-right steamLine-arrow-right"></i>
+                            </div>
+                          </div>
+                          <div nz-col nzSpan="2" class="plus">
+                                  <span class="plus-icon  anticon anticon-plus-circle-o"
+                                        (click)="toggleMask()"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                    <div nz-col nzSpan="3" class="common-row-title" style="margin-top: 10px;">
+                      默认抄送人
+                    </div>
+                    <div nz-col nzSpan="21" style="font-size: 14px; color: rgb(50, 51, 52);">
+                      <div nz-row>
+                        <div nz-col nzSpan="24">
+                          <div class="approval-sorted"></div>
+                          <div nz-col nzSpan="2" class="plus">
+                                  <span id="" class="plus-icon anticon anticon-plus-circle-o"
+                                        (click)="toggleMask()"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cut-line-large"></div>
+                <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                  <div nz-col nzSpan="3" class="common-row-title"
+                       style="font-size: 14px; color: rgb(50, 51, 52);">
+                    <span id="guide_add_condition_start">分条件审批<i
+                            class="anticon anticon-info-circle date-tip"></i></span>
+                  </div>
+                  <div nz-col nzSpan="21" class="common-row-content">
+                    <button id="guide_add_condition_end" type="button"
+                            class="ant-btn normal-btn guide_next_trigger">
+                      <span>添 加</span></button>
+                    <span class="common-tips" style="font-size: 12px; margin-left: 20px;">审批单首先匹配优先级高的条件，拖拽可调整以下条件的优先级<i
+                            class="anticon anticon-info-circle date-tip"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="cut-line-large"></div>
+              <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                <div nz-col nzSpan="3" class="common-row-title" style="font-size: 14px; color: rgb(50, 51, 52);">
+                  更多设置
+                </div>
+              </div>
+              <div class="more-setting-content canedit-content">
+                <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                  <div nz-col nzSpan="3" class="common-row-title" style="margin-top: 10px;">
+                    审批人去重
+                  </div>
+                  <div nz-col nzSpan="21" style="font-size: 14px; color: rgb(50, 51, 52);">
+                    <div nz-row>
+                      <div nz-col nzSpan="24">
+                        <nz-select style="width: 330px;" nzAllowClear nzPlaceHolder="请选择">
+                          <nz-option nzValue="0" nzLabel="不启用自动去重"></nz-option>
+                          <nz-option nzValue="1" nzLabel="同一个审批人在流程中出现多次时，仅保留第一个"></nz-option>
+                          <nz-option nzValue="2" nzLabel="同一个审批人在流程中出现多次时，仅保留最后一个"></nz-option>
+                          <nz-option nzValue="3" nzLabel="同一个审批人仅在连续出现时，自动去重"></nz-option>
+                        </nz-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div nz-row nzType="flex" class="common-row" nzJustify="top">
+                  <div nz-col nzSpan="3" class="common-row-title" style="margin-top: 10px;">
+                    通知抄送人
+                  </div>
+                  <div nz-col nzSpan="21" style="font-size: 14px; color: rgb(50, 51, 52);">
+                    <div nz-row>
+                      <div nz-col nzSpan="24">
+                        <nz-select style="width: 330px;" nzAllowClear nzPlaceHolder="请选择">
+                          <nz-option nzValue="0" nzLabel="仅全部同意后通知"></nz-option>
+                          <nz-option nzValue="1" nzLabel="仅发起时通知"></nz-option>
+                          <nz-option nzValue="2" nzLabel="发起时和全部同意后均通知"></nz-option>
+                        </nz-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="approval-page-footer">
+              <div class="cut-line-large"></div>
+              <button type="button" class="ant-btn main-save ant-btn-primary"><span>保 存</span></button>
+              <a style="margin-left: 30px;">
+                <button type="button" class="ant-btn normal-btn process-check-btn"><span>流程检查</span></button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--弹框-->
+  <div>
+    <div *ngIf=" showMask " class="node-setting-mask" (click)="toggleMask()"></div>
+    <div class="approval-node-setting" [ngClass]="{'show':showMask}"><h4 class="node-setting-title">设置审批人</h4>
+      <div nz-row nzType="flex" class="common-row" nzJustify="middle">
+        <div nz-col nzSpan="4" class="common-row-title">
+          审批人类别
+        </div>
+        <div nz-col nzSpan="20" class="common-row-content">
+          <nz-radio-group [(ngModel)]="dataCandidate.type">
+            <label nz-radio nzValue="0">主管(指定一级)<i
+                    class="anticon anticon-info-circle date-tip"></i></label>
+            <label nz-radio nzValue="1">主管(连续多级)<i
+                    class="anticon anticon-info-circle date-tip"></i></label>
+            <label nz-radio nzValue="2">指定成员<i
+                    class="anticon anticon-info-circle date-tip"></i></label>
+            <label nz-radio nzValue="3">角色<i
+                    class="anticon anticon-info-circle date-tip"></i></label>
+            <label nz-radio nzValue="4">发起人自己</label>
+          </nz-radio-group>
+        </div>
+      </div>
+      <div class="cut-line-small"></div>
+      <!--  主管(指定一级) -->
+      <div *ngIf="dataCandidate.type === '0'">
+        <div nz-row nzType="flex" class="common-row" nzJustify="middle">
+          <div nz-col nzSpan="4" class="common-row-title">
+          </div>
+          <div nz-col nzSpan="20" class="common-row-content approval-charge-content">
+            <div nz-col nzSpan="24" style="color: #000">
+              发起人的
+              <nz-select style="min-width: 140px;margin-left: 10px;" nzAllowClear nzPlaceHolder="请选择"
+                         [(ngModel)]="dataCandidate.approvalUser" (ngModelChange)="getApprovalName()">
+                <nz-option nzValue="0" nzLabel="直接主管"></nz-option>
+                <nz-option nzValue="1" nzLabel="第2级主管"></nz-option>
+                <nz-option nzValue="2" nzLabel="第3级主管"></nz-option>
+              </nz-select>
+              <i class="anticon anticon-info-circle date-tip"></i>
+            </div>
+          </div>
+        </div>
+        <div class="cut-line-large" style="margin-left: 25px; margin-right: 25px;"></div>
+        <div nz-row nzType="flex" class="common-row" nzJustify="middle" style="align-items: initial;">
+          <div nz-col nzSpan="4" class="common-row-title">
+            <div>
+              审批方式<i class="anticon anticon-info-circle date-tip"></i>
+            </div>
+          </div>
+          <div nz-col nzSpan="20" class="common-row-content approval-charge-content"
+               style="font-size: 12px; color: rgb(51, 51, 51); margin-top: -6px;">
+            <div nz-col nzSpan="24">
+              <nz-radio-group [(ngModel)]="dataCandidate.approvalMethod">
+                <label nz-radio [ngStyle]="style" nzValue="0">依次审批（本环节内审批人依次审批）</label>
+                <label nz-radio [ngStyle]="style" nzValue="1">会签（须所有审批人同意）</label>
+                <label nz-radio [ngStyle]="style" nzValue="2">或签（一名审批人同意或拒绝即可）</label>
+              </nz-radio-group>
+            </div>
+          </div>
+        </div>
+        <div class="cut-line-large" style="margin-left: 25px; margin-right: 25px;"></div>
+        <div nz-row nzType="flex" class="common-row" nzJustify="middle" style="align-items: initial;">
+          <div nz-col nzSpan="4" class="common-row-title">
+          </div>
+          <div nz-col nzSpan="20" class="common-row-content">
+            <div nz-col nzSpan="24" style="font-size: 12px; color: rgb(51, 51, 51);">
+              <label nz-checkbox [(ngModel)]="inner">若该审批人空缺，由其在通讯录中的上级主管代审批<i
+                      class="anticon anticon-info-circle date-tip"></i></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  主管(指定二级) -->
+      <div *ngIf="dataCandidate.type === '1'">
+        <div nz-row nzType="flex" class="common-row" nzJustify="middle">
+          <div nz-col nzSpan="4" class="common-row-title">
+          </div>
+          <div nz-col nzSpan="20" class="common-row-content approval-charge-content">
+            <div nz-col nzSpan="24" style="color: #000">
+              <div nz-col nzSpan="3" style="color:#000; font-size: 12px; ">审批终点：</div>
+              <div nz-col nzSpan="21">
+                <div style="margin-top: -4px;" class="dingtalk-select">
+                  <nz-radio-group [(ngModel)]="dataCandidate.type">
+                    <label nz-radio nzValue="0">
+                      <span>指定角色（同时是<a href="https://tms.dingtalk.com/markets/dingtalk/director_line?wh_ttid=phone"
+                                       target="_blank">主管线上的主管</a>）
+                      <button type="button" nz-button nzType="primary" nzValue="large" class="node-saveBtn"
+                              ><span>添加角色</span>
+                      </button>
+                    </span>
+                    </label>
+                    <div style="margin-left: 22px; margin-bottom: 10px;"></div>
+                    <div style="margin-left: 22px; margin-bottom: 10px;">
+                      <label nz-checkbox>同时不超过发起人向上的</label>
+                      <nz-select style="min-width: 140px;margin-left: 10px;" nzAllowClear nzPlaceHolder="请选择"
+                                 (ngModelChange)="getApprovalName()">
+                        <nz-option nzValue="0" nzLabel="第1级主管"></nz-option>
+                        <nz-option nzValue="1" nzLabel="第2级主管"></nz-option>
+                        <nz-option nzValue="2" nzLabel="第3级主管"></nz-option>
+                        <nz-option nzValue="3" nzLabel="第4级主管"></nz-option>
+                        <nz-option nzValue="4" nzLabel="第5级主管"></nz-option>
+                        <nz-option nzValue="5" nzLabel="第6级主管"></nz-option>
+                        <nz-option nzValue="6" nzLabel="第7级主管"></nz-option>
+                        <nz-option nzValue="7" nzLabel="第8级主管"></nz-option>
+                        <nz-option nzValue="8" nzLabel="第9级主管"></nz-option>
+                      </nz-select>
+                    </div>
+                    <label nz-radio nzValue="1">通讯录中的 <nz-select style="min-width: 140px;margin-left: 10px;" nzAllowClear nzPlaceHolder="请选择"
+                                                                 (ngModelChange)="getApprovalName()">
+                      <nz-option nzValue="0" nzLabel="最高层级主管"></nz-option>
+                      <nz-option nzValue="1" nzLabel="第2级层级主管"></nz-option>
+                      <nz-option nzValue="2" nzLabel="第3级层级主管"></nz-option>
+                      <nz-option nzValue="3" nzLabel="第4级层级主管"></nz-option>
+                      <nz-option nzValue="4" nzLabel="第5级层级主管"></nz-option>
+                      <nz-option nzValue="5" nzLabel="第6级层级主管"></nz-option>
+                      <nz-option nzValue="6" nzLabel="第7级层级主管"></nz-option>
+                    </nz-select></label>
+                  </nz-radio-group>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cut-line-large" style="margin-left: 25px; margin-right: 25px;"></div>
+        <div nz-row nzType="flex" class="common-row" nzJustify="middle" style="align-items: initial;">
+          <div nz-col nzSpan="4" class="common-row-title">
+            <div>
+              审批方式<i class="anticon anticon-info-circle date-tip"></i>
+            </div>
+          </div>
+          <div nz-col nzSpan="20" class="common-row-content approval-charge-content"
+               style="font-size: 12px;">
+            <div nz-col nzSpan="24">
+              依次审批（每一级主管中的审批人依次审批）
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slideFormBtn">
+        <button type="submit" nz-button nzType="primary" nzValue="large" class="node-saveBtn" (click)="saveApproval()">
+          <span>确 定</span>
+        </button>
+        <button type="button" nz-button nzType="default" nzValue="large" class="node-delBtn"
+                style="display: none;"><span>删除节点</span></button>
+        <button type="button" nz-button nzType="default" nzValue="large" class="node-cancelBtn"><span>取 消</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #tabToolBarTemplate>
+    <button nz-button nzType="primary" type="submit" >帮助</button>
+    <button nz-button nzType="default" [routerLink]="['/workflow/design']" nzType="primary">返回</button>
+  </ng-template>
+</nz-card>
+

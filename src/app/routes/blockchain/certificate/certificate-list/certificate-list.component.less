@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'MyNewFont';
+    src: url('./assets/font/SourceHanSerifSC-Regular.otf');
+}
+
+.capture {
+    // background: url(./assets/img/zhengshumoban.jpg )no-repeat;
+    background-size: 100% 100%;
+    width: 1270px;
+    height: 900px;
+    position: absolute;
+    left: -100000px;
+    top: 0
+}
+
+.capture h4 {
+    font-family: 'MyNewFont';
+    font-size: 86px;
+    font-weight: 300px;
+    text-align: center;
+    letter-spacing: 68px;
+    position: relative;
+    top: 215px;
+    left: 0;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.capture  p {
+    font-family: 'MyNewFont';
+    font-size: 29px;
+    position: relative;
+    top: 258px;
+    left: 0;
+    text-align: left;
+    width: 873px;
+    margin: 0 auto
+}
+
+.erweima {
+    position: relative;
+    top: 396px;
+    left: 198px;
+}
+.erweimaimg {
+    width: 108px;
+    height: 108px;
+    margin: 0;
+    border: 1px solid #000000
+}
+:host {
+    ::ng-deep {
+        .content_header, .ant-card-head {
+            position: fixed;
+            left: 0px;
+            right: 0px;
+            z-index: 10;
+            margin-left: 200px;
+        }
+        .ant-card-body{
+            padding-top: 140px
+        }
+    }
+  
+}

@@ -1,0 +1,245 @@
+<!-- <nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>员工信息管理</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <button nz-button type="button" [disabled]="!form.valid" (click)="_submitForm()" nzType="primary">保存</button>
+            <button nz-button (click)="cancel()">返 回</button>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+        <div nz-col class="employee-update">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div id="personal-information">
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            前公司名称
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="enterpriseName" placeholder="请填写公司名称">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            前公司职位
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="position" placeholder="请填写职位">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            证明人
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="witness" placeholder="请填写证明人">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            证明人电话
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="witnessPhone" placeholder="请填写证明人电话">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            离职原因
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="dimissionReason" placeholder="请填写离职原因">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            入职日期
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker formControlName="entryTime" [nzFormat]="dateFormat"></nz-date-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            离职日期
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker formControlName="quitTime" [nzFormat]="dateFormat"></nz-date-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传离职证明（图片）
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="2">
+                            <nz-upload [nzAction]="uploaderUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+                                [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                                <i class="anticon anticon-plus"></i>
+                                <div class="ant-upload-text">点击上传</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="6">
+                            <div>上传：离职证明图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传员工简历（附件）
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <div style="overflow: hidden;">
+                                <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[1]" [nzShowButton]="fileList[1].length < 1"
+                                    [nzPreview]="handlePreview" (nzChange)="handleChange($event,1)">
+                                    <i class="anticon anticon-plus"></i>
+                                    <div class="ant-upload-text">点击上传</div>
+                                </nz-upload>
+                                <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                    <ng-template #modalContent>
+                                        <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                    </ng-template>
+                                </nz-modal>
+                            </div>
+                            <div>文件格式为：DOC/DOCX/XLS/XLSX/PDF/ZIP/RAR，大小在5M内。</div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+    </div>
+</nz-card> -->
+
+
+
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+          <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+            <ng-template #nzTitle>
+              <div (click)="to(i)">{{i.tab}}</div>
+            </ng-template> 
+          </nz-tab>
+        </nz-tabset>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>员工信息管理</span>
+      </ng-template>
+      <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="showModal('1')" nzType="primary">新增</button>
+        <button nz-button (click)="cancel()">返 回</button>
+      </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+      <div nz-col style="padding-top: 100px">
+        <div style="padding: 18px 24px">
+          <div nz-row *ngFor="let item of userEmployments">
+            <div nz-col nzSpan="24" class='ed-box'>
+              <p class="userEducations">{{item.entryTime  | dateTrans:'YYYY-MM-dd'}} 至 {{ item.quitTime  | dateTrans:'YYYY-MM-dd' }}</p>
+              <div style="width: calc(100% - 200px);padding-left: 18px" class="educations">
+                <p class="userEducations-box">{{item.enterpriseName}}
+                  <a (click)="delete(item.guid)" style='float: right;font-size: 14px;margin-right: 16px'>删除</a>
+                  <a  (click)='showModal(item.guid)'  style='float: right;font-size: 14px;margin-right: 16px'>编辑</a>
+                </p>
+                <p class="item-name">{{item.position}} |
+                  <a *ngIf="item.dimission !== ''" (click)="showModalss(item.dimission)">查看离职证明</a>
+                </p>
+                <p class="item-name">
+                  <span style="background: #80c2ff;color:#fff;padding: 0 6px;border-radius: 4px">职位描述</span>
+                  {{item.positionDescription}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p *ngIf='userEmployments.length === 0' style="text-align: center;padding: 50px">暂无数据</p>
+      </div> 
+    </div>
+  </nz-card>
+  <nz-modal nzWidth="800px" [(nzVisible)]="isVisibless" nzTitle="" [nzFooter]='null' nzClosable="false" (nzOnCancel)="Cancel()"
+    (nzOnOk)="Ok()">
+    <img (click)="handleOkss()" width="100%" height="400" src="{{ templateimgUrl }}" alt="">
+  </nz-modal>
+  <nz-modal nzWidth="800px" [(nzVisible)]="isVisible"  [(nzTitle)]="titlename"  (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+      <div id="personal-information">
+        <nz-form-item nz-row> 
+          <nz-form-label nz-col [nzSm]="4">
+            公司
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="enterpriseName" placeholder="请填写公司">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            职位
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="position" placeholder="请填写职位">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            职位描述
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="positionDescription" placeholder="请填写职位描述">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            入离职时间
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-date-picker [nzDisabledDate]="disabledStartDates" [nzFormat]="dateFormat" formControlName="entryTime" nzPlaceHolder="start"
+              (ngModelChange)="onStartChanges($event)" (nzOnOpenChange)="handleStartOpenChanges($event)">
+            </nz-date-picker>
+            至
+            <nz-date-picker [nzDisabledDate]="disabledEndDates" [nzFormat]="dateFormat" formControlName="quitTime" nzPlaceHolder="End"
+              [nzOpen]="endOpens" (ngModelChange)="onEndChanges($event)" (nzOnOpenChange)="handleEndOpenChanges($event)">
+            </nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            上传离职证明
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="2">
+            <nz-upload [nzAction]="uploaderUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+              [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+              <i class="anticon anticon-plus"></i>
+              <div class="ant-upload-text">点击上传</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </nz-modal>
+  <nz-modal [(nzVisible)]="sisVisible" nzTitle="删除该条记录" (nzOnCancel)="shandleCancel()" (nzOnOk)="shandleOk()">
+      <p>删除后不可恢复</p>
+    </nz-modal>

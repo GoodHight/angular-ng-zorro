@@ -1,0 +1,184 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[cancel, tabToolBarTemplate]">
+            </nz-list-item>
+            <ng-template #itemContentTemplate>
+
+            </ng-template>
+        </ng-template>
+
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>{{dataList.name}}的简历详情</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <button nz-button nzType="primary"  [disabled]="isDown"  (click)='dowResume(dataList.fileId)'>下载简历</button>
+    </ng-template>
+    <ng-template #cancel>
+        <button nz-button nzType="default"  (click)='cancelAct()'>返回</button>
+    </ng-template>
+
+    <div nz-row>
+        <section>
+            <div class="title_divider">
+                <nz-divider [class.divider-15641]="true" nzType="vertical"></nz-divider>
+                <span class="username">{{dataList.name}}</span>
+                <p class="phone-email">
+                    <span>手机: {{dataList.phone}}</span>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <span>邮箱: {{dataList.email}}</span>
+                </p>
+            </div>
+        </section>
+        <section>
+            <div class="title_divider">
+                <nz-divider [class.divider-15641]="true" nzType="vertical"></nz-divider>
+                <span class="username">应聘职位:{{dataList.applyPosition}}</span>
+                <p  class="phone-email">
+                    <span *ngIf="dataList.workYear !== ''">
+                        <span>{{dataList.workYear}}年工作经验</span>
+                        <nz-divider nzType="vertical"></nz-divider>
+                    </span>
+                    <span>{{dataList.education}}</span>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <span>{{dataList.graduatedFrom}}</span>
+                    <span *ngIf="dataList.lastCompany !== ''">
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <span>上家公司：{{dataList.lastCompany}}</span>
+                    </span>
+
+                </p>
+            </div>
+        </section>
+        <div>
+            <!-- 推荐详情 -->
+            <nz-collapse [nzBordered]="false" [class.dividerMian]="true">
+                <nz-collapse-panel [(nzHeader)]="recomendTitle" [nzActive]="active">
+                    <ng-container *ngIf="!recommendData; else elseRecommendTemplate">
+                        <p>没有数据</p>
+                    </ng-container>
+                    <ng-template #elseRecommendTemplate>
+                        <p><span  class="item-title">姓名:</span>{{recommendData.name}}</p>
+                        <p><span  class="item-title">手机号:</span>{{recommendData.phone}}</p>
+                        <p><span  class="item-title">邮箱:</span>{{recommendData.email}}</p>
+                        <p><span  class="item-title">应聘职位:</span> {{recommendData.applyPosition}}</p>
+                        <p><span  class="item-title">面试官:</span> {{recommendData.interviewerName}}</p>
+                        <p><span  class="item-title">有效期:</span> {{recommendData.deadline | dateTrans:'YYYY年MM月dd日'}}</p>
+                        <p><span  class="item-title">备注:</span> {{recommendData.remark }}</p>
+                        <div *ngIf="recommendData.approvalState != 0">
+                                <nz-divider ></nz-divider>
+                                <p>
+                                    <span  class="item-title">审批结果:</span> 
+                                    <span *ngIf="recommendData.approvalResult === 1">通过</span>
+                                    <span *ngIf="recommendData.approvalResult === 0">拒绝</span>
+                                </p>
+                                <p><span>反馈信息:</span> {{recommendData.feedbackInformation}}</p>
+                        </div>
+                    </ng-template>
+                </nz-collapse-panel>
+            </nz-collapse>
+            <!-- 面试通知 -->
+            <nz-collapse [nzBordered]="false" [class.dividerMian]="true">
+                <nz-collapse-panel [(nzHeader)]="interviewTitle" [nzActive]="active">
+                    <ng-container *ngIf="!interviewData; else interviewTemplate">
+                        <p>没有数据</p>
+                    </ng-container>
+                    <ng-template #interviewTemplate>
+                        <p><span class="item-title"  class="item-title">面试职位:</span> {{interviewData.interviewPostion}}</p>
+                        <p><span  class="item-title">面试日期:</span> {{interviewData.interviewDate | dateTrans:'YYYY年MM月dd日'}}</p>
+                        <p><span  class="item-title">面试时间:</span> {{interviewData.interviewTime | dateTrans:'HH:mm'}}</p>
+                        <p><span  class="item-title">面试官:</span> {{interviewData.interviewerName}}</p>
+                        <p><span  class="item-title">面试负责人:</span> {{interviewData.responsibleName}}</p>
+                        <p><span  class="item-title">联系电话:</span> {{interviewData.responsiblePhone}}</p>
+                        <p><span  class="item-title">面试地点:</span> {{interviewData.interviewAddress}}</p>
+                        <p><span  class="item-title">备注:</span> {{interviewData.remark}}</p>
+                    </ng-template>
+                </nz-collapse-panel>
+            </nz-collapse>
+            <!-- 面试结果反馈 -->
+            <nz-collapse [nzBordered]="false" [class.dividerMian]="true">
+                <nz-collapse-panel [(nzHeader)]="feedbackTitle" [nzActive]="active">
+                    <ng-container *ngIf="!interviewData || (interviewData && interviewData.interviewState === 0)">
+                        <p>没有数据</p>
+                    </ng-container>
+                    <ng-container  *ngIf="interviewData && interviewData.interviewState === 1">
+                        <p><span  class="item-title">面试官:</span>{{interviewData.interviewerName}}</p>
+                        <p><span  class="item-title">面试评价:</span>{{interviewData.interviewFeedback}}</p>
+                        
+                        <!-- <p>建议薪资: {{interviewData.interviewFeedback}}
+                        </p> -->
+                        <p><span  class="item-title">面试结果:</span>
+                            <span *ngIf="interviewData.interviewState === 1 && interviewData.interviewResult === 1">录用</span>
+                            <span *ngIf="interviewData.interviewState === 1 && interviewData.interviewResult === 0">放弃</span>
+                            <span *ngIf="interviewData.interviewState === 1 && interviewData.interviewResult === 2">进一步考核</span>
+                        </p>
+                    </ng-container>
+                </nz-collapse-panel>
+            </nz-collapse>
+            <!-- 录用审批详情 -->
+            <nz-collapse [nzBordered]="false" [class.dividerMian]="true">
+                <nz-collapse-panel [(nzHeader)]="employTitle" [nzActive]="active">
+                    <ng-container *ngIf="!employData; else employTemplate">
+                        <p>没有数据</p>
+                    </ng-container>
+                    <ng-template #employTemplate>
+                        <p><span  class="item-title">报道时间:</span>{{employData.entryDateTime | dateTrans:'YYYY-MM-dd HH:mm'}}</p>
+                        <p><span  class="item-title">入职职位:</span>{{employData.entryPostion}}</p>
+                        <p><span  class="item-title">入职部门:</span>{{employData.entryDepartmentName}}</p>
+                       
+                        <p><span  class="item-title">试用期工资:</span>{{employData.payOnTrial}}</p>
+                        <p><span  class="item-title">转正工资:</span>{{employData.payRegularWorker}}</p>
+                        <p>
+                            <span  class="item-title">工作性质:</span>
+                            <span>{{employData.workNature}}</span>
+                        </p>
+                        <p><span  class="item-title">审批人:</span> {{employData.approvalName}}</p>
+                        <p>
+                            <span  class="item-title">审批结果:</span>
+                            <span *ngIf="employData.approvalResult === 1 && employData.approvalState ===1">通过</span>
+                            <span  *ngIf="employData.approvalResult === 0 && employData.approvalState ===1" >拒绝</span>
+                        </p>
+                    </ng-template>
+                </nz-collapse-panel>
+            </nz-collapse>
+            <!-- 查看offer -->
+            <nz-collapse [nzBordered]="false" [class.dividerMian]="true">
+                <nz-collapse-panel [(nzHeader)]="offerTitle" [nzActive]="active">
+                    <ng-container *ngIf="!offerData; else offerTemplate">
+                        <p>没有数据</p>
+                    </ng-container>
+                    <ng-template #offerTemplate >
+                        <div [innerHTML]="offerData.offerContent">
+
+                        </div>
+                            <!-- {{offerData.offerContent}} -->
+                        <!-- <p>报道时间: {{offerData.entryDateTime}}
+                            <nz-divider nzType="vertical"></nz-divider>
+                            试用期: {{offerData.probationStage}}
+                            <nz-divider nzType="vertical"></nz-divider>
+                            入职职位: {{offerData.entryPostion}}
+                            <nz-divider nzType="vertical"></nz-divider>
+                            入职部门: {{offerData.entryDepartmentName}}
+                        </p>
+                        <p>试用期工资: {{offerData.payOnTrial}}
+                            <nz-divider nzType="vertical"></nz-divider>
+                            转正工资: {{offerData.payRegularWorker}}
+                            <nz-divider nzType="vertical"></nz-divider>
+                            工资性质: <span *ngIf="employData.workNature === 1">全职</span>
+                            <span *ngIf="employData.workNature === 2">兼职</span>
+                            <span *ngIf="employData.workNature === 3">实习</span>
+                        </p>
+                        <p>审批人: {{employData.approvalName}}</p>
+                        <p>审批结果:<span *ngIf="employData.approvalResult === 1">通过</span>
+                            <span *ngIf="employData.approvalResult === 0">拒绝</span>
+                        </p> -->
+                    </ng-template>
+                </nz-collapse-panel>
+            </nz-collapse>
+        </div>
+    </div>
+
+</nz-card>

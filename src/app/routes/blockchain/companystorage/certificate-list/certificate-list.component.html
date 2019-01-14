@@ -1,0 +1,63 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive]">
+          <ng-template #serachActive>
+            <div *ngIf="showSearch === 1">
+              <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchKey">
+              </nz-input-group>
+              <ng-template #suffixIconButton>
+                <button (click)="getData()" nz-button nzType="primary" nzSearch>
+                  <i class="anticon anticon-search"></i>
+                </button>
+              </ng-template>
+            </div>
+            <div *ngIf="showSearch === 0" (click)="showSearch = 1;">
+              <span>
+                <i class="icon iconfont icon-sousuo"></i>搜索</span>
+            </div>
+          </ng-template>
+        </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>证书管理</span>
+      </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+      [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+      <thead>
+        <tr>
+          <th>
+            序号
+          </th>
+          <th>姓名</th>
+          <th>培训结构 </th>
+          <th>专业</th>
+          <th>班级</th>
+          <th>存证时间</th>
+          <th>哈希值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of ajaxTable.data let no = index">
+          <td>{{ code + no }}</td>
+          <td>{{i.studentName}}</td>
+          <td>{{i.enterpriseName}}</td>
+          <td>{{i.classesName}}</td>
+          <td>{{i.major}}</td>
+          <td>{{i.evidenceTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+          <td width="260px">
+            <a (click)="detalis(i.dataHash)">查看详情</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+  </nz-card>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="哈希值" [nzFooter]="null" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <p>{{dataHash}}</p>
+  </nz-modal>

@@ -1,0 +1,60 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div class="text">设置审批，员工移动端开启此功能。</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <div nz-row>
+    <section class="tab-content approval">
+      <div class="title">
+        人事审批
+      </div>
+      <div class="list">
+        <div class='clearfix' *ngFor="let item of dataType0">
+          <i class="icon-first {{ item.icon }}"></i>
+          <div class="list-name">{{ item.name }}</div>
+          <div class="list-show">是否开启此功能:
+            <nz-radio-group  [(ngModel)]="item.showFlag" (click)='updateState(item.guid,item.showFlag,no)'>
+              <label nz-radio [nzValue]="1">是</label>
+              <label nz-radio [nzValue]="0">否</label>
+            </nz-radio-group>
+          </div>
+          <i *ngIf="item.showFlag === 0" class="icon-right1" ></i>
+          <i *ngIf="item.showFlag === 1" class="icon-right" ></i>
+        </div>
+      </div>
+      <div class="title">
+        考勤审批
+      </div>
+      <div class="list">
+
+        <div class='clearfix' *ngFor="let item of dataType1;let no = index">
+          <i class="icon-first {{ item.icon }}"></i>
+          <div class="list-name">{{ item.name }}</div>
+          <div class="list-show">是否开启此功能:
+            <nz-radio-group [(ngModel)]="item.showFlag" (click)='updateState(item.guid,item.showFlag,no)'>
+              <label nz-radio [nzValue]="1" >是</label>
+              <label nz-radio [nzValue]="0">否</label>
+            </nz-radio-group>
+          </div>
+          <i *ngIf="item.showFlag === 0" class="icon-right1" ></i>
+          <i *ngIf="item.showFlag === 1" class="icon-right" ></i>
+        </div>
+      </div>
+    </section>
+  </div>
+  <ng-template #title>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>审批设置</span>
+  </ng-template>
+  <ng-template #tabToolBarTemplate>
+
+  </ng-template>
+</nz-card>

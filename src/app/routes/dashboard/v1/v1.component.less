@@ -1,0 +1,51 @@
+@import 'node_modules/@delon/theme/styles/default';
+
+:host ::ng-deep {
+    .ant-layout-content{
+        background-color: transparent;
+        padding-top: 24px;
+        //padding-left: 24px;
+        overflow: hidden;
+        section > div{
+            margin-bottom: 24px;
+        }
+        section > div:last-child{
+            margin-bottom: 0px;
+        }
+        ul{
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+            padding-left: 24px;
+            overflow: hidden;
+            li{
+                text-align: center;
+                margin-right: 24px;
+                margin-bottom: 24px;
+                background: #fff;
+                border-radius:20px;
+                height: 138px;
+                width: 200px;
+                border-width: 1px;
+                border-style: solid;
+                cursor: pointer;
+                i{
+                    font-size: 64px;
+                    line-height: 96px;
+                }
+                div{
+                    line-height: 42px;
+                    text-align:center;
+                    border-bottom-right-radius: 20px;
+                    border-bottom-left-radius: 20px;
+                    color: #fff;
+                    font-size: 16px;
+                } 
+            }
+            li:last-child{
+                margin-bottom: 0px; 
+            }
+        }
+            
+    } 
+}

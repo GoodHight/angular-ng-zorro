@@ -1,0 +1,11 @@
+<div nz-row class="app-notice">
+    <div nz-col nzSpan="24" style="width: 100%;overflow: hidden;">
+      <div class="title">{{ title }}</div>
+      <div class="company-name">{{ messageTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss' }} | </div>
+      <!-- <div class="state">全部已读</div> -->
+      <div class="img" *ngIf="imgSrc !== ''">
+        <img src="{{imgSrc}}" />
+      </div>
+      <div class="app-content" [innerHTML]="content">无内容信息</div>
+    </div>
+  </div>

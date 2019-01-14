@@ -1,0 +1,232 @@
+.business-info-title {
+    // .logo-img {
+    //     float: left;
+    //     margin-left: 25px;
+    //     background: #fff;
+    //     width: 96px;
+    //     height: 96px;
+    //     text-align: center;
+    //     border: 1px #e8e8e8 solid;
+    //     -webkit-border-radius: 5px;
+    //     -moz-border-radius: 5px;
+    //     border-radius: 5px; //display:flex;/*Flex布局*/
+    //     //display: -webkit-flex; /* Safari */
+    //     //align-items:center;/*指定垂直居中*/
+    //     img {
+    //         width: 81px;
+    //         height: 78px;
+    //         margin-top: 8px;
+    //     }
+    // }
+    .business-info-list {
+        float: left;
+        .name {
+            display: block;
+            font-size: 24px;
+            color: #0f0f0f;
+            margin-top: 10px;
+        }
+        .info {
+            display: inline-block;
+        }
+    }
+}
+
+:host {
+    ::ng-deep {
+        .content_header,
+        .ant-card-head {
+            height: 112px !important;
+            max-height: 112px !important;
+        }
+        .ant-list-item {
+            margin-top: 4px;
+        }
+        ul.ant-list-item-action {
+            // margin-top: 61px;
+        }
+        .ant-card-body {
+            padding-top: 0;
+        }
+        .ant-select{
+            height: 40px;
+            background: #f7f7f7
+        }
+        .ant-select-selection{
+            background: #f7f7f7;
+        }
+        form .ant-select{
+            width: 26.8%
+        }
+    }
+}
+
+.business-info-left {
+    padding-left: 20px;
+    padding-right: 40px;
+    border-right: 2px #161616 dashed;
+    height: 900px;
+}
+
+.state-success {
+    color: #fff;
+    background: #16dba7;
+    border-radius: 2px;
+    padding: 1px 2px;
+    font-size: 14px;
+}
+
+.state-error {
+    color: #fff;
+    background: #ff3f3a;
+    border-radius: 2px;
+    padding: 1px 2px;
+    font-size: 14px;
+}
+
+.refusalCause {
+    color: #fff;
+    background: #ff3f3a;
+    border-radius: 2px;
+    padding: 1px 2px;
+    font-size: 14px;
+}
+
+.extra {
+    //width: 380px; 16dba7
+    margin-top: 40px;
+    padding-left: 40px;
+    .state {
+        color: #fff;
+        background: #ff3f3a;
+        border-radius: 2px;
+        padding: 1px 2px;
+    }
+    .state1 {
+        color: #ff3f3a;
+        background: none;
+    }
+    .mb-md {
+        margin-bottom: 8px !important;
+    }
+}
+
+.extra .title:before {
+    display: inline-block;
+    content: ' ';
+    width: 4px;
+    height: 16px;
+    background: #28d1eb;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.extra .title {
+    color: #20282e;
+    font-size: 16px;
+    margin-bottom: 12px;
+    font-weight: bold;
+    span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .update {
+        color: #1b93de;
+        font-size: 16px;
+        float: right;
+        cursor: pointer;
+        margin-top: 3px;
+    }
+}
+
+.logo-title {
+    margin: 16px 0;
+    background: #fff;
+    overflow: hidden;
+    padding: 18px 24px
+}
+
+.logo-imgs {
+    height: 96px !important;
+    width: 96px;
+    float: left;
+    border: 1px solid #e2e2e2;
+    box-shadow: 0px 0px 8px 1px #e2e2e2;
+    img {
+        width: 100%;
+        max-height:80px
+    }
+}
+
+.logo-conters {
+    float: left;
+    padding: 21px 22px;
+    .namegs {
+        font-size: 22px;
+        margin-bottom: 0;
+        a {
+            font-size: 14px;
+            margin-left: 6px
+        }
+        .state {
+            font-size: 14px;
+            color: #fff;
+            background: #16dba7;
+            border-radius: 2px;
+            padding: 1px 2px;
+        }
+    }
+    .email {
+        margin-bottom: 0;
+        font-size: 14px;
+        color: #999999;
+    }
+}
+
+:host ::ng-deep .avatar-uploader>.ant-upload {
+    width: 100%;
+    height: 100%;
+    margin: 0
+}
+
+:host ::ng-deep .ant-upload-select-picture-card i {
+    font-size: 32px;
+    color: #999;
+}
+
+:host ::ng-deep .ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
+}
+
+.account-name {
+    font-size: 18px;
+    line-height: 21px;
+    padding: 18px 0 6px;
+    margin: 0 24px;
+    color: #292929;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.item-name {
+    font-size: 14px;
+    line-height: 21px;
+    color: #999999;
+    margin-bottom: 4px;
+}
+
+.item-box {
+    font-size: 18px;
+    line-height: 21px;
+    color: #292929;
+    overflow: hidden;
+    min-height: 21px;
+}
+input{
+    border: 1px solid #e2e2e2;
+    width: 80%;
+    padding: 1px 11px;
+    height: 31px;
+    margin-bottom: 8px;
+    background: #f7f7f7
+}

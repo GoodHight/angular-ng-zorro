@@ -1,0 +1,80 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[time,selectAction,serachActive]">
+        <ng-template #time>
+          <span>订单日期筛选：</span>
+          <nz-range-picker nzFormat="yyyy-MM-dd" ngModel (ngModelChange)="onChange($event)" style="margin-right: 20px"></nz-range-picker>
+        </ng-template>
+        <ng-template #selectAction>
+          <span>业务类型：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.business" (ngModelChange)="businessTypeChange($event)">
+            <nz-option *ngFor="let option of businesslist" [nzLabel]="option.str" [nzValue]="option.status"></nz-option>
+          </nz-select>
+          <span style="margin-left: 18px">订单状态：</span> 
+          <nz-select style="width: 120px;margin-left: 4px" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.orderStatus" (ngModelChange)="employeeStateChange($event)">
+            <nz-option *ngFor="let option of orderStatus" [nzLabel]="option.str" [nzValue]="option.status"></nz-option>
+          </nz-select> 
+        </ng-template>
+        <ng-template #serachActive> 
+          <div>
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入关键字" [(ngModel)]="q.searchStr">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button  (click)="refreshData(true)"  nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div>
+          <!-- <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div> -->
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>订单管理</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataSet" [nzTotal]="q.total" [nzPageIndex]="1" [nzPageSize]="q.pageSize"
+    [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+      <tr>
+        <th>订单号</th>
+        <th>下单时间</th>
+        <th>商品名称</th>
+        <th>单价（元）</th>
+        <th>数量</th>
+        <th>订单金额（元）</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of ajaxTable.data,let no = index">
+        <td>{{item['orderNo']}}</td>
+        <td>{{item['orderTime'] | dateTrans:'YYYY年MM月dd日'}}</td>
+        <td>{{item['itemName']}}</td>
+        <td>{{item['unitPrice'] / 100}}</td>
+        <td>{{item['orderQuantity']}}</td>
+        <td>{{item['orderPrice'] / 100}}</td>
+        <td *ngIf="item.orderStatus === 0">关闭</td>
+        <td *ngIf="item.orderStatus === 1">未付款</td>
+        <td *ngIf="item.orderStatus === 2">处理中</td>
+        <td *ngIf="item.orderStatus === 3">已支付</td>
+        <td *ngIf="item.orderStatus === 4">交易成功</td>
+        <td>
+          <a (click)="$event.stopPropagation();details(item)">查看详情</a>
+          <nz-divider *ngIf="item.orderStatus === 1" nzType="vertical"></nz-divider>
+          <a *ngIf="item.orderStatus === 1" (click)="$event.stopPropagation();pay(item)">立即支付</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>

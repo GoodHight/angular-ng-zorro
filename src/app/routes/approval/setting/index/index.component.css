@@ -1,0 +1,85 @@
+:host ::ng-deep .ant-tabs-tab-active {
+  color: #4c4c4c;
+}
+:host ::ng-deep .ant-tabs-ink-bar {
+  height: 0;
+}
+:host ::ng-deep .ant-radio-group .ant-radio-wrapper {
+  font-size: 12px;
+  margin-right: 0;
+}
+.approval {
+  padding-top: 46px;
+}
+.approval .title {
+  color: #0f0f0f;
+  font-size: 16px;
+  line-height: 21px;
+}
+.approval .title::before {
+  content: ' ';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: #1890ff;
+  vertical-align: middle;
+}
+.approval .list {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  zoom: 1;
+}
+.approval .clearfix {
+  overflow: hidden;
+  zoom: 1;
+  float: left;
+  width: 256px;
+  height: 104px;
+  background: #fff;
+  position: relative;
+  padding-left: 16px;
+  cursor: pointer;
+  margin-right: 18px;
+}
+.approval .clearfix i.icon-first {
+  display: inline-block;
+  float: left;
+  font-size: 40px;
+  margin-top: 20px;
+}
+.approval .clearfix .list-name {
+  color: #2a2a2a;
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  width: 180px;
+  margin-left: 15px;
+  margin-top: 28px;
+}
+.approval .clearfix .list-show {
+  color: #4c4c4c;
+  font-size: 12px;
+  margin-left: 15px;
+  float: left;
+}
+.approval .clearfix .icon-right {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(/assets/img/icon-right-1.png) no-repeat 100%;
+  background-size: 40px;
+}
+.approval .clearfix .icon-right1 {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(/assets/img/icon-right-2.png) no-repeat 100%;
+  background-size: 40px;
+}

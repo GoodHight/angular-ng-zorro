@@ -1,0 +1,62 @@
+.resume-recommend-box .title {
+  color: #0f0f0f;
+  font-size: 16px;
+  font-weight: bold;
+}
+.resume-recommend-box .title::before {
+  content: ' ';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: #1890ff;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.resume-recommend-box span {
+  vertical-align: middle;
+}
+.resume-recommend-box .resume-recommend-title {
+  margin-bottom: 20px;
+}
+.employee-add {
+  padding-top: 20px;
+}
+.d-flex1 {
+  margin-top: 10px;
+}
+.d-flex1 .label-left {
+  width: 80px;
+  text-align: right;
+  padding-right: 10px;
+  line-height: 32px;
+  float: left;
+}
+.d-flex1 .flex-1 {
+  width: 320px;
+  float: left;
+}
+:host ::ng-deep .ant-form {
+  margin-top: 86px;
+}
+:host ::ng-deep .content_header,
+:host ::ng-deep .ant-card-head {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  z-index: 10;
+}
+:host ::ng-deep .update-title {
+  font-size: 14px;
+  color: #1890ff;
+  border-bottom: 4px #1890ff solid;
+  margin-bottom: -7px;
+}
+:host ::ng-deep .content_header .ant-card-head-title,
+:host ::ng-deep .ant-card-head .ant-card-head-title {
+  margin-left: 207px;
+}
+.interview {
+  display: inline-block;
+  padding: 5px 0;
+  height: auto;
+}

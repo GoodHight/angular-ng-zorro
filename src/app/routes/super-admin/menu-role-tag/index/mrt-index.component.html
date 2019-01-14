@@ -1,0 +1,66 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>模板权限授权</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate" (nzSelectChange)="tabSelectChange($event)">
+                <nz-tab [nzTitle]="nzTitle0">
+                    <ng-template #nzTitle0>
+                        <div>管理端模板功能({{currentRoleTag.roleName}})</div>
+                    </ng-template>
+                </nz-tab>
+                <nz-tab [nzTitle]="nzTitle1">
+                    <ng-template #nzTitle1>
+                        <div>移动端模板功能({{currentRoleTag.roleName}})</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <ng-template #tabToolBarTemplate>
+                <button nz-button nzType="default" [routerLink]="['/admin/templaterole']">返回</button>
+                <button nz-button nzType="primary" (click)="authorization()">更新</button>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <nz-layout>
+        <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+            <div nz-row>
+                <section class="tab-content">
+                    <nz-table #basicTable nzBordered nzShowPagination="false" [nzData]="allMenuList" nzNoResult="没有数据">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span>序号</span>
+                                </th>
+                                <th>
+                                    <span>模块</span>
+                                </th>
+                                <th>
+                                    <span>功能</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody nz-tbody>
+                            <tr *ngFor="let i of allMenuList let no = index">
+                                <td>{{ no+1 }}</td>
+                                <td>
+                                    <label nz-checkbox (nzCheckedChange)="checkAll(no, i.guid, $event, no)" [(ngModel)]="allMenuList[no].isDefault " [nzIndeterminate]="allMenuList[no].nzIndeterminate">
+                                        {{i.menuName}}
+                                    </label>
+                                </td>
+                                <td>
+                                    <label nz-checkbox *ngFor="let item of i.subMenuList" (nzCheckedChange)="checkAll('-1', item.guid, $event, no)" [(ngModel)]="item.isDefault">
+                                        {{item.menuName}}
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+
+                </section>
+            </div>
+        </nz-content>
+    </nz-layout>
+</nz-card>

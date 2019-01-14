@@ -1,0 +1,75 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>设置证书模板</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <nz-list-item [nzActions]="[saveAction, cancelAction]">
+                    <!-- [disabled]="!validataForm.valid || defaultSignature == null" -->
+                <ng-template #saveAction>
+                    <button nz-button nzType="primary" [nzLoading]="confirmButtonLoading" [disabled]="!validataForm.valid"
+                        (click)="saveTemplate()">
+                        确定
+                    </button>
+                </ng-template>
+                <ng-template #cancelAction>
+                    <button nz-button nzType="default" routerLink="/blockchain/certificate/index">
+                        取消
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <nz-spin [nzSpinning]="loading">
+            <section>
+                <form nz-form [formGroup]="validataForm">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="4" nzRequired>选择模板</nz-form-label>
+                        <nz-form-control [nzSpan]="12" nzHasFeedback>
+                            <nz-select style="width: 200px;" (ngModelChange)="templateChange($event)" nzShowSearch nzAllowClear [ngModel]="templeId"
+                                nzPlaceHolder="请选择模板" formControlName="fileId">
+                                <nz-option *ngFor="let item of templates" nzLabel="{{item.templateName}}" nzValue="{{item.fileId}}"></nz-option>
+                            </nz-select>
+                            <nz-form-explain *ngIf="validataForm.get('fileId').dirty && validataForm.get('fileId').hasError('required') ">
+                                请选择模板！
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="4">预览</nz-form-label>
+                        <nz-form-control [nzSpan]="12">
+                            <nz-spin [nzSpinning]="imgLoading">
+                                <canvas #preview width="780" height="551"></canvas>
+                            </nz-spin>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <!-- <nz-form-item>
+                        <nz-form-label [nzSpan]="4">默认签章预览</nz-form-label>
+                        <nz-form-control [nzSpan]="12">
+                            <div class="div-box" *ngIf="defaultSignature">
+                                <div [ngStyle]="{'color': defaultSignature.cssColor, 'height': defaultSignature.cssHeight + 'px', 
+                                'width': defaultSignature.cssWidth + 'px', 'border-width':
+                                defaultSignature.cssBorderWidth + 'px', 'font-family': defaultSignature.cssFont, 
+                                'font-size': defaultSignature.cssFontSize + 'px'}"> {{defaultSignature['signatureContent']}}
+                                </div>
+                            </div>
+                            <button nz-button nzType="primary" (click)="confirmToSignature()">更换签章</button>
+                        </nz-form-control>
+                    </nz-form-item> -->
+                </form>
+            </section>
+        </nz-spin>
+    </div>
+</nz-card>

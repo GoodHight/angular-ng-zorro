@@ -1,0 +1,243 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[saveAction, cancelAction]">
+        <ng-template #saveAction>
+          <!-- <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)="submit()" [nzLoading]="confirmButtonLoading"> -->
+            <button nz-button nzType="primary" (click)="submit()" [nzLoading]="confirmButtonLoading">
+            保存
+          </button>
+        </ng-template>
+        <ng-template #cancelAction>
+          <button nz-button nzType="default" (click)="cancel()">
+            返回
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>新增合同</span>
+    </ng-template>
+  </nz-card-tab>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>
+<nz-row nzAlign="bottom">
+  <nz-col>
+    <nz-spin [nzSpinning]="loading">
+      <form nz-form [formGroup]="validateForm">
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>
+            签订人
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <!-- <nz-select nzAllowClear formControlName="userId" nzPlaceHolder="请选择签订人"> -->
+            <!-- <nz-option *ngFor="let option of pleplolist" [nzLabel]="option.name" [nzValue]="option.userGuid">
+              </nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validateForm.get('userId').dirty && validateForm.get('userId').hasError('required')">请选择签订人！</nz-form-explain> -->
+
+            <!-- <input nz-input type='text' readonly="readonly"  [(ngModel)]="signedPerson" [ngModelOptions]="{standalone: true}"
+              placeholder="请选择签订人">
+            <button nz-button (click)='userBtn(signedPerson,1)'>+内部人员</button>
+            <button nz-button (click)="showOuterModal()" class='addOuter'>+外部人员</button> -->
+            <nz-input-group nzSearch  [nzSuffix]="suffixButton">
+              <input class="selectInput" nz-input type='text' readonly="readonly"  [(ngModel)]="signedPerson" [ngModelOptions]="{standalone: true}"
+              placeholder="请选择签订人">
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button nz-button (click)='userBtn(signedPerson,1)' nzType="primary" nzSearch>+内部员工</button>
+                <button nz-button (click)="showOuterSignModal()" nzType="primary" nzSearch class='addOuter'>+外部人员</button>
+            </ng-template>
+            <input [hidden]="true" nz-input type='text' formControlName="userId">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>
+            审核人
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <ul>
+              <li class="li-content" *ngFor="let item of orderPerson;let n=index">
+                <!-- <span clsss="arrow" *ngIf="n !== 0">=></span> -->
+                <img *ngIf="n !== 0" src="../../../../assets/img/arrow.png">
+                <!-- <i nz-icon type="arrow-right" theme="outline" ></i> -->
+                <div class="auditorName">
+                    <a class="auditorNameBox" href="javascript:;">{{item.name}}</a>
+                    <span class="remove" (click)="removeAuditor(item.userGuid, n)">x</span>
+                </div>
+              </li>
+              <li class="li-btn">
+                <!-- <span *ngFor="let item of sendPersonAuditor" class='copyItem'>{{item.name}}</span> -->
+                <button (click)="showModalAuditor()">+添加内部员工</button>
+                <button (click)="showOuterModal()" class='addOuter'>+添加外部人员</button>
+              </li>
+              <!-- <li class="li-btn"> -->
+                  <!-- <span *ngFor="let item of outerPerson" class='copyItem'>{{item.phone}}</span> -->
+                  <!-- <button (click)="showOuterModal()" class='addOuter'>+添加外部人员</button> -->
+              <!-- </li> -->
+            </ul>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>
+            用印人
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <nz-input-group nzSearch  [nzSuffix]="suffixButton2">
+              <input class="selectInput" nz-input type='text' readonly="readonly"[(ngModel)]="signedPrinter" [ngModelOptions]="{standalone: true}"
+              placeholder="请选择用印人">
+              <input [hidden]="true" nz-input type='text' formControlName="printerId">
+            </nz-input-group>
+            
+            <ng-template #suffixButton2>
+                <button nz-button  (click)='userBtn(signedPrinter,2)'  nzType="primary" nzSearch>+内部员工</button>
+                <button nz-button (click)="showOuterPrintModal()" nzType="primary" nzSearch class='addOuter'>+外部人员</button>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <!-- <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>
+            审核人
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input type='text' readonly="readonly" (click)='userBtn(signedAuditor,3)' [(ngModel)]="signedAuditor" [ngModelOptions]="{standalone: true}"
+              placeholder="请选择审核人">
+            <input [hidden]="true" nz-input type='text' formControlName="auditorId">
+          </nz-form-control>
+        </nz-form-item> -->
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3">
+            抄送人
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <ul>
+              <!-- <li class="li-content"></li> -->
+              <li class="li-btn">
+                <span *ngFor="let item of sendPerson" class='copyItem'>{{item.name}}</span>
+                <button (click)="showModal()">+添加人员</button>
+              </li>
+            </ul>
+          </nz-form-control>
+        </nz-form-item> 
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3" nzRequired>有效期（天）</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input type='number' formControlName="day" placeholder="请填写有效期" oninput="if(value.length>2)value=value.slice(0,2)">
+            <nz-form-explain *ngIf="(validateForm.get('day').dirty || validateForm.get('day').touched) && validateForm.get('day').errors">
+              请填写有效期(只能为大于等于1的整天，且不能大于30天)
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3" nzRequired>合同起止日期</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <nz-range-picker nzFormat="yyyy-MM-dd" formControlName="quitTime" [nzDisabledDate]="disabledDate" (ngModelChange)="onChange($event)"
+              style="margin-right: 20px"></nz-range-picker>
+            <nz-form-explain *ngIf="(validateForm.get('quitTime').dirty || validateForm.get('quitTime').touched) && validateForm.get('quitTime').errors">
+              请选择合同起止日期
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>
+            合同类别 
+          </nz-form-label> 
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <nz-select nzAllowClear formControlName="typeId"  (ngModelChange)="contractTypeChange($event)" nzPlaceHolder="请选择合同类别">
+              <nz-option *ngFor="let option of carsystemlist" [nzLabel]="option.dictName" [nzValue]="option.guid">
+              </nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validateForm.get('typeId').dirty && validateForm.get('typeId').hasError('required')">请选择合同类别！</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item> 
+          <nz-form-label [nzSpan]="3" nzRequired>甲方盖章位置</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input type='text' formControlName="enterpriseKey"  [(ngModel)]="enterpriseKey" placeholder="请填写印章关键字，如“甲方(盖章)”">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3" nzRequired>乙方盖章位置</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input type='text' formControlName="userKey" [(ngModel)]="userKey" placeholder="请填写印章关键字，如“签字或盖章">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired [nzSpan]="3">
+            上传文件(格式为.pdf)
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzFileType='application/pdf' nzName="file" [(nzFileList)]="fileList[0]"
+              [nzShowButton]="fileList[0].length < 1" [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+              <i class="anticon anticon-plus"></i>
+              <div class="ant-upload-text">点击上传</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3">备注</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input formControlName="remark" placeholder="请填写备注" [maxLength]='50'>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-spin>
+  </nz-col>
+</nz-row>
+<nz-modal [(nzVisible)]="isVisibleManager" nzTitle="选择签订人" nzWidth="750" (nzOnCancel)="handleCancelSelectManager()" (nzOnOk)="handleOkSelectManager()">
+  <app-lalust-select-person-single (changeSelectPeople)="changeSelectManager($event)"></app-lalust-select-person-single>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisible" nzWidth="720" nzTitle="添加抄送人" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <app-lalust-select-person [excludeData]="[]" [disabledData]="[]" (changeSelectPeople)="changeSelectPoeple($event)"></app-lalust-select-person>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisibleAuditor" nzWidth="720" nzTitle="添加内部审核人员" (nzOnCancel)="handleCancelAuditor()" (nzOnOk)="handleOkAuditor()">
+  <!-- <app-lalust-select-person [excludeData]="[]" [disabledData]="[]" (changeSelectPeople)="changeSelectPoepleAuditor($event)"></app-lalust-select-person> -->
+  <app-lalust-select-person-single (changeSelectPeople)="changeSelectPoepleAuditor($event)"></app-lalust-select-person-single>
+</nz-modal>
+<!-- 添加外部审核人员 -->
+<nz-modal [(nzVisible)]="isVisibleOuter" nzTitle="添加外部审核人员" (nzOnCancel)="handleCancelOuter()" (nzOnOk)="handleOkOuter()">
+    <!-- <div class='infoBox'>
+      <p *ngIf="outerPerson.length > 0" >已选人员信息：</p>
+      <p *ngFor="let item of outerPerson" class='showPerson'>
+        <span  *ngIf="item.phone"  class='paddingBox'>手机号：{{item.phone}}</span>
+        <a href="javascript:;" (click)='removeOuterPerson(item.phone)' class='removeX'>X</a>
+      </p>
+    </div> -->
+   <!--  <nz-form-label>人员姓名</nz-form-label> 
+    <input nz-input type='text' placeholder="外部审核人员姓名" [(ngModel)]="outerPersonName"> -->
+    <nz-form-label>人员手机号</nz-form-label>
+    <input nz-input type='number' placeholder="外部审核人员手机号" [(ngModel)]="outerPersonPhone">
+</nz-modal>
+<!-- 添加外部签订人员 -->
+<nz-modal [(nzVisible)]="isVisibleOuterSign" nzTitle="添加外部签订人员" (nzOnCancel)="handleCancelOuterSign()" (nzOnOk)="handleOkOuterSign()">
+    <!-- <p>
+      <span *ngIf="selectedPersonSign.phone" >已选人员信息：</span>
+      <span  *ngIf="selectedPersonSign.phone" class='paddingBox'>姓名：{{selectedPersonSign.name}}</span>
+      <span  *ngIf="selectedPersonSign.phone"  class='paddingBox'>手机号：{{selectedPersonSign.phone}}</span>
+    </p>
+    <nz-form-label>人员姓名</nz-form-label>
+    <input nz-input type='text' placeholder="外部签订人员姓名" [(ngModel)]="outerPersonSignName"> -->
+   <!--  <p>
+      <span *ngIf="selectedPersonSign.phone" >已选人员信息：</span>
+      <span  *ngIf="selectedPersonSign.phone"  class='paddingBox'>手机号：{{selectedPersonSign.phone}}</span>
+    </p> -->
+    <nz-form-label>人员手机号</nz-form-label>
+    <input nz-input type='number' placeholder="外部签订人员手机号" [(ngModel)]="outerPersonSignPhone">
+</nz-modal>
+<!-- 添加外部用印人员 -->
+<nz-modal [(nzVisible)]="isVisibleOuterPrint" nzTitle="添加外部用印人员" (nzOnCancel)="handleCancelOuterPrint()" (nzOnOk)="handleOkOuterPrint()">
+   <!--  <p>
+      <span *ngIf="selectedPersonPrint.phone" >已选人员信息：</span>
+      <span  *ngIf="selectedPersonPrint.phone"  class='paddingBox'>手机号：{{selectedPersonPrint.phone}}</span>
+    </p> -->
+    <nz-form-label>人员手机号</nz-form-label>
+    <input nz-input type='number' placeholder="外部用印人员手机号" [(ngModel)]="outerPersonPrintPhone">
+</nz-modal>

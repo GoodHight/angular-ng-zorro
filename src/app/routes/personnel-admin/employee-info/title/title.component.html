@@ -1,0 +1,54 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+  <nz-card-tab>
+      <ng-template #tab>
+          <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+              <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                  <ng-template #nzTitle>
+                      <div (click)="to(i)">{{i.tab}}</div>
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template> 
+      <ng-template #title>
+          <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+          <span>员工信息管理</span>
+      </ng-template>
+      <ng-template #tabToolBarTemplate>
+          <button nz-button type="button" [disabled]="!form.valid" (click)="_submitForm()" nzType="primary">保存</button>
+          <button nz-button (click)="cancel()">返 回</button>
+      </ng-template>
+  </nz-card-tab>
+  <div nz-row style="position: relative;">
+      <div nz-col class="employee-update">
+          <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+              <div id="personal-information">
+                  <nz-form-item nz-row>
+                      <nz-form-label nz-col [nzSm]="4">
+                          职称名称
+                      </nz-form-label>
+                      <nz-form-control nz-col [nzSm]="16">
+                          <input nz-input formControlName="name" placeholder="输入职称名称">
+                      </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item nz-row>
+                      <nz-form-label nz-col [nzSm]="4">
+                          职称获取日期
+                      </nz-form-label>
+                      <nz-form-control nz-col [nzSm]="16">
+                          <nz-date-picker formControlName="titleTime" [nzFormat]="dateFormat"></nz-date-picker>
+                      </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4">
+                        职称备注
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="remark" placeholder="输入职称备注">
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+          </form>
+      </div>
+  </div>
+</nz-card>

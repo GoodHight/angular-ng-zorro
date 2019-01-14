@@ -1,0 +1,158 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+          <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+            <ng-template #nzTitle>
+              <div (click)="to(i)">{{i.tab}}</div>
+            </ng-template>
+          </nz-tab>
+        </nz-tabset>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>员工信息管理</span>
+      </ng-template>
+      <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="showModal('1')" nzType="primary">新增</button>
+        <button nz-button (click)="cancel()">返 回</button>
+      </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+      <div nz-col style="padding-top: 100px">
+        <div style="padding: 18px 24px">
+          <div nz-row *ngFor="let item of userEducations">
+            <div nz-col nzSpan="24" class='ed-box'>
+              <p class="userEducations">{{item.educationName}}
+              </p>
+              <div style="width: calc(50% - 200px);padding-left: 18px" class="educations">
+                <p class="userEducations-box">{{item.schoolName}}</p>
+                <p class="item-name">{{item.major}} |
+                  <a (click)="showModalss(item.graduationCertificate)" *ngIf="item.graduationCertificate !== ''">查看毕业证 | </a>
+                  <a *ngIf="item.diploma !== ''" (click)="showModalss(item.diploma)">查看学位证</a>
+                </p>
+              </div>
+              <div class="userEducations-time">
+                <div style="width: 50%;float: left">
+                    <p class="userEducations-box" style="font-size: 14px;color: rgba(0, 0, 0, 0.65)">入学日期：{{item.entryTime | dateTrans:'YYYY-MM-dd'}}</p>
+                    <p class="userEducations-box" style="font-size: 14px;color: rgba(0, 0, 0, 0.65)">毕业日期：{{item.graduateTime | dateTrans:'YYYY-MM-dd'}}</p>
+                </div>
+                <a (click)="delete(item.guid)">删除</a>
+                <a (click)="showModal(item.guid)">编辑</a>
+              </div>
+            </div>
+          </div>
+          <p *ngIf='userEducations.length === 0' style="text-align: center;padding: 50px">暂无数据</p>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+  <nz-modal nzWidth="800px" [(nzVisible)]="isVisibless" nzTitle="" [nzFooter]='null' nzClosable="false" (nzOnCancel)="Cancel()"
+    (nzOnOk)="Ok()">
+    <img (click)="handleOkss()" width="100%" height="400" src="{{ templateimgUrl }}" alt="">
+  </nz-modal>
+  <nz-modal nzWidth="800px" [(nzVisible)]="isVisible" [(nzTitle)]="titlename" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+      <div id="personal-information">
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            最高学历类型 
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-form-control>
+              <nz-radio-group formControlName="educationType">
+                <label nz-radio *ngFor="let option of selectData10" [nzValue]="option.guid">
+                  <span>{{ option.dictName }}</span>
+                </label>
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            学校名称
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="schoolName" placeholder="请填写学校名称">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            最高学历
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-select formControlName="education" nzPlaceHolder="请选择最高学历" nzAllowClear>
+              <nz-option *ngFor="let option of selectData11" [nzLabel]="option.dictName" [nzValue]="option.guid">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            入学日期 
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-date-picker formControlName="entryTime" [nzFormat]="dateFormat"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row> 
+          <nz-form-label nz-col [nzSm]="4">
+            毕业日期
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-date-picker formControlName="graduateTime" [nzFormat]="dateFormat"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            专业
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="major" placeholder="请填写专业">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            上传毕业证
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="2">
+            <nz-upload [nzAction]="uploaderUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+              [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+              <i class="anticon anticon-plus"></i>
+              <div class="ant-upload-text">点击上传</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="4">
+            上传学位证
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="2">
+            <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[1]" [nzShowButton]="fileList[1].length < 1"
+              [nzPreview]="handlePreview" (nzChange)="handleChange($event,1)">
+              <i class="anticon anticon-plus"></i>
+              <div class="ant-upload-text">点击上传</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </nz-modal>
+  <nz-modal [(nzVisible)]="sisVisible" nzTitle="删除该条记录" (nzOnCancel)="shandleCancel()" (nzOnOk)="shandleOk()">
+      <p>删除后不可恢复</p>
+    </nz-modal>
+  <!-- <nz-form-control nz-col [nzSm]="6">
+      <div>上传：学位证书图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+      </div>
+    </nz-form-control> -->

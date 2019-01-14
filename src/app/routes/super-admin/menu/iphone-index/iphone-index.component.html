@@ -1,0 +1,125 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="1" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div (click)="to(i.key)">{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>功能信息</span>
+  </ng-template>
+  <div nz-row>
+    <nz-layout class="layout">
+      <nz-layout>
+        <nz-sider [nzWidth]="200" style="background:#fff">
+          <ul nz-menu [nzMode]="'inline'" style="height:100%">
+            <ng-container *ngFor="let i of dataListArr let no = index">
+              <ng-container *ngIf="i.subMenuList.length > 0">
+                <li nz-submenu (click)="refreshData(i.guid,0 , no,0)">
+                  <span title>
+                    <i class="anticon anticon-user"></i>{{ i.menuName }}</span>
+                  <ul>
+                    <li *ngFor="let item of i.subMenuList let items = index" nz-menu-item (click)="$event.stopPropagation();refreshData(i.guid,1,no, items)">{{ item.menuName }}</li>
+                  </ul>
+                </li>
+              </ng-container>
+              <ng-container *ngIf="!(i.subMenuList.length > 0)">
+                <li nz-menu-item (click)="refreshData(i.guid,0 , no,0)">
+                  <span title>
+                    <i class="anticon anticon-user"></i>{{ i.menuName }}</span>
+                </li>
+              </ng-container>
+            </ng-container>
+
+          </ul>
+        </nz-sider>
+        <nz-layout style="padding:0 24px 24px">
+          <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+            <nz-table #editRowTable nzBordered [nzData]="dataList">
+              <thead>
+                <tr>
+                  <th>功能名</th>
+                  <th>路由</th>
+                  <th>icon</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of dataList">
+                  <td>
+                    <div class="editable-cell">
+                      <div class="editable-cell-text-wrapper">
+                        <ng-container *ngIf="!editCache[data.key].edit">
+                          {{data.menuName}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[data.key].edit">
+                          <input type="text" nz-input [(ngModel)]="editCache[data.key].menuName">
+                        </ng-container>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="!editCache[data.key].edit">
+                      {{data.menuActionId }}
+                    </ng-container>
+                    <ng-container *ngIf="editCache[data.key].edit">
+                      <input type="text" nz-input [(ngModel)]="editCache[data.key].menuActionId">
+                    </ng-container>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="!editCache[data.key].edit">
+                      {{data.menuCss}}
+                    </ng-container>
+                    <ng-container *ngIf="editCache[data.key].edit">
+                      <input type="text" nz-input [(ngModel)]="editCache[data.key].menuCss">
+                    </ng-container>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="!editCache[data.key].edit">
+                      {{data.menuState === '1' ? '开启': '关闭'}}
+                    </ng-container>
+                    <ng-container *ngIf="editCache[data.key].edit">
+                      <nz-radio-group [(ngModel)]="editCache[data.key].menuState">
+                        <label nz-radio nzValue='1'>
+                          <span>开启</span>
+                        </label>
+                        <label nz-radio nzValue='0'>
+                          <span>关闭</span>
+                        </label>
+                      </nz-radio-group>
+                    </ng-container>
+                  </td>
+
+                  <td>
+                    <a (click)="finishEdit(data.key)" *ngIf="editCache[data.key].edit">确定</a>
+                    <a routerLink="/admin/menu/add/{{data.guid}}/1" *ngIf="!editCache[data.key].edit">编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="deleteMenu(data.key)">删除</a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </nz-content>
+        </nz-layout>
+      </nz-layout>
+    </nz-layout>
+  </div>
+  <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除功能"
+    (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+    <p>您正在删除功能 请注意！！</p>
+    <p>确定删除嘛？</p>
+    <p>确定就点下面确定按钮！！！</p>
+  </nz-modal>
+  <ng-template #tabToolBarTemplate>
+    <button nz-button nzType="primary" [routerLink]="['/admin/menu/add/0/1']">添 加</button>
+  </ng-template>
+
+</nz-card>

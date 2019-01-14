@@ -1,0 +1,100 @@
+<div nz-row class="login-box">
+    <!-- <div class="login-bg-box">
+            <div nz-col  nzSpan="12" class="text left"><i class="icon-left"></i>不是企业，请进行<a href="{{ personal_reg_url }}">个人注册</a></div>
+            <div nz-col  nzSpan="12" class="text">已经有账号，返回<a routerLink="/passport/login">登录</a><i class="icon-right"></i></div>
+        </div> -->
+    <div nz-col nzSpan="8" nzOffset="8">
+        <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+            <div class="clearfix personal-register" style="height:660px!important;">
+                <div class="h2">企业注册</div>
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-input-group nzPrefixIcon="">
+                            <input type="text" nz-input formControlName="userName" placeholder="输入企业名称">
+                        </nz-input-group>
+                        <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">请输入企业名称
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-input-group nzPrefixIcon="">
+                            <!-- <input type="text" nz-input (blur)="getCaptchas()" formControlName="email" placeholder="输入企业邮箱"> -->
+                            <input type="text" nz-input formControlName="email" placeholder="输入企业邮箱">
+                        </nz-input-group>
+                        <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors">请输入正确的邮箱
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control nzValidateStatus="{{messageState}}">
+                        <nz-input-group nzPrefixIcon="" style="display: inline-block;width: 256px;vertical-align: middle;">
+                            <input type="text" formControlName="captcha" nz-input placeholder="输入右侧图形验证码" [(ngModel)]="captcha"
+                                style="width: 256px;vertical-align: middle;" maxlength="4">
+                        </nz-input-group>
+                        <img src="{{ url }}" (click)="getCaptchaCode()" />
+
+                    </nz-form-control>
+                    <!--<div nz-form-explain-->
+                    <!--*ngIf="getFormControl('captcha').dirty&&getFormControl('captcha').hasError('captcha')">{{-->
+                    <!--message }}-->
+                    <!--</div>--> 
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control nzHasFeedback>
+                        <nz-input-group nzPrefixIcon="" style="display: inline-block;width: 256px;vertical-align: middle;">
+                            <input type="text" formControlName="smsCode" nz-input placeholder="输入6位验证码" style="width: 256px;vertical-align: middle;"
+                                length="4">
+                        </nz-input-group>
+                        <button type="button" nz-button nzSize="large" (click)="getCaptchas()" [disabled]="disabled" class="ant-btn__block">{{ count ? count + 's' : '获取验证码' }}
+                        </button>
+                    </nz-form-control>
+                    <div nz-form-explain *ngIf="getFormControl('smsCode').dirty&&getFormControl('smsCode').hasError('smsCode')">{{ message }}
+                    </div>
+                </nz-form-item>
+                <nz-form-item style="margin-bottom: 4px;">
+                    <nz-form-control>
+                        <nz-input-group nzPrefixIcon="">
+                            <input type="password" nz-input formControlName="password" placeholder="输入登录密码" minlength="6" maxlength="16">
+                        </nz-input-group>
+                        <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">
+                            密码须是字母与数字的组合（6~16位）
+                            <!-- 大小写字符、数字以及特殊符号组成，长度为6-16位。 -->
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item> 
+                <nz-form-item style="margin-bottom: 18px;">
+                    <nz-form-control>
+                        <div class="tip">
+                            <label nz-checkbox nzRequired class="remember-password" formControlName="agree">
+                                <span style='color: #a8a9ac'>同意
+                                    
+                                </span>
+                            </label>
+                            <a routerLink="/passport/protocol" target style='color: #21564a'>《才链云用户协议》</a>
+                        </div>
+                        <!--<div class="tip">已经有账户？直接 <a [routerLink]="['/passport/login']">登录</a></div>-->
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item style="margin-bottom: 4px;">
+                    <nz-form-control>
+                        <button nz-button class="login-form-button" [nzType]="'primary'">注册</button>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control style="width: 100%;margin-bottom:54px">
+                        <a class="login-form-forgot" routerLink="/passport/login" class="login-form-forgot">
+                            <span class="border_login">返回登录</span>
+                        </a>
+                        <span style="float: right">
+                            <a class="remember-password" href="{{ personal_reg_url }}">
+                                <span class="border_login">个人注册</span>
+                            </a>
+                        </span>
+                    </nz-form-control>
+                    <p style="text-align: center;color: #a8a9ac;margin-top: 40px">© All Rights Reserved.渝ICP备18002151号</p>
+                </nz-form-item>
+            </div>
+        </form>
+    </div>
+</div>

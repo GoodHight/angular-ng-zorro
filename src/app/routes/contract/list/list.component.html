@@ -1,0 +1,137 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[time,selectAction,serachActive,editAction]">
+        <ng-template #time>
+          <span>合同有效期筛选：</span>
+          <nz-range-picker nzFormat="yyyy-MM-dd" ngModel (ngModelChange)="onChange($event)" style="margin-right: 20px"></nz-range-picker>
+        </ng-template>
+        <ng-template #selectAction>
+          <span>合同类别：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.typeId" (ngModelChange)="typeChange($event)">
+            <nz-option *ngFor="let option of carsystemlist" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+          </nz-select>
+          <span style="margin-left: 18px">状态：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.status" (ngModelChange)="employeeStateChange($event)">
+            <nz-option *ngFor="let option of employeeStateList" [nzLabel]="option.str" [nzValue]="option.status"></nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #serachActive>
+          <div>
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入签订人" [(ngModel)]="q.searchStr">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="getData()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div> 
+          <!-- <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div> -->
+        </ng-template>
+        <ng-template #editAction>
+          <button nz-button routerLink="/contract/list/add" nzType="primary">
+            新增
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>合同签订</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="reportList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+    [nzLoading]="loading" (nzPageIndexChange)="pageChange($event, 1)" nzNoResult="没有数据">
+    <thead>
+      <tr>
+        <!-- <th>
+          序号
+        </th> -->
+        <th>合同编号 </th>
+        <th>签订人 </th>
+        <th>签订截止日期</th>
+        <th>合同类别</th>
+        <th>合同有效期</th>
+        <th>合同状态</th>
+        <th>证据链</th>
+        <th>HR</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of ajaxTable.data let no = index">
+        <!-- <td>{{ code + no }}</td> -->
+        <td>{{i.contractNo}}</td>
+        <td>
+          <span *ngIf='i.signUserName !== ""'>
+            <span>{{i.signUserName}}</span>
+          </span>
+          <span *ngIf='i.signUserName === ""'>
+            <span>{{i.signUserPhone}}</span>
+          </span>
+        </td>
+        <td>{{i.signDeadLine | dateTrans:'YYYY年MM月dd日'}}</td>
+        <td>{{i.typeName}}</td>
+        <td>{{i.signStartDate | dateTrans:'YYYY年MM月dd日'}} - {{i.signEndDate | dateTrans:'YYYY年MM月dd日'}}</td>
+        <td *ngIf='i.contractStatus === "1"'>待签</td>
+        <td *ngIf='i.contractStatus === "2"'>已签待审</td>
+        <td *ngIf='i.contractStatus === "5"'>审核中</td>
+        <td *ngIf='i.contractStatus === "6"'>审核通过</td>
+        <td *ngIf='i.contractStatus === "7"'>完成</td>
+        <td *ngIf='i.contractStatus === "3"'>
+          <nz-popover [nzTitle]="'拒签理由'">
+            <a nz-popover>拒签</a>
+            <ng-template #nzTemplate>
+              <div>
+                <p>{{i.refuseReason}}</p>
+              </div>
+            </ng-template>
+          </nz-popover>
+        </td>
+        <td *ngIf='i.contractStatus === "4"'>
+          <nz-popover [nzTitle]="'不通过理由'">
+            <a nz-popover>审核不通过</a>
+            <ng-template #nzTemplate>
+              <div>
+                <p>{{i.refuseReason}}</p>
+              </div>
+            </ng-template>
+          </nz-popover>
+        </td>
+        <td>
+          <a *ngIf='i.contractStatus === "7"' target="target" href='{{i.eviChainUrl}}'>证据链</a>
+        </td>
+        <td>{{i.hrName}}</td>
+        <td>
+          <span *ngIf='i.isHr === 1'>
+            <a *ngIf='i.contractStatus=== "3" || i.contractStatus=== "4"' (click)="activation(i.contractNo)">重审</a>
+            <nz-divider *ngIf='i.contractStatus=== "3" || i.contractStatus=== "4"' nzType="vertical"></nz-divider>
+            <a *ngIf='i.contractStatus=== "3" || i.contractStatus=== "4"' (click)="disuse(i.contractNo)">废弃</a>
+            <nz-divider *ngIf='i.contractStatus=== "3" || i.contractStatus=== "4"' nzType="vertical"></nz-divider>
+          </span>
+          <a *ngIf='i.contractStatus !== "7"' target="target" href='{{i.contractUrl}}'>{{download}}</a>
+          <a *ngIf='i.contractStatus === "7"' target="target" href='{{i.contractUrl}}'>下载</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="details(i.contractNo)">进度</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a *ngIf='i.isHr === 1 && i.contractStatus !== "7"' (click)="delet(i.contractNo)">删除</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>
+<!-- <nz-modal [(nzVisible)]="isVisible" nzTitle="删除该条记录" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <p>删除后不可恢复</p>
+</nz-modal> -->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="是否同意" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-radio-group [(ngModel)]="signState">
+    <label nz-radio [nzValue]="i.guid" *ngFor="let i of signStateList">{{i.name}}</label>
+  </nz-radio-group>
+</nz-modal>

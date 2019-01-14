@@ -1,0 +1,141 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>教育信息</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>教育信息</span>
+    </ng-template>
+    <div id="education-information">
+        <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+            <nz-form-item nz-row>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>学校名称</nz-form-label>
+                <nz-form-control [nzSm]="16" [nzXs]="24">
+                    <input nz-input type="text" formControlName="schoolName">
+                    <nz-form-explain
+                            *ngIf="validateForm.get('schoolName').dirty && validateForm.get('schoolName').errors">
+                        <ng-container *ngIf="validateForm.get('schoolName').hasError('required')">
+                            请输入学校名称
+                        </ng-container>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    学历类型
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-radio-group formControlName="educationType">
+                        <label nz-radio *ngFor="let option of selectData10" [nzValue]="option.guid">
+                            <span>{{ option.dictName }}</span>
+                        </label>
+                    </nz-radio-group>
+                    <nz-form-explain
+                            *ngIf="validateForm.get('educationType').dirty && validateForm.get('educationType').errors">
+                        请选择学历
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    学历
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-select formControlName="education" nzPlaceHolder="选择最高学历" nzAllowClear>
+                        <nz-option *ngFor="let option of selectData11" [nzLabel]="option.dictName"
+                                   [nzValue]="option.guid">
+                        </nz-option>
+                    </nz-select>
+                    <nz-form-explain
+                            *ngIf="validateForm.get('education').dirty && validateForm.get('education').errors">请选择学历
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    毕业日期
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-date-picker formControlName="graduateTime" [(ngModel)]="graduateTime"
+                                    [nzFormat]="dateFormat"></nz-date-picker>
+                    <nz-form-explain
+                            *ngIf="validateForm.get('graduateTime').dirty && validateForm.get('graduateTime').errors">
+                        请选择毕业时间
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    专业
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <input nz-input formControlName="major" placeholder="请输入专业">
+                </nz-form-control>
+                <nz-form-explain *ngIf="validateForm.get('major').dirty && validateForm.get('major').errors">请输入专业
+                </nz-form-explain>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    上传学历证书
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload
+                            [nzAction]="uploaderUrl"
+                            nzListType="picture-card"
+                            nzName="file"
+                            [(nzFileList)]="fileList[0]"
+                            [nzShowButton]="fileList[0].length < 1"
+                            [nzPreview]="handlePreview"
+                            (nzChange)="handleChange($event)"
+                    >
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                              (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    上传毕业证书
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload
+                            [nzAction]="uploaderGradUrl"
+                            nzListType="picture-card"
+                            nzName="file"
+                            [(nzFileList)]="fileList[1]"
+                            [nzShowButton]="fileList[1].length < 1"
+                            [nzPreview]="handlePreview"
+                            (nzChange)="handleChange($event)"
+                    >
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                              (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [disabled]="!validateForm.valid" nzType="primary" (click)="submitForm()">保存</button>
+</ng-template>

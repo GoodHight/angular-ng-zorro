@@ -1,0 +1,27 @@
+.state{
+    width: 4px;
+    height: 4px;
+    display: inline-block;
+    background: red;
+    margin-right:5px;
+    border-radius: 50%;
+}
+.noread{
+    color:#1890ff;
+    font-weight: 500;
+}
+.maginauto{
+    text-align: center;   
+}
+.title{
+    font-size: 24px;
+}
+.btn{
+    position: absolute;
+    right: 0;
+}
+.content{
+    width: 40%;
+    text-indent: 1%;
+    margin: 0 auto;
+}

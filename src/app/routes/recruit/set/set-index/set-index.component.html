@@ -1,0 +1,74 @@
+<nz-table #basicTable [nzData]="dataList" nzNoResult="没有数据">
+    <thead>
+    <tr>
+        <th>
+            <span>渠道</span>
+        </th>
+        <th>
+            <span>账号</span>
+        </th>
+        <th>
+            <span>绑定时间</span>
+        </th>
+        <th>
+            <span>账号状态</span>
+        </th>
+        <th>
+            <span>绑定人</span>
+        </th>
+        <th>
+            <span>操作</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <tr *ngFor="let i of dataList let no = index">
+        <td>{{i.channelName}}</td>
+        <td>{{i.account}}</td>
+        <td>{{ i.bindTime }}</td>
+        <td>{{i.accountState === 1 ? '已绑定':'未绑定'}}</td>
+        <td>{{i.bindUserName}}</td>
+        <td>
+            <a (click)="$event.stopPropagation();handle(0,i.guid)">{{ i.accountState === 1 ? '停用':'启用' }}</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="$event.stopPropagation();handle(1,i.guid)">删除</a>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisibleMiddle" nzTitle="绑定账号"
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+    <form nz-row [nzGutter]="16" nz-form [formGroup]="form" class="login-form">
+        <nz-form-item nz-row>
+            <nz-form-label nzRequired nz-col [nzSm]="6">
+                招聘渠道
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12">
+                <nz-select nzAllowClear nzPlaceHolder="请选择渠道" formControlName="channelId"  [(ngModel)]="addDataList.channelId" (ngModelChange)="getQudaoName()">
+                    <nz-option
+                            *ngFor="let option of positionList[16]['childrenDictionaries']"
+                            [nzLabel]="option.dictName"
+                            [nzValue]="option.guid"
+                    >
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nzRequired nz-col [nzSm]="6">
+                账号
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12">
+                <input nz-input formControlName="account" [(ngModel)]="addDataList.account" placeholder="请输入账号">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nzRequired nz-col [nzSm]="6">
+                密码
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12">
+                <input nz-input type="password" formControlName="passWord" [(ngModel)]="addDataList.passWord" placeholder="请输入密码">
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>

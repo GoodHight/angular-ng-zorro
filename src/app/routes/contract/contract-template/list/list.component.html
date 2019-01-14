@@ -1,0 +1,75 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+      <ng-template #tab>
+          <ng-template #itemContentTemplate></ng-template>
+          <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,editAction]">
+              <ng-template #serachActive>
+                  <div *ngIf="showSearch === 1">
+                      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                          <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchStr" (keydown)="enterSearch($event)">
+                      </nz-input-group>
+                      <ng-template #suffixIconButton>
+                          <button (click)="pageChange(1)" nz-button nzType="primary" nzSearch>
+                              <i class="anticon anticon-search"></i>
+                          </button>
+                      </ng-template>
+                  </div>
+                  <div *ngIf="showSearch === 0" (click)="showSearch = 1;">
+                      <span>
+                          <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                  </div>
+              </ng-template>
+              <ng-template #editAction>
+                  <button nz-button nzType="primary" (click)="templateAdd()">
+                      新增
+                  </button>
+              </ng-template>
+          </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+          <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+          <span>合同模板</span>
+      </ng-template>
+  </nz-card-tab>
+  <nz-table #ajaxTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzPageIndex]="pageNum"
+      [nzPageSize]="pageSize" (nzPageIndexChange)="pageChange($event)" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+      (nzPageSizeChange)="refreshStatus()" [nzLoading]="loading" nzNoResult="没有数据">
+      <thead>
+          <tr>
+              <th>
+                  <span>名称</span>
+              </th>
+              <th>
+                  <span>编号</span>
+              </th>
+              <th>
+                  <span>版本</span>
+              </th>
+              <th>
+                  <span>时间</span>
+              </th>
+              <th>
+                  <span>备注</span>
+              </th>
+              <th>
+                  <span>操作</span>
+              </th> 
+          </tr>
+      </thead>
+      <tbody nz-tbody>
+          <tr *ngFor="let item of ajaxTable.data; let no = index">
+              <td>{{item.name}}</td>
+              <td>{{item.contractNo }}</td>
+              <td>{{item.versions}}</td>
+              <td>{{item.createTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+              <td>{{item.remark}}</td>
+              <td>
+                  <a target="target" href='{{item.url}}' >下载</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="delete(item.guid)">删除</a>
+              </td>
+          </tr>
+      </tbody>
+  </nz-table>
+</nz-card>

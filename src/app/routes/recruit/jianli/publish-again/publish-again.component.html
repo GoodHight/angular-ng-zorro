@@ -1,0 +1,113 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[saveAction, cancelAction]">
+                <ng-template #saveAction>
+                    <button nz-button nzType="primary" (click)="_submitForm()">
+                        确定
+                    </button>
+                </ng-template>
+                <ng-template #cancelAction>
+                    <button nz-button nzType="default" (click)="cancel()">
+                        取消
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleValue>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>简历推荐</span>
+        </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+    <div nz-row [nzGutter]="12" class="resume-recommend-box">
+        <nz-col [nzMd]="24" class="employee-add">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div nz-row class="resume-recommend-title">
+                    <div nz-col [nzSm]="2">
+                    </div>
+                    <div nz-col [nzSm]="16">
+                        <div class="title"><span>{{detailData.name}} - {{detailData.phone}} - {{detailData.email}}</span></div>
+                    </div>
+                </div>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        职位
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="jobPostion" [(ngModel)]="dataList.jobPostion" placeholder="请输入职位">
+                            <div nz-form-explain *ngIf="(form.get('jobPostion').dirty ||form.get('jobPostion').touched) && form.get('jobPostion').errors">
+                                请填写职位
+                            </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        部门
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="departmentId"  nzPlaceHolder="选择部门" nzAllowClear>
+                            <nz-option *ngFor="let item of managerList;let i = index;" [nzLabel]="item.departmentName" [nzValue]="item.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        添加面试官
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <span class="interview"  nz-button nzType="default" (click)="setEmployeeshowModal()" ><span *ngIf="interviewerFlah === 1">+ 添加面试官</span>
+                            <span *ngIf="interviewerFlah === 2">{{selectPeopleNameCopy}}</span></span>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        推荐截止日期
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-date-picker formControlName="deadline"  [nzDisabledDate]="disabledDate"></nz-date-picker>
+                        <div nz-form-explain *ngIf="(form.get('deadline').dirty || form.get('deadline').touched) && form.get('deadline').errors">
+                            请选入职日期
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        备注
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <textarea nz-input [(ngModel)]="dataList.remark" formControlName="remark" placeholder="输入备注信息">
+                        </textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-col>
+    </div>
+    <!-- 选择面试官弹出 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="setEmployeeState" nzTitle="选择面试官"
+    (nzOnCancel)="setEmployeesCancel()" (nzOnOk)="setEmployeesOk()">
+    <div nz-row>
+        已选面试官：{{selectPeopleName }}
+    </div>
+    <div nz-row>
+        <div nz-col nzSpan="12" style="border-right:1px #ddd solid;min-height:100px">
+            <nz-tree [(ngModel)]="employeeList" [nzCheckable]="false" [nzMultiple]="false" (nzClick)="mouseAction('click',$event)" (nzDblClick)="mouseAction('dblclick', $event)"
+                (nzCheckBoxChange)="mouseAction('checkout', $event)">
+            </nz-tree>
+        </div>
+        <div nz-col nzSpan="12" style="padding-left:20px;min-height:100px">
+            <!-- <span *ngFor="let item of peopleData;let no = index">
+                <label *ngIf="item.boundStatus !== '1'" nz-radio [nzValue]="item.guid" (ngModelChange)="getChecked(no)" nzDisabled [(ngModel)]="item.checked">{{ item.name }}(该用户未绑定公司)</label>
+                <br>
+            </span> -->
+            <nz-radio-group [(ngModel)]="selectPeopleData" (ngModelChange)="getChecked()">
+                <label nz-radio *ngFor="let item of peopleData;let no = index" [nzValue]="item.guid">{{ item.name }}</label>
+            </nz-radio-group>
+        </div>
+    </div>
+</nz-modal>
+</nz-card>

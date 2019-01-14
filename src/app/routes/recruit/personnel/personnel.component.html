@@ -1,0 +1,108 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive, selectAction]">
+
+                <ng-template #serachActive>
+                    <div *ngIf="serachType === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="q.searchStr" (keydown)="enterSearch($event)">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="serachAction()" nz-button nzType="primary" nzSearch>
+                                <i class="anticon anticon-search"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="serachType === 0" (click)="showSerach()">
+                        <span>
+                            <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                    </div>
+
+                </ng-template>
+                <ng-template #selectAction>
+                    <span [routerLink]="['/recruit/notification']" class="shezhimagin"><i class="icon iconfont icon-shezhi"></i>设置</span>
+                    <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="personState" (ngModelChange)="employeeStateChange($event)">
+                        <nz-option *ngFor="let option of optionList" [nzLabel]="option.dicName" [nzValue]="option.guid"></nz-option>
+                    </nz-select>
+                </ng-template>
+               <!--  <ng-template #editAction>
+                    <button nz-button nzType="primary" [routerLink]="['/recruit/resume/add']">
+                        上传简历
+                    </button>
+                </ng-template> -->
+                <!-- <ng-template #moreAction>
+                            <button nz-button nzType="primary">
+                                3月报表
+                            </button>
+                        </ng-template> -->
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>人才库</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #basicTable [nzData]="dataList" nzNoResult="没有数据">
+        <thead>
+            <tr>
+
+                <th>
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>手机号</span>
+                </th>
+                <th>
+                    <span>学历</span>
+                </th>
+                <th>
+                    <span>工作年限</span>
+                </th>
+                <th>
+                    <span>毕业院校</span>
+                </th>
+                <th>
+                    <span>上家公司</span>
+                </th>
+                <th>
+                    <span>应聘职位</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let i of dataList let no = index" (click)="details(i.guid)" (click)="details(i.guid)">
+                <td>{{i.name}}</td>
+                <td>{{i.phone}}</td>
+                <td>{{ i.education }}</td>
+                <td>{{i.workYear}}</td>
+                <td>{{i.graduatedFrom}}</td>
+                <td>
+                    {{ i.lastCompany }}
+                </td>
+                <td>{{i.applyPosition}}</td>
+                <td>
+                    <a [routerLink]="['/recruit/personnel/details/',i.resumeId]" (click)="$event.stopPropagation()">查看简历</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a [routerLink]="['/recruit/personnel/recommend/',i.resumeId]" (click)="$event.stopPropagation()">推荐简历</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a [routerLink]="['/recruit/personnel/notice/',i.resumeId, 'new']" (click)="$event.stopPropagation()">面试通知</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a [routerLink]="['/recruit/personnel/employ/', i.resumeId, '']" (click)="$event.stopPropagation()">录用审批</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();showModalMiddle(i.guid)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>  
+    <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisibleMiddle" nzTitle="删除" (nzOnCancel)="handleCancelMiddle()"
+        (nzOnOk)="handleOkMiddle()">
+        <p>确定要删除吗？</p>
+    </nz-modal>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+</nz-card>

@@ -1,0 +1,134 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="itemContentTemplate">
+                <nz-tab [nzTitle]="'上传简历'">
+                    <ng-template #nzTitle>
+                        <div routerLinkActive="active">上传简历</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+          <ng-template #titleValue>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>新增简历</span>
+    </ng-template>
+    <ng-template #itemContentTemplate>
+        <button nz-button type="button" nzType="default" (click)="cancel()">取消</button>
+        <button nz-button nzType="primary" [disabled]="!form.valid" [nzLoading]="isLoadingOne" (click)="_submitForm()">确定</button>
+    </ng-template>
+    </nz-card-tab>
+    <nz-row [nzGutter]="16">
+        <nz-col [nzMd]="24" class="employee-add">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        姓名
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="name" [(ngModel)]="dataList.name" placeholder="请输入人员姓名">
+                        <div nz-form-explain *ngIf="(form.get('name').dirty ||form.get('name').touched) && form.get('name').errors">
+                            请输入人员姓名
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        手机号码
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="tel" [(ngModel)]="dataList.phone" placeholder="请输入手机号码" maxlength="11">
+                        <div nz-form-explain *ngIf="(form.get('tel').dirty || form.get('tel').touched) && form.get('tel').errors">
+                            请输入正确手机号码
+                        </div>
+                        
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        邮箱
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="email" [(ngModel)]="dataList.email" placeholder="请输入人员邮箱信息">
+                        <div nz-form-explain *ngIf="(form.get('email').dirty || form.get('email').touched) && form.get('email').errors">
+                            请输入正确的邮箱信息
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        应聘职位
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="applyPosition" [(ngModel)]="dataList.applyPosition" placeholder="请输入应聘职位">
+                        <div nz-form-explain *ngIf="(form.get('applyPosition').dirty || form.get('applyPosition').touched) && form.get('applyPosition').errors">
+                            请输入应聘职位
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        学历
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="education" [(ngModel)]="dataList.education" placeholder="请填写学历">
+                        <div nz-form-explain *ngIf="(form.get('education').dirty || form.get('education').touched) && form.get('education').errors">
+                            请填写学历
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        毕业院校
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="graduatedFrom" [(ngModel)]="dataList.graduatedFrom" placeholder="请输入毕业院校">
+                        <div nz-form-explain *ngIf="(form.get('graduatedFrom').dirty || form.get('graduatedFrom').touched) && form.get('graduatedFrom').errors">
+                            请输入毕业院校
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        工作年限
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="workYear" [(ngModel)]="dataList.workYear" placeholder="请输入工作年限" maxlength="6">
+                        <div nz-form-explain *ngIf="(form.get('workYear').dirty || form.get('workYear').touched) && form.get('workYear').errors">
+                            工作年限请输入数字
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        上家公司名
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="lastCompany" [(ngModel)]="dataList.lastCompany" placeholder="请输入上家公司名">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        附件
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-upload
+                            [nzAction]="uploaderUrl"
+                            [(nzFileList)]="fileList"
+                            [nzShowButton]="fileList.length < 1"
+                            [nzBeforeUpload]="beforeUpload"
+                            (nzChange)="handleChange($event)">
+                            <span nz-butto class="title_divider" >
+                              <i class="anticon anticon-upload"></i><span> 点击上传</span>
+                            </span>
+                        </nz-upload>
+                    </nz-form-control>
+                </nz-form-item>
+                <!--<file-template #fileTemplate [bizType]="'resume'"  [bizID]="guid" ></file-template>-->
+            </form>
+        </nz-col>
+    </nz-row>
+  
+</nz-card>

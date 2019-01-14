@@ -1,0 +1,76 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle0">
+                    <ng-template #nzTitle0>
+                        <div>我的班级</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <ng-template #itemContentTemplate></ng-template>
+            <ng-template #tabToolBarTemplate>
+                <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[operationAction]">
+                    <ng-template #operationAction>
+                        <button nz-button nzType="primary" (click)="addClass()">
+                                        加入班级
+                                    </button>
+                    </ng-template>
+                </nz-list-item>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>我的培训</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>培训机构</span>
+                </th>
+                <th>
+                    <span>班级名称</span>
+                </th>
+                <th>
+                    <span>专业名称</span>
+                </th>
+                <th>
+                    <span>培训有效期</span>
+                </th>
+                <th>
+                    <span>导师</span>
+                </th>
+                <th>
+                    <span>加入时间</span>
+                </th>
+                <th>
+                    <span>状态</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index">
+                <td>{{ no + 1 + (pageIndex - 1) * pageSize }}</td>
+                <td>{{item.enterpriseName}}</td>
+                <td>{{item.className}}</td>
+                <td>{{item.major}}</td>
+                <td>{{item.startTime | dateTrans:'YYYY年MM月dd日 HH:mm'}} -- {{item.endTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td>{{item.tutorName}}</td>
+                <td>{{item.applyJoinTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td [ngClass]="{'state-issue': item.applyJoinStatus === 1}">{{states[item.applyJoinStatus]}}</td>
+                <td>
+                    <a *ngIf="item.applyJoinStatus === 0" (click)="$event.stopPropagation();deleteClass(item)">删除班级</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

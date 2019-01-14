@@ -1,0 +1,210 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset>
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>个人资料</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>个人资料</span>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section *ngIf="personInfo">
+            <div class="extra">
+                <div class="title">
+                    <span class="text">个人头像</span>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col nzOffset="2" [nzSpan]="10">
+                        <file-template #fileTemplate2 [bizType]="'avatar'" [bizID]="personInfo.guid" [showFileAttachmentURI]="true"></file-template>
+                    </div>
+                </div>
+            </div>
+            <div class="extra">
+                <div class="title">
+                    <span class="text">基础信息</span>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">姓名</div>
+                        <div nz-col [nzSpan]="6">{{personInfo.realName}}</div>
+                        <div nz-col [nzSpan]="3">
+                            <span class="al-auth" *ngIf="isAuthentication !== 'LNULL'">
+                                已实名认证
+                            </span>
+                            <span class="al-auth" *ngIf="isAuthentication === 'L1'">
+                                已高级认证
+                            </span>
+                            <span class="no-auth" *ngIf="isAuthentication === 'LNULL' || isAuthentication === 'L0'">
+                                <a [routerLink]="['/usercenter/personInfo/authentication']">
+                                    未{{isAuthentication === 'LNULL' ? '实名' : '高级'}}认证，马上去认证
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">身份证号</div>
+                        <div nz-col [nzSpan]="6">{{personInfo.identityCardNumber | hiddenNumber:2}}</div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">绑定手机号</div>
+                        <div nz-col [nzSpan]="6">{{personInfo.userPhone | hiddenNumber:2}}</div>
+                        <div nz-col [nzSpan]="3">
+                            <span *ngIf="personInfo.userPhone">已设置</span>
+                            <!-- <span *ngIf="!personInfo.userPhone" class="no-set">未设置</span> -->
+                        </div>
+                        <div nz-col [nzSpan]="3"><i class="anticon anticon-edit" routerLink="/usercenter/personInfo/changeMobile"></i></div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">登录密码</div>
+                        <div nz-col [nzSpan]="6">******</div>
+                        <div nz-col [nzSpan]="3">
+                            <span>已设置</span>
+                            <span class="no-set">未设置</span>
+                        </div>
+                        <div nz-col [nzSpan]="3"><i class="anticon anticon-edit" routerLink="/usercenter/personInfo/changePassword"></i></div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">安全密码</div>
+                        <div nz-col [nzSpan]="6">{{personInfo.securityPassword}}</div>
+                        <div nz-col [nzSpan]="3">已认证</div>
+                        <div nz-col [nzSpan]="3"><i class="anticon anticon-edit" routerLink="/usercenter/personInfo/changeSecurity"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="extra">
+                <div class="title">
+                    <span class="text">教育信息</span>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">学校</div>
+                        <div nz-col [nzSpan]="6">西南大学</div>
+                        <div nz-col [nzSpan]="3">已设置</div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('school')"></i>
+                        </div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">专业</div>
+                        <div nz-col [nzSpan]="6">欧阳娜娜</div>
+                        <div nz-col [nzSpan]="3">已设置</div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('major')"></i>
+                        </div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">学历</div>
+                        <div nz-col [nzSpan]="6">欧阳娜娜</div>
+                        <div nz-col [nzSpan]="3">已设置</div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('education')"></i>
+                        </div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">毕业证</div>
+                        <div nz-col [nzSpan]="6"></div>
+                        <div nz-col [nzSpan]="3">
+                            <span>已设置</span>
+                            <span class="no-upload">未上传</span>
+                        </div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('biye')"></i>
+                        </div>
+                    </div>
+                    <div nz-row class="list-item">
+                        <div nz-col [nzSpan]="3">学位证</div>
+                        <div nz-col [nzSpan]="6"></div>
+                        <div nz-col [nzSpan]="3">
+                            <span>已设置</span>
+                            <span class="no-upload">未上传</span>
+                        </div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('xuewei')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="extra">
+                <div class="title">
+                    <span class="text">个性签名</span>
+                </div>
+                <div nz-row class="nb-md">
+                    <div nz-row>
+                        <div nz-col [nzOffset]="1" [nzSpan]="10">
+                            这是一个个性签名的占位，nz-input 可以使用所有的W3C标准下的所有 使用方式 和 Angular对 inp ut 的全部额外功能支持。nz-input 可以使用所有的W3C标准下的所有 使用方式 和 Angular对 input 的全部额外功能支持。
+                        </div>
+                        <div nz-col [nzSpan]="3">
+                            <i class="anticon anticon-edit" (click)="editModal('signature')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</nz-card>
+
+<ng-template #editContent>
+    <form nz-form [formGroup]="validataForm">
+        <div *ngIf="formShowKey === 'school'">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">
+                    学校
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input formControlName="school">
+                    <nz-form-explain *ngIf="validataForm.get('school').dirty && validataForm.get('school').hasError('required')">
+                        请输入您的学校！
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div *ngIf="formShowKey === 'major'">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">
+                    专业
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input formControlName="major">
+                    <nz-form-explain *ngIf="validataForm.get('major').dirty && validataForm.get('major').hasError('required')">
+                        请输入您的专业！
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div *ngIf="formShowKey === 'education'">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">
+                    学历
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input formControlName="education">
+                    <nz-form-explain *ngIf="validataForm.get('education').dirty && validataForm.get('education').hasError('required')">
+                        请输入您的学历！
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div *ngIf="formShowKey === 'signature'">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">
+                    学历
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <textarea row="4" nz-input formControlName="signature"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </form>
+</ng-template>
+<ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+    <button nz-button [disabled]="!validataForm.valid" nzType="primary" (click)="handleOk()" [nzLoading]="isOkLoading">确认</button>
+</ng-template>

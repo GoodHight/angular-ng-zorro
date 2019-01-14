@@ -1,0 +1,113 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div (click)="to(i)">{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #title>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>离职管理</span>
+    </ng-template>
+
+    <ng-template #tabToolBarTemplate>
+      <div>
+        <span>离职类型：</span>
+        <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="dimissionType" (ngModelChange)="employeeStateChange($event)">
+          <nz-option *ngFor="let option of turnoverList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+        </nz-select>
+        <div style="width: 220px;float: right;margin-left: 10px;">
+          <!-- <div *ngIf="serachType === 1"> -->
+          <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+            <input type="text" nz-input placeholder="请输入名字、手机号" [(ngModel)]="key" (keydown)="enterSearch($event)">
+          </nz-input-group>
+          <ng-template #suffixIconButton>
+            <button (click)='serachAction()' style="margin-right: 0" nz-button nzType="primary" nzSearch>
+              <i class="anticon anticon-search"></i>
+            </button>
+          </ng-template>
+        </div>
+      </div>
+      <!-- <div *ngIf="serachType === 0" (click)="showSerach()">
+        <span>
+          <i class="icon iconfont icon-sousuo"></i>搜索</span>
+      </div> -->
+    </ng-template>
+  </nz-card-tab>
+  <div nz-row style="position: relative;">
+    <div nz-col class="employee-update">
+      <nz-table #basicTable [nzFrontPagination]="false" [nzData]="reportList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+        [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+        <thead>
+          <tr>
+            <th>
+              <span>序号</span>
+            </th>
+            <th>
+              <span>姓名</span>
+            </th>
+            <th>
+              <span>工号</span>
+            </th>
+            <th>
+              <span>手机号</span>
+            </th>
+            <th>
+              <span>部门</span>
+            </th>
+            <th>
+              <span>职位</span>
+            </th>
+            <th>
+              <span>入职日期</span>
+            </th>
+            <th>
+              <span>离职日期</span>
+            </th>
+            <th>
+              <span>离职类别</span>
+            </th>
+            <th>
+              <span>离职原因</span>
+            </th>
+            <th colspan="4">
+              <span>操作</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody nz-tbody>
+          <tr *ngFor="let i of basicTable.data let no = index">
+            <td>{{ code + no }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.jobNumber }}</td>
+            <td>{{ i.phone }}</td>
+            <td>{{ i.departmentName }}</td>
+            <td>{{ i.position }}</td>
+            <td>{{ i.entryTime | dateTrans:'YYYY年MM月dd日'}}</td>
+            <td>{{ i.dimissionaTime | dateTrans:'YYYY年MM月dd日'}}</td>
+            <td>{{i.dimissionType}}</td>
+            <td>{{ i.reason }}</td>
+            <td style='text-align: center'>
+              <a (click)='details(i.guid)'>详情</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)='blacklist(i.guid)'>加入黑名单</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)='delete(i.guid)'>删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisibles" nzTitle="加入黑名单" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <p>确定加入黑名单？</p>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="确认删除" (nzOnCancel)="handleCancels()" (nzOnOk)="handleOks()">
+  <p>确认删除</p>
+</nz-modal>

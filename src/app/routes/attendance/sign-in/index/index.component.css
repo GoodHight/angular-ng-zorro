@@ -1,0 +1,8 @@
+.signRemark{
+	max-width: 400px;
+    display:block;/*内联对象需加*/
+	word-break:keep-all;/* 不换行 */
+	white-space:nowrap;/* 不换行 */
+	overflow:hidden;
+	text-overflow:ellipsis
+}

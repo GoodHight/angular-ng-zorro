@@ -1,0 +1,56 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[editAction]">
+                <ng-template #editAction>
+                    <button nz-button target="_blank" routerLink="/blockchain/certificate/templateAdd" nzType="primary">
+                        新增模板
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>证书模板管理</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+        [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    序号
+                </th>
+                <th>模板名称</th>
+                <th>大小 </th>
+                <th>上传日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let i of ajaxTable.data let no = index">
+                <td>{{ code + no }}</td>
+                <td>{{i.templateName}}</td>
+                <td>{{(i.size / 1024 /1024).toFixed(2)}} M</td>
+                <td>{{i.updateDate | dateTrans:'YYYY年MM月dd日 HH:mm:ss'}}</td>
+                <td width="260px">
+                    <!-- <a (click)="delete(i.guid,i.reportType)">删除</a> -->
+                    <a (click)="showModalss(i.templateFileId)">查看</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <!-- <a>编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider> -->
+                    <a (click)="showModal(i.guid)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="删除证书模板" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <p>删除后不可恢复！</p>
+</nz-modal>
+<nz-modal nzWidth="700px" [(nzVisible)]="isVisibless" nzTitle=""  [nzFooter]='null'  nzClosable="false"  (nzOnCancel)="Cancel()" (nzOnOk)="Ok()">
+    <img (click)="handleOkss()" width="100%" height="400" src="{{ templateimgUrl }}" alt="">
+</nz-modal>

@@ -1,0 +1,82 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[saveAction, cancelAction]">
+        <ng-template #saveAction>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)="save()" [nzLoading]="confirmButtonLoading">
+            保存
+          </button>
+        </ng-template>
+        <ng-template #cancelAction>
+          <button nz-button nzType="default" (click)="cancel()">
+            返回
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>新增合同模板</span>
+    </ng-template>
+  </nz-card-tab>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>
+<nz-row nzAlign="bottom">
+  <nz-col>
+    <nz-spin [nzSpinning]="loading">
+      <form nz-form [formGroup]="validateForm">
+        <nz-form-item nz-row>
+          <nz-form-label [nzSpan]="3" nzRequired>合同类型</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <nz-select formControlName="type" nzPlaceHolder="请选择合同类型" nzAllowClear>
+              <nz-option *ngFor="let option of typeList" [nzLabel]="option.dictName" [nzValue]="option.guid">
+              </nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="(validateForm.get('type').dirty || validateForm.get('type').touched) && validateForm.get('type').errors">
+              请选择合同类型
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3" nzRequired>合同名称</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input formControlName="name" placeholder="请填写合同名称">
+            <nz-form-explain *ngIf="(validateForm.get('name').dirty || validateForm.get('name').touched) && validateForm.get('name').errors">
+              请填写合同名称
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3" >合同版本</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <input nz-input formControlName="versions" placeholder="请填写合同版本">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="3">备注</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <textarea row="6" nz-input formControlName="remark" placeholder="请填写备注"></textarea>
+            <nz-form-explain *ngIf="(validateForm.get('remark').dirty || validateForm.get('remark').touched) && validateForm.get('remark').errors">
+              请填写备注
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired [nzSpan]="3">
+            上传文件
+          </nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <nz-upload [nzAction]="uploaderGradUrl" nzName="file" [(nzFileList)]="fileList[0]" (nzChange)="handleChange($event,0)" [nzDisabled]="filedisabled"
+              [nzRemove]="!filedisabled" [nzBeforeUpload]="beforeUpload">
+              <button nz-button>
+                <i class="anticon anticon-upload"></i><span>上传文件</span>
+              </button>
+            </nz-upload>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-spin>
+  </nz-col>
+</nz-row>

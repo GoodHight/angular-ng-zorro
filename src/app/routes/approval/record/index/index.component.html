@@ -1,0 +1,100 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachType,serachActive,tabToolBarTemplate]">
+            </nz-list-item>
+            <ng-template #itemContentTemplate>
+                <nz-tabset [nzSelectedIndex]="1">
+                    <nz-tab [nzTitle]="nzTitle">
+                        <ng-template #nzTitle>
+                            <div>审批记录</div>
+                        </ng-template>
+                    </nz-tab>
+                </nz-tabset>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content approval">
+            <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataSet" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+                [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+                <thead>
+                    <tr>
+                        <th>审批编号</th>
+                        <th>类型 </th>
+                        <th>发起人</th>
+                        <th>发起人部门</th>
+                        <th>发起时间</th>
+                        <th>完成时间</th>
+                        <th>审批状态</th>
+                        <th>审批结果</th>
+                        <th>当前审批人</th>
+                        <th>历史审批人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ajaxTable.data">
+                        <td>{{ item.approvalNo }}</td>
+                        <td>{{ item.type }}</td>
+                        <td>{{ item.initiatorName }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ (item.startTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss') }}</td>
+                        <td>{{ (item.endTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss') }}</td>
+                        <td>{{ item.status===2?'已完成':'未完成' }}</td>
+                        <td *ngIf="item.result === ''">&nbsp;</td>
+                        <td *ngIf="item.result === 0">同意</td>
+                        <td *ngIf="item.result === 1">拒绝</td>
+                        <td>{{ item.currentName }}</td>
+                        <td>{{ item.historyName }}</td>
+                        <td>
+                            <a (click)="$event.stopPropagation();details(item.guid)">详情</a>
+                            <nz-divider *ngIf="item.publishState != 1" nzType="vertical"></nz-divider>
+                            <a (click)="$event.stopPropagation();showModalMiddle(item.guid)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </section>
+    </div>
+    <ng-template #title>
+
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>审批记录</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <!-- <span>
+            <i class="icon iconfont icon-sousuo"></i>搜索</span>
+        <span [routerLink]="['/recruit/set']">
+            <i class="icon iconfont icon-shezhi"></i>设置</span>-->
+        <button nz-button (click)=dew() type="button" [disabled]="outdisabled" nzType="primary">导出报表</button>
+    </ng-template>
+    <ng-template #serachType>
+        <div>
+            审批类型：
+            <nz-select style="width: 200px;" nzAllowClear nzPlaceHolder="选择审批类型" (ngModelChange)="ngModelChangetData($event)" [(ngModel)]="q.type">
+                <nz-option *ngFor="let option of approvaltype" [nzLabel]="option.dickname" [nzValue]="option.guid"></nz-option>
+                <!-- 0离职1请假2外出3出差4补打卡5转正6调岗 -->
+            </nz-select>
+        </div>
+    </ng-template>
+    <ng-template #serachActive>
+        <div>
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="q.searchName" (keydown)="enterSearch($event)">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+                <button (click)="serachAction()" nz-button nzType="primary" nzSearch>
+                    <i class="anticon anticon-search"></i>
+                </button>
+            </ng-template>
+        </div>
+    </ng-template>
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除审批记录"
+        (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <p>请注意您正在删除审批记录！！</p>
+        <p>确定删除嘛？</p>
+        <p>确定就点下面确定按钮！！！</p>
+    </nz-modal>
+</nz-card>

@@ -1,0 +1,144 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div>{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #title>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>版本套餐</span>
+    </ng-template>
+  </nz-card-tab>
+  <div>
+    <div nz-row [nzGutter]="30">
+      <div nz-col [nzSpan]="8" class="versionBox">
+        <nz-card nzHoverable>
+          <div class="versionBoxC">
+            <img src="{{version[0].img}}" alt="">
+            <div class="one">{{version[0].name}}</div>
+            <div class="two">￥0</div>
+            <div class="three">员工人数不超过30人 | 只能开启部分功能</div>
+            <button nz-button class="four {{version[0].color}}" (click)="btn01()" [disabled]="version[0].btndisabled">{{version[0].btn}}</button>
+            <div class="five">
+              <div class="displayinlineblock">
+                <div>员工花名册</div>
+                <div>入职管理</div>
+                <div>离职管理</div>
+                <div>组织架构</div>
+                <div>部门管理</div>
+                <div>用户中心</div>
+              </div>
+            </div>       
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8" class="versionBox">
+        <nz-card nzHoverable>
+          <div class="versionBoxC">
+            <img src="{{version[1].img}}" alt="">
+            <div class="one">{{version[1].name}}</div>
+            <div class="two">￥0</div>
+            <div class="three">员工人数不超过30人 | 开启全部功能</div>
+            <button nz-button class="four {{version[1].color}}" (click)="btn02()" [disabled]="version[1].btndisabled">{{version[1].btn}}</button>
+            <div class="five">
+              <div class="displayinlineblock">
+                <div>员工花名册</div>
+                <div>入职管理</div>
+                <div>离职管理</div>
+                <div>组织架构</div>
+                <div>部门管理</div>
+                <div>用户中心</div>
+                <div>合同管理</div>
+              </div>
+              <div class="displayinlineblock">
+                <div>公告制度</div>
+                <div>审批管理</div>
+                <div>考勤管理</div>
+                <div>汇报管理</div>
+                <div>培训管理</div>
+                <div>证书签发</div>
+                <div>员工认可</div>
+                <div>信息存证</div>
+                <div>用户管理</div>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8" class="versionBox">
+        <nz-card nzHoverable>
+          <div class="versionBoxC">
+            <img src="{{version[3].img}}" alt="">
+            <div class="one">{{version[3].name}}</div>
+            <div class="two">￥1000</div>
+            <div class="three">员工人数没有限制 | 开启基础功能 + 合同管理</div>
+            <button nz-button class="four {{version[3].color}}" (click)="btn03(4)" [disabled]="version[3].btndisabled">{{version[3].btn}}</button>
+            <div *ngIf='dataList.versionId === "4"' class="time">到期时间：{{dataList.expiredTime.substr(0,4)}}-{{dataList.expiredTime.substr(4,2)}}-{{dataList.expiredTime.substr(6,2)}}</div>
+            <div class="five">
+              <div class="displayinlineblock">
+                <div>员工花名册</div>
+                <div>入职管理</div>
+                <div>离职管理</div>
+                <div>组织架构</div>
+                <div>部门管理</div>
+                <div>用户中心</div>
+                <div>合同管理</div>
+              </div>
+              <!-- <div class="displayinlineblock">
+                <div>公告制度</div>
+                <div>审批管理</div>
+                <div>考勤管理</div>
+                <div>汇报管理</div>
+                <div>培训管理</div>
+                <div>证书签发</div>
+                <div>员工认可</div>
+                <div>信息存证</div>
+                <div>用户管理</div>
+              </div> -->
+            </div>
+          </div>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8" class="versionBox">
+        <nz-card nzHoverable>
+          <div class="versionBoxC">
+            <img src="{{version[2].img}}" alt="">
+            <div class="one">{{version[2].name}}</div>
+            <div class="two">￥9800</div>
+            <div class="three">员工人数没有限制 | 开启全部功能</div>
+            <button nz-button class="four {{version[2].color}}" (click)="btn03(3)" [disabled]="version[2].btndisabled">{{version[2].btn}}</button>
+            <div *ngIf='dataList.versionId === "3"' class="time">到期时间：{{dataList.expiredTime.substr(0,4)}}-{{dataList.expiredTime.substr(4,2)}}-{{dataList.expiredTime.substr(6,2)}}</div>
+            <div class="five">
+              <div class="displayinlineblock">
+                <div>员工花名册</div>
+                <div>入职管理</div>
+                <div>离职管理</div>
+                <div>组织架构</div>
+                <div>部门管理</div>
+                <div>用户中心</div>
+                <div>合同管理</div>
+              </div>
+              <div class="displayinlineblock">
+                <div>公告制度</div>
+                <div>审批管理</div>
+                <div>考勤管理</div>
+                <div>汇报管理</div>
+                <div>培训管理</div>
+                <div>证书签发</div>
+                <div>员工认可</div>
+                <div>信息存证</div>
+                <div>用户管理</div>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</nz-card>

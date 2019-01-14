@@ -1,0 +1,74 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>{{title}}</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <nz-list-item [nzActions]="[actions]">
+                <ng-template #actions>
+                    <button nz-button nzType="primary" [disabled]="!validataForm.valid" (click)="save()" [nzLoading]="confirmButtonLoading">保存</button>
+                    <button nz-button nzType="default" routerLink="/usercenter/signature">取消</button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section>
+            <form nz-form [formGroup]="validataForm">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7">签章名称</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <input nz-input formControlName="signatureName" placeholder="请输入签章名称">
+                        <nz-form-explain *ngIf="validataForm.get('signatureName').dirty && validataForm.get('signatureName').hasError('required') ">
+                            请输入签章名称！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7">签章内容</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <input nz-input formControlName="signatureContent" placeholder="请输入签章内容">
+                        <nz-form-explain *ngIf="validataForm.get('signatureContent').dirty && validataForm.get('signatureContent').hasError('required') ">
+                            请输入签章内容！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7">样式</nz-form-label>
+                    <nz-form-control [nzSpan]="12">
+                        <nz-radio-group formControlName="signatureCss" [ngModel]="validataForm.value.signatureCss">
+                            <label class="signature" nz-radio nzValue="{{item.guid}}" *ngFor="let item of signatureStyles">
+                                <div class="div-box" [ngStyle]="{'color': item.cssColor, 'height': item.cssHeight + 'px', 'width': item.cssWidth + 'px', 
+                                'border-width': item.cssBorderWidth + 'px', 'font-family': item.cssFont, 'font-size': item.cssFontSize + 'px'}">
+                                    张三
+                                </div>
+                            </label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7">预览</nz-form-label>
+                    <nz-form-control [nzSpan]="12">
+                        <ng-container *ngFor="let item of signatureStyles">
+                            <div *ngIf="validataForm.value.signatureContent && validataForm.value.signatureCss == item.guid" [ngStyle]="{'color': item.cssColor, 'height': item.cssHeight + 'px', 'width': item.cssWidth + 'px', 
+                            'border-width': item.cssBorderWidth + 'px', 'font-family': item.cssFont, 'font-size': item.cssFontSize + 'px'}">
+                                {{validataForm.value.signatureContent}}
+                            </div>
+                        </ng-container>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </section>
+    </div>
+</nz-card>

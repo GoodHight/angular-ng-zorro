@@ -1,0 +1,165 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>员工信息管理</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <button nz-button type="button" [disabled]="!form.valid" (click)="_submitForm()" nzType="primary">保存</button>
+            <button nz-button (click)="cancel()">返 回</button>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+        <div nz-col class="employee-update">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div id="personal-information">
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            工资卡开户行
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="bankOfdeposit" placeholder="请填写工资卡开户行">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            工资卡号
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="cardNumber" placeholder="请填写工资卡号">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            社保账号
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="insuranceNumber" placeholder="请填写员工社保账号">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            社保缴纳地
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="iprovinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="icityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="iareasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            社保起始月
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="insuranceTime" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            公积金账户
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="accumulationNumber" nzPlaceHolder="请填写员工公积金账户">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            公积金缴纳地
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="aprovinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="acityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="aareasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            公积金起始月
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="accumulationTime" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传工资卡附件（图片）
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="2">
+                            <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+                                [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                                <i class="anticon anticon-plus"></i>
+                                <div class="ant-upload-text">点击上传</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="6">
+                            <div>上传：工资卡正面图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+    </div>
+</nz-card>

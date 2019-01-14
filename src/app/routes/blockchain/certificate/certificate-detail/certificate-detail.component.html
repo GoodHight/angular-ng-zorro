@@ -1,0 +1,212 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>{{data.name}}</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate" (nzSelectChange)="changeListShow($event)">
+                <nz-tab [nzTitle]="nzTitle0">
+                    <ng-template #nzTitle0>
+                        <div>学生列表</div>
+                    </ng-template>
+                </nz-tab>
+                <nz-tab [nzTitle]="nzTitle1">
+                    <ng-template #nzTitle1>
+                        <div>
+                            申请待处理({{ applyTotal }})
+                        </div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <nz-list-item [nzActions]="[serachActive,certificateIssus]">
+            </nz-list-item>
+            <ng-template #serachActive>
+                <div *ngIf="showSearch === 1">
+                    <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                        <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchKey">
+                    </nz-input-group>
+                    <ng-template #suffixIconButton>
+                        <button style="margin-right: 0;" (click)="pageChange(1)" nz-button nzType="primary" nzSearch>
+                            <i class="anticon anticon-search"></i>
+                        </button>
+                    </ng-template>
+                </div>
+                <div *ngIf="showSearch === 0" (click)="showSearch = 1;">
+                    <span>
+                        <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                </div>
+            </ng-template>
+            <ng-template #certificateIssus>
+                <button nz-button nzType="primary" (click)="batchJoin(applyModalContent)" *ngIf="changeList === 1">
+                    批量加入
+                </button>
+                <ng-template #applyModalContent>
+                    <div nz-row>
+                        <p nzSpan="12" nzOffset="6">是否确认{{applyNum}}学生加入{{data.name}}？</p>
+                    </div>
+                </ng-template>
+                <button nz-button nzType="primary" (click)="batchIssue()" *ngIf="changeList === 0">
+                    证书签发
+                </button>
+                <button nz-button nzType="default" [routerLink]="['/blockchain/certificate/index']">
+                    返回
+                </button>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+
+    </nz-card-tab>
+    <!-- 当前先隐藏授时 -->
+    <!-- <div class="beidou-time">
+        <span>北斗卫星授时</span>
+        <span>16:29:57  797</span>
+    </div> -->
+    <nz-table *ngIf="changeList === 0" #ajaxTable [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzData]="studentList" [nzPageSize]="pageSize"
+        [nzPageIndex]="pageIndex" (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>手机号</span>
+                </th>
+                <th>
+                    <span>身份证号</span>
+                </th>
+                <th>
+                    <span>签发时间</span>
+                </th>
+                <th>
+                    <span>状态</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index">
+                <td nzShowCheckbox [nzDisabled]="item.issuingStatus !== -1 && item.issuingStatus !== -2" [(nzChecked)]="item.checked" (click)="$event.stopPropagation();"
+                    (nzCheckedChange)="refreshStatus($event)"></td>
+                <td>{{ no + 1 + (pageIndex - 1) * pageSize }}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.phone | hiddenNumber:2}}</td>
+                <td>{{item.idNumber | hiddenNumber:2 }}</td>
+                <td>
+                    {{item.issueDate | dateTrans:'YYYY-MM-dd HH:mm:ss'}}
+                </td>
+                <td [ngStyle]="{'color': item.issuingStatus == 1 ? 'green' : ''}">{{issuingStatus[item.issuingStatus]}}</td>
+                <td>
+                    <a *ngIf="item.issuingStatus === 1" (click)="preview(item.certificateFileId)">证书预览</a>
+                    <a *ngIf="item.issuingStatus === -2" (click)="$event.stopPropagation();removeStudent(item)">移除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <!-- <div *ngFor="let item of thisimg">
+        <img style="width:500px;height: 300px;" src="{{item}}" />
+    </div> -->
+    <nz-table *ngIf="changeList === 1" #ajaxTable [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzData]="applyList" [nzPageSize]="pageSize"
+        [nzPageIndex]="pageIndex" (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                <th>
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>手机号</span>
+                </th>
+                <th>
+                    <span>身份证号</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index">
+                <td nzShowCheckbox [(nzChecked)]="item.checked" (click)="$event.stopPropagation();" (nzCheckedChange)="refreshStatus($event)"></td>
+                <td>{{item.name}}</td>
+                <td>{{item.phone | hiddenNumber:2}}</td>
+                <td>{{item.idNumber | hiddenNumber:2}}</td>
+                <td>
+                    <a (click)="$event.stopPropagation();join(item)">加入</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();refuse(item, applyModalContent, applyModalFooter)">拒绝</a>
+                    <ng-template #applyModalContent>
+                        <div nz-row>
+                            <nz-form-item>
+                                <nz-form-label required>拒绝原因</nz-form-label>
+                                <nz-form-control [nzSpan]="24">
+                                    <textarea row="4" nz-input [(ngModel)]="refuseReason"></textarea>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </ng-template>
+                    <ng-template #applyModalFooter>
+                        <button nz-button nzType="primary" (click)="refuseOk(item)" [disabled]="!refuseReason">
+                            确定
+                        </button>
+                        <button nz-button nzType="default" (click)="refuseCancel()">
+                            取消
+                        </button>
+                    </ng-template>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+<!-- 模态框 start-->
+<ng-template #modalTitle>
+    证书预览
+</ng-template>
+
+<ng-template #modalContent>
+
+</ng-template>
+<!-- 预览 模态框 end-->
+<nz-modal [(nzVisible)]="modalsss" [nzWidth]="800" nzTitle="预览证书" (nzOnCancel)="previewHandle()" (nzOnOk)="previewOk()">
+    <div style="text-align: center;margin-bottom: 8px">
+        <img src="{{imgUrl}}" alt="预览图" width="700" height="495">
+    </div>
+    <a style='margin-left: 26px' (click)="downloadCertificate()" #downloadA>下载证书</a>
+
+</nz-modal>
+<!-- 模态框 end-->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="确认签发" (nzOnCancel)="qianfaCancel()" (nzOnOk)="qianfaok()">
+    <p>本次共计签发1班级，共计{{studentNum}}证书，是否确认签发？</p>
+    <span>证书模板：</span>
+    <nz-select style="width: 200px;" nzShowSearch nzAllowClear (ngModelChange)="templateChange($event)" nzAllowClear="false"
+        [(ngModel)]="templeId" nzPlaceHolder="请选择模板">
+        <nz-option *ngFor="let item of templates" nzLabel="{{item.templateName}}" nzValue="{{item.guid}}"></nz-option>
+    </nz-select>
+    <span *ngIf="tips === '1'" style="color: red;margin-left: 8px">请先选择模板！</span>
+</nz-modal>
+<div>
+    <div class="capture" id="capture" [(ngStyle)]="background">
+        <h4 style="color: #000;">{{title}}</h4>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{content}}</span>
+        </p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{secondContent}}</span>
+        </p>
+        <div nz-row class="erweima">
+            <img nz-col [nzSm]="12" src="" id="image" alt="" class="erweimaimg">
+            <div nz-col [nzSm]="20" style="padding-left: 431px;margin-top: 47px;font-size: 29px">
+                <div style="line-height: 26px;margin-bottom: 10px">{{issuingDate}}</div>
+                <div style="line-height: 26px">{{issuingAgency}}</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,228 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,editAction]">
+        <ng-template #serachActive>
+          <div *ngIf="serachType === 1">
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key" (keyup.enter)="enterEvent()">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="refreshNzTable()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div>
+          <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div>
+        </ng-template>
+        <ng-template #editAction>
+          <button nz-button nzType="primary" (click)="openModal(1)">
+            新增
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>考勤组管理</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table [hidden]="!hiddenSwitch" #basicTable [nzData]="dataSet"  [nzPageSize]="queryParams.pageSize" [nzLoading]="loading"
+  [nzPageIndex]="queryParams.pageIndex" [nzTotal]="queryParams.totals" nzNoResult="没有数据" (nzPageIndexChange)="pageChange($event)">
+    <thead>
+      <tr>
+        <th>考勤组名称</th>
+        <th>人数</th>
+        <th>考勤时间</th>
+        <th>管理员</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of basicTable.data">
+        <td>{{ v.name }}</td>
+        <td>{{ v.hrmClockinUsers.length }}</td>
+        <td>
+            <div>
+                <label style="display: inline-block; margin-right: 30px;color: #666666">休息</label>
+                <ng-container *ngIf="v._rule.rest; else elseTemplateRest">
+                    <span>{{v._rule.rest}}</span>
+                </ng-container>
+                <ng-template #elseTemplateRest>
+                    <span>-</span>
+                </ng-template>
+            </div>
+            <div *ngIf="v._rule.work">
+                <label style="display: inline-block; margin-right: 30px;color: #666666">上班</label>
+                <ng-container *ngIf="v._rule.work; else elseTemplateWork">
+                        <span>{{v._rule.work}}</span>
+                </ng-container>
+                <ng-template #elseTemplateWork>
+                    <span>-</span>
+                </ng-template>
+            </div>
+        </td>
+        <td>{{ v.mgrUserName }}</td>
+        <td>
+          <a (click)="openModal(2, v)">修改</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="deleteGroup(v.guid, v.name)">删除</a>
+        </td>
+      </tr>
+      
+    </tbody>
+  </nz-table>
+
+  <div class="lalust-tab-manager-45454545" [hidden]="hiddenSwitch">
+      <div class="lalust-btn-float-right-5864654">
+          <button nz-button type="button" (click)="saveGroup()"  nzType="primary">保存</button>
+          <button nz-button type="button" (click)="cancelSave()">取消</button>
+      </div>
+     
+      <form nz-form [formGroup]="form">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4" nzRequired nzFor="groupname">考勤组名称</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+              <input nz-input formControlName="groupname" placeholder="请输入考勤组名称" [(ngModel)]="viewModel.name">
+              <nz-form-explain *ngIf="form.get('groupname').dirty && form.get('groupname').errors">
+                <ng-container *ngIf="form.get('groupname').hasError('required')">
+                    请输入考勤组名称
+                </ng-container>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+      
+      
+      
+          <nz-form-item>
+            <nz-form-label nzRequired nz-col [nzSm]="4">
+              参与考勤人员
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12" nzHasFeedback>
+              <ul class="people-list">
+                  <ng-container *ngIf="sourceSelectPeopleDispley.length>0; else elseTemplateNotPeople">
+                      <li *ngFor="let item of sourceSelectPeopleDispley">
+                          {{ item.name }}
+                          <img (click)="removeSelectPeople(item.guid)" src="../../../assets/img/close/close-s.png"/>
+                      </li>
+                  </ng-container>
+                  <ng-template #elseTemplateNotPeople>
+                      <li class="li-content">
+                          <!-- 没有数据,请添加人员. -->
+                      </li>
+                  </ng-template>
+                  <li class="li-btn">
+                      <span class="add" (click)="openAttendancePeople()">+</span>
+                  </li>
+              </ul>
+              <nz-form-explain style="color: red;" *ngIf="errorInfo.userIds">
+                <ng-container *ngIf="errorInfo.userIds">
+                    请添加参与考勤人员
+                </ng-container>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nz-col [nzSm]="4">
+              考勤组管理人员
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12" nzHasFeedback>
+                <ul class="people-list">
+                    <ng-container *ngIf="sourceSelectManagerDispaly.length>0; else elseTemplateNotManager">
+                        <li *ngFor="let item of sourceSelectManagerDispaly">
+                            {{ item.name }}
+                            <img (click)="removeSelectManager(item.guid)" src="../../../assets/img/close/close-s.png"/>
+                        </li>
+                    </ng-container>
+                    <ng-template #elseTemplateNotManager>
+                        <li class="li-content">
+                            <!-- 没有数据,请添加人员. -->
+                        </li>
+                    </ng-template>
+                    <li class="li-btn">
+                        <span class="add" (click)="openAttendanceManager()">+</span>
+                    </li>
+                </ul>
+                <nz-form-explain style="color: red;" *ngIf="errorInfo.mgrUserId">
+                  <ng-container *ngIf="errorInfo.mgrUserId">
+                      请添加考勤组管理人员
+                  </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nz-col [nzSm]="4">
+              选择工作日
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12" nzHasFeedback>
+              <nz-select [(ngModel)]="viewModel.workdayId" (ngModelChange)="selectChangeWorkday($event)"
+              nzAllowClear nzPlaceHolder="请选择选择工作日" [ngModelOptions]="{standalone: true}">
+                <nz-option *ngFor="let item of sourceWorkDay" [nzLabel]="item.name" [nzValue]="item.guid"></nz-option>
+              </nz-select>
+              <nz-form-explain style="color: red;" *ngIf="errorInfo.workdayId">
+                  <ng-container *ngIf="errorInfo.workdayId">
+                      请选择工作日
+                  </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item nz-row>
+            <nz-form-label nzRequired nz-col [nzSm]="4">
+              选择班次
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12" nzHasFeedback>
+              <nz-select [(ngModel)]="viewModel.classesid" (ngModelChange)="selectChangeClasses($event)"
+              nzAllowClear nzPlaceHolder="请选择班次" [ngModelOptions]="{standalone: true}">
+                <nz-option *ngFor="let item of sourceClass" [nzLabel]="item.name" [nzValue]="item.guid"></nz-option>
+              </nz-select>
+              <nz-form-explain style="color: red;" *ngIf="errorInfo.classesid">
+                  <ng-container *ngIf="errorInfo.classesid">
+                    请选择班次
+                  </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item nz-row>
+            <nz-form-label nzRequired nz-col [nzSm]="4">
+              考勤办公地点
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="12" nzHasFeedback>
+              <nz-select [(ngModel)]="viewModel.siteId" (ngModelChange)="selectChangeSite($event)"
+              nzAllowClear nzPlaceHolder="请选择办公地点" [ngModelOptions]="{standalone: true}">
+                <nz-option *ngFor="let item of sourceAddress" [nzLabel]="item.name" [nzValue]="item.guid"></nz-option>
+              </nz-select>
+              <nz-form-explain style="color: red;" *ngIf="errorInfo.siteId">
+                  <ng-container *ngIf="errorInfo.siteId">
+                    请选择办公地点
+                  </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+  </div>
+
+  <ng-template #itemContentTemplate>
+
+  </ng-template>
+</nz-card>
+
+
+
+<!-- add user model -->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="选择考勤人员" nzWidth="750" (nzOnCancel)="handleCancelSelectUser()" (nzOnOk)="handleOkSelectUser()">
+  <app-lalust-select-person #lalustSelectPersonComponentm 
+  [excludeData]="clockinPeople"
+  [disabledData]="joinAttendance" (changeSelectPeople)="changeSelectPoeple($event)"></app-lalust-select-person>
+</nz-modal>
+
+<!-- add user model -->
+<nz-modal [(nzVisible)]="isVisibleManager" nzTitle="选择考勤管理员" nzWidth="750" (nzOnCancel)="handleCancelSelectManager()" (nzOnOk)="handleOkSelectManager()">
+  <app-lalust-select-person-single (changeSelectPeople)="changeSelectManager($event)"></app-lalust-select-person-single>
+</nz-modal>
+
+
+

@@ -1,0 +1,96 @@
+<!-- 功能管理（增删改） -->
+<nz-spin [nzSpinning]="loading">
+    <nz-card [nzBordered]="false" [nzTitle]="titleView">
+        <nz-card-tab>
+            <ng-template #tab>
+                <nz-tabset [nzSelectedIndex]="currentSelectedTab" [nzTabBarExtraContent]="tabToolBarTemplate" (nzSelectChange)="tabChange($event)">
+                    <nz-tab [nzTitle]="nzTitle0">
+                        <ng-template #nzTitle0>
+                            <div>PC端功能管理</div>
+                        </ng-template>
+                    </nz-tab>
+                    <nz-tab [nzTitle]="nzTitle1">
+                        <ng-template #nzTitle1>
+                            <div>移动端功能管理</div>
+                        </ng-template>
+                    </nz-tab>
+                </nz-tabset>
+                <ng-template #tabToolBarTemplate>
+                    <button nz-button nzType="primary" [routerLink]="['/sysfunc/funcmanage/add/', currentSelectedTab]">添 加</button>
+                </ng-template>
+            </ng-template>
+            <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        </nz-card-tab>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>功能管理</span>
+        </ng-template>
+        <div nz-row>
+            <nz-layout class="layout">
+                <nz-layout>
+                    <nz-sider [nzWidth]="200" style="background:#fff">
+                        <ul nz-menu [nzMode]="'inline'">
+                            <ng-container *ngFor="let i of menuList let itemIndex = index">
+                                <ng-container *ngIf="i.subMenuList.length > 0">
+                                    <li nz-submenu (click)="refreshData(i.guid, 0, itemIndex, 0)">
+                                        <span title>
+                                            <i class="anticon anticon-user"></i>{{ i.menuName }}</span>
+                                        <ul>
+                                            <li *ngFor="let item of i.subMenuList let subItemList = index" nz-menu-item 
+                                                (click)="$event.stopPropagation();refreshData(i.guid, 1, itemIndex, subItemList)">
+                                                {{ item.menuName }}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ng-container>
+                                <ng-container *ngIf="!(i.subMenuList.length > 0)">
+                                    <li nz-menu-item (click)="refreshData(i.guid, 0, itemIndex, 0)">
+                                        <span title>
+                                            <i class="anticon anticon-user"></i>{{ i.menuName }}
+                                        </span>
+                                    </li>
+                                </ng-container>
+                            </ng-container>
+                        </ul>
+                    </nz-sider>
+                    <nz-layout style="padding:0 24px 24px">
+                        <nz-content style="background:#fff; padding: 24px; min-height: 280px;">
+                            <nz-table #tableId nzBordered [nzData]="showList" nzShowPagination="false" [nzFrontPagination]="false">
+                                <thead>
+                                    <tr>
+                                        <th>功能名</th>
+                                        <th>路由</th>
+                                        <th>icon</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let data of tableId.data">
+                                        <td>
+                                            {{data.menuName}}
+                                        </td>
+                                        <td>
+                                            {{data.menuAction}}
+                                        </td>
+                                        <td>
+                                            {{data.menuCss}}
+                                        </td>
+                                        <td>
+                                            {{data.menuState == '1' ? '开启': '停用'}}
+                                        </td>
+                                        <td>
+                                            <a [routerLink]="['/sysfunc/funcmanage/edit/' + currentSelectedTab + '/' + data.guid]">编辑</a>
+                                            <nz-divider nzType="vertical"></nz-divider>
+                                            <a (click)="deleteMenu(data.guid)">删除</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                        </nz-content>
+                    </nz-layout>
+                </nz-layout>
+            </nz-layout>
+        </div>
+    </nz-card>
+</nz-spin>

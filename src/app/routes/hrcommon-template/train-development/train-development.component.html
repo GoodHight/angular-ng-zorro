@@ -1,0 +1,54 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive]">
+          <ng-template #serachActive>
+            <div *ngIf="serachType === 1">
+              <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="q.searchStr" (keydown)="enterSearch($event)">
+              </nz-input-group>
+              <ng-template #suffixIconButton>
+                <button (click)="searchAction()" nz-button nzType="primary" nzSearch>
+                  <i class="anticon anticon-search"></i>
+                </button>
+              </ng-template>
+            </div>
+            <div *ngIf="serachType === 0" (click)="showSerach()">
+              <span>
+                <i class="icon iconfont icon-sousuo"></i>搜索</span>
+            </div>
+          </ng-template>
+        </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>培训与开发</span>
+      </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+      [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+      <thead>
+        <tr>
+          <th>文件名</th>
+          <th>上传时间</th>
+          <th>版本</th>
+          <th>下载数量 </th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of dataList let no = index">
+          <td>{{i.fileName}}</td>
+          <td>{{i.uploadTime  | dateTrans:'YYYY年MM月dd日 HH:mm:ss'}}</td>
+          <td>{{i.fileVersion }}</td>
+          <td>{{i.downloadNum}}</td>
+          <td>
+            <a (click)="downLoadFile(i.guid, i.fileUrl)">下载</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate> 
+    </ng-template>
+  </nz-card>

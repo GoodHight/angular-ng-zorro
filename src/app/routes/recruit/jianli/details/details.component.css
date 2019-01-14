@@ -1,0 +1,30 @@
+:host ::ng-deep .divider-15641 {
+  width: 4px;
+  margin-left: 0px;
+  background: #1890ff;
+  font-size: 24px;
+}
+:host ::ng-deep .ant-collapse-header {
+  font-size: 16px;
+}
+.username {
+  font-size: 20px;
+  color: black;
+  font-weight: 600;
+}
+.phone-email {
+  line-height: 30px;
+  margin-bottom: 1.5em;
+}
+.item-title {
+  padding: 0 10px;
+  color: #cdcdcd;
+}
+:host ::ng-deep .ant-collapse-borderless > .ant-collapse-item {
+  border-bottom: 10px solid #f7f7f7;
+}
+:host ::ng-deep .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow {
+  color: #1890ff;
+  font-weight: 700;
+  left: 10px;
+}

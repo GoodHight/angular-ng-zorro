@@ -1,0 +1,16 @@
+<nz-card>
+    <div nz-row>
+        <div class="maginauto">
+            <p class="title">
+                {{dataList.title}}
+            </p>
+            <p>
+                <span class="date">{{dataList.publishTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss'}}</span>
+                <button nz-button nzType="default" class="btn" (click)="back()">返回</button>
+            </p>
+        </div>
+    </div>
+</nz-card>
+<div class="content">
+    {{dataList.content}}
+</div>

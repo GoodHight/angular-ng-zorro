@@ -1,0 +1,65 @@
+.resume-recommend-box{
+  .title{
+    color: #0f0f0f;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .title::before{
+    content: ' ';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: #1890ff;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  span{
+    vertical-align: middle;
+  }
+  .resume-recommend-title{
+    margin-bottom: 20px;
+  }
+}
+.employee-add {
+  padding-top: 20px;
+}
+
+.d-flex1 {
+  margin-top: 10px;
+  .label-left {
+      width: 80px;
+      text-align: right;
+      padding-right: 10px;
+      line-height: 32px;
+      float: left;
+  }
+  .flex-1 {
+      width: 320px;
+      float: left;
+  }
+}
+
+:host {
+  ::ng-deep {
+      .ant-form{
+          margin-top: 86px
+      }
+      .content_header, .ant-card-head{
+          position: fixed;
+          left: 0px;
+          right: 0px;
+          z-index: 10;
+      } .update-title{
+          font-size: 14px;
+          color: #1890ff;
+          border-bottom: 4px #1890ff solid;
+          margin-bottom: -7px;
+      }
+      .content_header .ant-card-head-title, .ant-card-head .ant-card-head-title{
+          margin-left: 207px;
+      }
+  }
+}
+.item-label label:after{
+  content:''
+}

@@ -1,0 +1,243 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[editAction,moreAction]">
+                <!--<span class="save-btn" nz-button  nzSize="large">取消</span>-->
+                <ng-template #editAction>
+                    <button nz-button (click)="cancel()">取消</button>
+                </ng-template>
+                <ng-template #moreAction>
+                    <button nz-button nzType="primary" [disabled]="!form.valid" [nzLoading]="isLoadingOne" (click)="_submitForm()">保存</button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>新增员工</span>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <nz-row [nzGutter]="16">
+        <nz-col [nzMd]="24" class="employee-add">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        姓名
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="name" placeholder="请填写用户姓名">
+                        <nz-form-explain  nz-form-explain *ngIf="(form.get('name').dirty ||form.get('name').touched) && form.get('name').errors">
+                            请填写用户姓名
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        手机号码
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="phone" [maxLength]='11' placeholder="请填写手机号码">
+                        <nz-form-explain  nz-form-explain *ngIf="(form.get('phone').dirty || form.get('phone').touched) && form.get('phone').errors">
+                            请填写手机号码
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        员工手机号隐藏
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-radio-group formControlName="hidePhone">
+                            <label nz-radio nzValue="1">隐藏</label>
+                            <label nz-radio nzValue="0">开放</label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        部门
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="departmentId" nzPlaceHolder="请选择部门" nzAllowClear>
+                            <nz-option *ngFor="let option of departmentOptions" [nzLabel]="option.departmentName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                        <nz-form-explain  nz-form-explain *ngIf="(form.get('departmentId').dirty || form.get('departmentId').touched) && form.get('departmentId').errors">
+                            请选部门
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        职位
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="position" placeholder="请填写员工职位。">
+                        <nz-form-explain  nz-form-explain *ngIf="(form.get('position').dirty || form.get('position').touched) && form.get('position').errors">
+                            请填写职位
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <!-- <nz-form-item nz-row>
+                    <nz-form-label nz-col nzRequired [nzSm]="2">
+                        是否此部门主管
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-radio-group formControlName="isManager">
+                            <label nz-radio *ngFor="let option of isManager" [nzValue]="option.guid">{{ option.dictName }}</label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item> -->
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        工号
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="jobNumber" PlaceHolder="请填写工号。">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col nzRequired [nzSm]="2">
+                        入职日期
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-date-picker formControlName="entryTime"></nz-date-picker>
+                        <nz-form-explain  nz-form-explain *ngIf="(form.get('entryTime').dirty || form.get('entryTime').touched) && form.get('entryTime').errors">
+                            请选入职日期
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        工作性质
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="workType" name="workType" nzAllowClear nzPlaceHolder="请选择工作性质">
+                            <nz-option *ngFor="let option of workTypeList" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        试用期限
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="probationTime" name="selectValue" nzAllowClear nzPlaceHolder="请选择试用期限">
+                            <nz-option *ngFor="let option of probationTime" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                        
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        员工状态
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="status" name="selectValue" nzAllowClear nzPlaceHolder="请选择员工状态">
+                            <nz-option *ngFor="let option of status" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        证件类型
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="idType" [(ngModel)]="selectValue" name="selectValue" nzAllowClear nzPlaceHolder="请选择证件类型" (ngModelChange)="certificateChange($event)">
+                            <nz-option *ngFor="let option of selectData0" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        证件号
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="idNumber" placeholder="请填写证件号" maxlength="18">
+                        <div nz-form-explain *ngIf="form.get('idNumber').dirty && form.get('idNumber').errors">
+                            <nz-form-explain  *ngIf="form.get('idNumber').hasError('required')">
+                                请填写证件号！
+                            </nz-form-explain >
+                            <nz-form-explain  *ngIf="form.get('idNumber').hasError('pattern')">
+                                输入的证件号码格式错误！请重新输入！
+                            </nz-form-explain >
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        企业邮箱
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="workEmail" placeholder="请填写企业邮箱">
+                        <nz-form-explain  nz-form-explain *ngIf="form.get('workEmail').dirty && form.get('workEmail').errors">
+                            <ng-container *ngIf="form.get('workEmail').dirty && form.get('workEmail').errors">
+                                邮箱格式错误！
+                            </ng-container>
+                        </nz-form-explain >
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        分机号
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="extNumber" placeholder="请填写员工企业分机号。">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        办公地点
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="3">
+                        <nz-select formControlName="workProvinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                            nzAllowClear>
+                            <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                    <nz-form-control nz-col [nzSm]="3">
+                        <nz-select formControlName="workCityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                            nzAllowClear>
+                            <nz-option *ngFor="let option of selectDataShi" [(nzLabel)]="option.name" [nzValue]="option.code">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                    <nz-form-control nz-col [nzSm]="3">
+                        <nz-select formControlName="workAreasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                            <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        详细地点
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="workAddress" placeholder="请填写办公详细地点">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <!--<nz-form-item nz-row class="mb0">-->
+                <!--<div nz-form-label nz-col [nzSm]="2">-->
+
+                <!--</div>-->
+                <!--<nz-form-control nz-col [nzSpan]="20">-->
+                <!--<button nz-button [nzType]="'primary'" nzSize="large">增加</button>-->
+                <!---->
+                <!--</nz-form-control>-->
+
+                <!--</nz-form-item>-->
+            </form>
+        </nz-col>
+    </nz-row>
+    <ng-template #itemContentTemplate>
+        <div></div>
+    </ng-template>
+</nz-card>

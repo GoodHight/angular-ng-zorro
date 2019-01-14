@@ -1,0 +1,77 @@
+
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>用户认证</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>用户认证1</span>
+    </ng-template>
+    <div>
+        <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    上传身份证正面
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload
+                            [nzAction]="uploaderFrontUrl"
+                            nzListType="picture-card"
+                            nzName="file"
+                            [(nzFileList)]="fileList[0]"
+                            [nzShowButton]="fileList[0].length < 1"
+                            [nzPreview]="handlePreview"
+                            (nzChange)="handleChange($event)"
+                    >
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                              (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4" nzRequired>
+                    上传身份证背面
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-upload
+                            [nzAction]="uploaderBackUrl"
+                            nzListType="picture-card"
+                            nzName="file"
+                            [(nzFileList)]="fileList[1]"
+                            [nzShowButton]="fileList[1].length < 1"
+                            [nzPreview]="handlePreview"
+                            (nzChange)="handleChange($event)"
+                    >
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                              (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [disabled]="readonly" nzType="primary" routerLink="/userInfo/authentication/next1">下一步</button>
+    <button nz-button [disabled]="" nzType="primary" (click)="submitForm()">保存</button>
+</ng-template>

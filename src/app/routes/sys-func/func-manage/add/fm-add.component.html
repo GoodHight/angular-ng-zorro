@@ -1,0 +1,91 @@
+<!-- 新增/编辑 -->
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{client == 0 ? 'PC端': '移动端'}}{{isAdd ? '新增': '编辑'}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>功能管理</span>
+    </ng-template>
+    <div nz-row>
+        <form nz-form [formGroup]="form">
+            <nz-form-item>
+                <nz-form-label nzSm="2" nzFor="title">上级菜单</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <nz-select nzAllowClear nzPlaceHolder="请选择上级菜单" (ngModelChange)="parentMenuChange($event)" formControlName="menuParentGuid" style="width: 100%;">
+                        <nz-option *ngFor="let option of menuList" [nzLabel]="option.menuName" [nzValue]="option.guid">
+                        </nz-option>
+                    </nz-select>
+                    <!--<nz-form-explain *ngIf="form.get('menuParentGuid').dirty && form.get('menuParentGuid').errors">请输入菜单名</nz-form-explain>-->
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzSm="2" nzRequired nzFor="title">菜单名</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="menuName" placeholder="菜单名">
+                    <nz-form-explain *ngIf="form.get('menuName').dirty && form.get('menuName').errors">请输入菜单名</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzSm="2" nzRequired nzFor="messageType">菜单图标</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="menuCss" placeholder="菜单图标">
+                    <nz-form-explain *ngIf="form.get('menuCss').dirty && form.get('menuCss').errors">请输入菜单图标</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label nzRequired nzSm="2">菜单路径</nz-form-label>
+                    <nz-form-control nzSm="16">
+                        <input nz-input formControlName="menuAction" placeholder="菜单路径">
+                        <nz-form-explain *ngIf="form.get('menuAction').dirty && form.get('menuAction').errors">请输入菜单路径</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzSm="2">背景样式</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="menuBackStyle" placeholder="背景样式">
+                    <nz-form-explain *ngIf="form.get('menuBackStyle').dirty && form.get('menuBackStyle').errors">请输入背景样式</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzSm="2">图标样式</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="menuIconStyle" placeholder="图标样式">
+                    <nz-form-explain *ngIf="form.get('menuIconStyle').dirty && form.get('menuIconStyle').errors">请输入图标样式</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzSm="2">边框线样式</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="menuLineStyle" placeholder="边框线样式">
+                    <nz-form-explain *ngIf="form.get('menuLineStyle').dirty && form.get('menuLineStyle').errors">请输入边框线样式</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired nzSm="2">菜单排序</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <nz-select nzAllowClear nzPlaceHolder="请选择菜单排列序号" formControlName="menuOrder" style="width: 100%;">
+                        <nz-option *ngFor="let option of menuIndexs" [nzLabel]="option" [nzValue]="option">
+                        </nz-option>
+                    </nz-select>
+                    <nz-form-explain *ngIf="form.get('menuOrder').dirty && form.get('menuOrder').errors">请选择菜单排列序号</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button nzType="primary" (click)="submit()" type="submit" [nzLoading]="loading">提 交</button>
+    <button nz-button [routerLink]="['/sysfunc/funcmanage/index/', (client == 0 ? 'pc': 'app')]" nzType="default">返回</button>
+</ng-template>

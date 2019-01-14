@@ -1,0 +1,183 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzTabBarExtraContent]="itemContentTemplate">
+        <nz-tab [nzTitle]="'发起工作'">
+          <ng-template #nzTitle><div routerLinkActive="active" >发起工作流程</div></ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <nz-row [nzGutter]="16">
+    <nz-col [nzMd]="24" class="employee-add">
+      <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired nz-col [nzSm]="2">
+            请假类型
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-radio-group [(ngModel)]="dataList.type" formControlName="type">
+              <label nz-radio *ngFor="let option of selectDataType"
+                     [nzValue]="option.guid">
+                <span>{{option.dictName}}</span>
+              </label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired nz-col [nzSm]="2">
+            开始时间
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-date-picker formControlName="starTime"  [nzFormat]="dateFormat"></nz-date-picker>
+            <div nz-form-explain *ngIf="(form.get('starTime').dirty || form.get('starTime').touched) && form.get('starTime').errors">
+              请选择开始时间
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired nz-col [nzSm]="2">
+            结束时间
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <nz-date-picker  [nzFormat]="dateFormat" formControlName="endTime" ></nz-date-picker>
+            <div nz-form-explain *ngIf="(form.get('endTime').dirty || form.get('endTime').touched) && form.get('endTime').errors">
+              请选择结束时间
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nzRequired nz-col [nzSm]="2">
+            时长
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <input nz-input formControlName="duration" [(ngModel)]="dataList.duration" placeholder="请输入请假时长">
+            <div nz-form-explain *ngIf="(form.get('duration').dirty || form.get('duration').touched) && form.get('duration').errors">
+              请输入请假时长
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="2">
+            请假事由
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+                        <textarea  nz-input [(ngModel)]="dataList.remark" formControlName="remark" placeholder="请假事由。">
+                        </textarea>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+          <nz-form-label nz-col [nzSm]="2">
+            审批人
+          </nz-form-label>
+          <nz-form-control nz-col [nzSm]="16">
+            <div nz-col nzSpan="24" style="font-size: 14px; color: rgb(50, 51, 52);">
+              <div nz-row>
+                <div nz-col nzSpan="24">
+                  <div class="approval-sorted" id="items" [sortablejs]="items">
+                    <div class="stream-user-content-approval" *ngFor="let item of items;let no = index">
+                      <div class="stream-user"><i class="anticon anticon-close stream-user-close"
+                                                  style="font-size: 14px; color: rgb(167, 163, 163);"
+                                                  ></i>
+                        <div nz-col nzSpan="24" class="approval-stream-card">
+                          <div>
+                            <div class="node-avatar">
+                              <img class="common-img"
+                                   src="https://img.alicdn.com/tfs/TB1UiLNSpXXXXcTaXXXXXXXXXXX-50-48.png"
+                                   alt="">
+                              <span>{{ item.candidateUser }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <i class="anticon anticon-arrow-right steamLine-arrow-right"></i>
+                    </div>
+                  </div>
+                  <div nz-col nzSpan="2" class="plus">
+                                  <span class="plus-icon  anticon anticon-plus-circle-o"
+                                        (click)="toggleMask()"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+        <!--<file-template #fileTemplate [bizType]="'resume'"  [bizID]="guid" ></file-template>-->
+      </form>
+    </nz-col>
+  </nz-row>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="选择审核人" (nzOnCancel)="toggleMask()" (nzOnOk)="handleOk()" [nzOkText]="'确定'" [nzCancelText]="'取消'"
+            >
+    <nz-layout>
+      <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzCollapsedWidth]="0" [nzBreakpoint]="'lg'">
+        <ul nz-menu [nzMode]="'inline'" style="height:100%">
+          <li nz-submenu>
+            <span title><i class="anticon anticon-user"></i>subnav 1</span>
+            <ul>
+              <li nz-menu-item>option1</li>
+              <li nz-menu-item>option2</li>
+              <li nz-menu-item>option3</li>
+              <li nz-menu-item>option4</li>
+            </ul>
+          </li>
+          <li nz-submenu>
+            <span title><i class="anticon anticon-laptop"></i>subnav 2</span>
+            <ul>
+              <li nz-menu-item>option5</li>
+              <li nz-menu-item>option6</li>
+              <li nz-menu-item>option7</li>
+              <li nz-menu-item>option8</li>
+            </ul>
+          </li>
+          <li nz-submenu>
+            <span title><i class="anticon anticon-notification"></i>subnav 3</span>
+            <ul>
+              <li nz-menu-item>option9</li>
+              <li nz-menu-item>option10</li>
+              <li nz-menu-item>option11</li>
+              <li nz-menu-item>option12</li>
+            </ul>
+          </li>
+        </ul>
+      </nz-sider>
+      <nz-layout>
+        <nz-content style="margin:24px 16px 0;">
+          <div style="padding:24px; background: #fff; min-height: 360px;">
+            <div nz-row>
+              <section class="tab-content">
+                <nz-table #basicTable nzBordered nzShowPagination="false"  [nzData]="UserData"  nzNoResult="没有数据">
+                  <thead>
+                  <tr>
+                    <th>
+                      <span>序号</span>
+                    </th>
+                    <th>
+                      <span>人员</span>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody nz-tbody>
+                  <tr  *ngFor="let i of UserData let no = index">
+                    <td>{{ no+1 }}</td>
+                    <td><label nz-checkbox  [(ngModel)]="UserData[no].isDefault ">{{i.realName}}</label>
+                    </td>
+                  </tr>
+                  </tbody>
+                </nz-table>
+              </section>
+            </div>
+          </div>
+        </nz-content>
+      </nz-layout>
+    </nz-layout>
+  </nz-modal>
+  <ng-template #titleValue>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>新增请假流程</span>
+  </ng-template>
+  <ng-template #itemContentTemplate>
+    <button nz-button type="button"  nzType="default" (click)="cancel()">取消</button>
+    <button nz-button type="button" nzType="primary" [disabled]="!form.valid" (click)="_submitForm()">确定</button>
+  </ng-template>
+</nz-card>

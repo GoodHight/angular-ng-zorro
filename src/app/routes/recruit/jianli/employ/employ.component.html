@@ -1,0 +1,183 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="itemContentTemplate">
+                <nz-tab [nzTitle]="'录用审批'">
+                    <ng-template #nzTitle>
+                        <div routerLinkActive="active">录用审批</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleValue>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>录用审批</span>
+    </ng-template>
+    <ng-template #itemContentTemplate>
+        <button nz-button nzType="primary" [disabled]="!form.valid" (click)="_submitForm()">提交</button>
+        <button nz-button type="button" nzType="default" (click)="cancel()">取消</button>
+    </ng-template>
+    <div nz-row [nzGutter]="12" class="resume-recommend-box">
+        <nz-col [nzMd]="24" class="employee-add">
+            <form nz-form [formGroup]="form">
+                <div nz-row class="resume-recommend-title">
+                    <div nz-col [nzSm]="2">
+                    </div>
+                    <div nz-col [nzSm]="16">
+                        <div class="title">
+                            <span>{{detailData.name}} - {{detailData.phone}} - {{detailData.email}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        入职时间
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <!-- <nz-date-picker [nzFormat]="dateFormat"></nz-date-picker> -->
+                        <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="Select Time" formControlName="entryDateTime">
+                        </nz-date-picker>
+                        <div nz-form-explain *ngIf="(form.get('entryDateTime').dirty ||form.get('entryDateTime').touched) && form.get('entryDateTime').errors">
+                            请选择入职时间
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        试用期
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="probationStage" nzPlaceHolder="请选择试用期" nzAllowClear>
+                            <nz-option *ngFor="let item of positionList;let i = index;" [nzLabel]="item.dictName" [nzValue]="item.guid">
+                            </nz-option>
+                            <div nz-form-explain *ngIf="(form.get('probationStage').dirty ||form.get('probationStage').touched) && form.get('probationStage').errors">
+                                请选择试用期
+                            </div>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        入职职位
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="entryPostion" [(ngModel)]="dataList.entryPostion" placeholder="请输入入职职位">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        入职部门
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="entryDepartmentId" nzPlaceHolder="请选择入职部门" nzAllowClear>
+                            <nz-option *ngFor="let item of managerList;let i = index;" [nzLabel]="item.departmentName" [nzValue]="item.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        工作性质
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="workNature" nzPlaceHolder="请选择工作性质" nzAllowClear>
+                            <nz-option *ngFor="let item of workNatureData;let i = index;" [nzLabel]="item.dictName" [nzValue]="item.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        计薪方式
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="payWay" nzPlaceHolder="请选择计薪方式" nzAllowClear>
+                            <nz-option *ngFor="let item of payWayData;let i = index;" [nzLabel]="item.dictName" [nzValue]="item.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        薪酬备注
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <textarea nz-input formControlName="payRemark" placeholder="请输入备注信息">
+                        </textarea>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        转正工资(元)
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="payRegularWorker" placeholder="请输入转正工资">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2" nzRequired>
+                        试用期工资(元)
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="payOnTrial" placeholder="请输入试用期工资">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="2">
+                        添加审批人
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <span class="interview" nz-button nzType="default" (click)="setEmployeeshowModal()">
+                                <!-- <span class="interview" nz-button nzType="default" (click)="setEmployeeshowModal('1', '2')"> -->
+                            <span *ngIf="makeSure === 1">+ 添加审批人</span>
+                            <span *ngIf="makeSure === 2">{{selectPeopleName}}</span>
+                        </span>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="2">
+                        抄送人
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <ul>
+                            <!-- <li class="li-content"></li> -->
+                            <li class="li-btn">
+                                <span *ngFor="let item of sendPerson" class='copyItem'>{{item.name}}</span><button (click)="showModal()">+添加人员</button>
+                            </li>
+                        </ul>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-col>
+    </div>
+</nz-card>
+<!-- 设置审批人-->
+<nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="setEmployeeState" nzTitle="添加审批人"
+    (nzOnCancel)="setEmployeesCancel()" (nzOnOk)="setEmployeesOk()">
+    <div nz-row>
+        已选审批人：{{selectPeopleName }}
+    </div>
+    <div nz-row>
+        <div nz-col nzSpan="12" style="border-right:1px #ddd solid;min-height:100px">
+            <nz-tree [(ngModel)]="employeeList" [nzCheckable]="false" [nzMultiple]="false" (nzClick)="mouseAction('click',$event)" (nzDblClick)="mouseAction('dblclick', $event)"
+                (nzCheckBoxChange)="mouseAction('checkout', $event)">
+            </nz-tree>
+        </div>
+        <div nz-col nzSpan="12" style="padding-left:20px;min-height:100px">
+            <!-- <span *ngFor="let item of peopleData;let no = index">
+                        <label *ngIf="item.boundStatus !== '1'" nz-radio [nzValue]="item.guid" (ngModelChange)="getChecked(no)" nzDisabled [(ngModel)]="item.checked">{{ item.name }}(该用户未绑定公司)</label>
+                        <br>
+                    </span> -->
+            <nz-radio-group [(ngModel)]="selectPeopleData" (ngModelChange)="getChecked()">
+                <label nz-radio style="width: 50%;margin-right:0 " *ngFor="let item of peopleData;let no = index" [nzValue]="item.guid">{{ item.name }}</label>
+            </nz-radio-group>
+        </div>
+    </div>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisible" nzWidth="720" nzTitle="添加抄送人" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <app-lalust-select-person [excludeData]="[]"
+    [disabledData]="[]" (changeSelectPeople)="changeSelectPoeple($event)"></app-lalust-select-person>
+</nz-modal>

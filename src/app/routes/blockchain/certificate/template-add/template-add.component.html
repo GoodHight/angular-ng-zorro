@@ -1,0 +1,98 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[editAction]">
+                <ng-template #editAction>
+                    <button nz-button target="_blank" style='margin-right: 6px;border: 1px soild #40a9ff' routerLink="/blockchain/certificate/template">
+                        返回
+                    </button>
+                    <button nz-button target="_blank" (click)='Submission()' nzType="primary">
+                        确定
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>新增证书模板</span>
+        </ng-template>
+    </nz-card-tab>
+    <section>
+        <form nz-form [formGroup]="form">
+            <nz-form-item>
+                <nz-form-label nzSm="4" nzRequired nzFor="title">模板名称</nz-form-label>
+                <nz-form-control nzSm="16">
+                    <input nz-input formControlName="templateName" id="title" placeholder="模板名称">
+                    <nz-form-explain *ngIf="form.get('templateName').dirty && form.get('templateName').errors">请输入模板名称</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="4">
+                    上传模板
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="2">
+                    <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+                        [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                        </ng-template>
+                    </nz-modal>
+                </nz-form-control>
+                <nz-form-control nz-col [nzSm]="8">
+                    <div style="line-height: 26px">上传模板图片支持：jpg .jpeg .bmp .gif .png格式； </div>
+                    <div style="line-height: 26px">尺寸为1750 * 900； 大小不超过8M。 </div>
+                    <div style="line-height: 26px">温馨提示：请上传带公章的空白模板，公章覆盖在模板右下角空白处。 </div>
+                    <div style="line-height: 26px">
+                        <a target="_blank" (click)='dow()'>下载系统证书模板</a>
+                    </div>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <div *ngIf="styletypes === 'yes'">
+                    <nz-form-label nz-col [nzSm]="4">
+                        预览模板
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="20">
+                        <img style="width:30%;height: 30%;" src="{{backgroundurl}}" />
+                    </nz-form-control>
+                </div>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <div *ngIf="styletype === 'yes'">
+                    <nz-form-label nz-col [nzSm]="4">
+                        预览模板效果图
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="20">
+                        <img style="width:30%;height: 30%;" src="{{canvasImg}}" />
+                        <!-- <button label="下载" pButton (click)="saveImgLocal()">导出图片</button> -->
+                    </nz-form-control>
+                </div>
+            </nz-form-item>
+        </form>
+    </section>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+</nz-card>
+<div>
+    <div class="capture" id="capture" [(ngStyle)]="background">
+        <h4 style="color: #000;">{{contentData.title}}</h4>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{contentData.content}}</span>
+        </p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{{contentData.secondContent}}</span>
+        </p>
+        <div nz-row class="erweima">
+            <img nz-col [nzSm]="12" src="" id="image" alt="" class="erweimaimg">
+            <div nz-col [nzSm]="20" style="padding-left: 431px;margin-top: 47px;font-size: 29px">
+                <div style="line-height: 26px;margin-bottom: 10px">{{contentData.issuingDate}}</div>
+                <div style="line-height: 26px">{{contentData.issuingAgency}}</div>
+            </div>
+        </div>
+    </div>
+</div>

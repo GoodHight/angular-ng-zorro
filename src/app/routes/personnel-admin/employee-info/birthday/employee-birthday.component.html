@@ -1,0 +1,46 @@
+<!--<tab-component></tab-component>-->
+<nz-card [nzBordered]="false">
+    <nz-table #nzTable [nzData]="dataList" [nzPageSize]="q.ps" [nzLoading]="loading"
+              (nzPageIndexChange)="pageChange($event)" >
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>序号</span></th>
+            <th nz-th><span>姓名</span></th>
+            <th nz-th><span>性别</span></th>
+            <th nz-th><span>年龄</span></th>
+            <th nz-th><span>生日</span></th>
+
+
+            <th nz-th><span>属相</span></th>
+            <th nz-th><span>星座</span></th>
+            <th nz-th><span>民族</span></th>
+            <th nz-th><span>是否转正</span></th>
+            <th nz-th><span>出生日期</span></th>
+            <th nz-th><span>部门</span></th>
+            <th nz-th>
+                <span>直属部门主管</span>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr  *ngFor="let i of dataList">
+            <td nz-td>{{ i.guid }}</td>
+            <td nz-td>{{i.realName}}</td>
+            <td nz-td>{{i.gender}}</td>
+            <td nz-td>{{i.age}}</td>
+            <td nz-td>{{i.birthday}}</td>
+            <td nz-td>{{i.zodiac}}</td>
+            <td nz-td>{{i.constellation}}</td>
+            <td nz-td>{{i.nation}}</td>
+            <td nz-td *ngIf=" i.status != 1"> 已绑定</td>
+            <td nz-td>{{i.entrydAt}}</td>
+            <td nz-td>{{i.departmentName}}</td>
+            <td nz-td>
+                {{ i.directDepartmentHead }}
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+

@@ -1,0 +1,154 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzTabBarExtraContent]="editAction">
+        <nz-tab [nzTitle]="'审批详情'">
+          <ng-template #nzTitle>
+            <div routerLinkActive="active">审批详情</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+      <ng-template #editAction>
+        <button nz-button routerLink='/approval/record'>返回</button>
+      </ng-template>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <div nz-row class="record-details">
+    <div class="left">
+      <div class="title">
+        <span class="head">{{ dataList.userName.substr(1,2) }}</span>
+        <span class="name">{{ dataList.userName }}</span>
+        <span class="text">发起 {{ dataList.type }} 申请，等待我的审批</span>
+      </div>
+      <div class="list">
+        <div class="clearfix">
+          <span>审批编号：</span>
+          <span>{{ dataList.approvalNo }}</span>
+        </div>
+        <div class="clearfix">
+          <span>所在部门：</span>
+          <span>{{ dataList.department }}</span>
+        </div>
+        <!-- <div class="clearfix">
+          <span>请假类型：</span>
+          <span>{{ dataList.businessObject.type }}</span>
+        </div> -->
+        <div *ngIf="dataList.type === '离职' || dataList.type === '转正'" class="clearfix">
+          <span>入职时间：</span>
+          <span>{{ (dataList.businessObject.entryTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type === '转正'" class="clearfix">
+          <span>转正时间：</span>
+          <span>{{ (dataList.businessObject.realityTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type === '离职'" class="clearfix">
+          <span>离职时间：</span>
+          <span>{{ (dataList.businessObject.expectTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type !== '补打卡' && dataList.type !== '离职' && dataList.type !== '转正' && dataList.type !== '调岗'" class="clearfix">
+          <span>开始时间：</span>
+          <span>{{ (dataList.businessObject.startTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type !== '补打卡' && dataList.type !== '离职' && dataList.type !== '转正' && dataList.type !== '调岗'" class="clearfix">
+          <span>结束时间：</span>
+          <span>{{ (dataList.businessObject.endTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type === '补打卡'" class="clearfix">
+          <span>补卡时间：</span>
+          <span>{{ (dataList.businessObject.reissueTime | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||'----' }}</span>
+        </div>
+        <div *ngIf="dataList.type !== '补打卡' && dataList.type !== '离职' && dataList.type !== '转正' && dataList.type !== '调岗'" class="clearfix">
+          <span>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长：</span>
+          <span>{{ dataList.businessObject.duration }}（小时）</span>
+        </div>
+        <div *ngIf="dataList.type !== '转正' && dataList.type !== '调岗'" class="clearfix">
+          <span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>
+          <span>{{ dataList.businessObject.reason }}</span>
+        </div>
+        <div *ngIf="dataList.type === '离职'" class="clearfix">
+          <span>交接事项：</span>
+          <span>{{ dataList.businessObject.handoverItem }}</span>
+        </div>
+        <div *ngIf="dataList.type === '转正'" class="clearfix">
+          <span>试用期内工作和成绩：</span>
+          <span>{{ dataList.businessObject.workAndGrade }}</span>
+        </div>
+        <div *ngIf="dataList.type === '转正'" class="clearfix">
+          <span>存在问题改进意见：</span>
+          <span>{{ dataList.businessObject.problems }}</span>
+        </div>
+        <div *ngIf="dataList.type === '转正'" class="clearfix">
+          <span>对公司的意见建议：</span>
+          <span>{{ dataList.businessObject.opinion }}</span>
+        </div>
+        <div *ngIf="dataList.type === '调岗'" class="clearfix">
+          <span>生效日期：</span>
+          <span>{{ dataList.businessObject.effectTime }}</span>
+        </div>
+        <div *ngIf="dataList.type === '调岗'" class="clearfix">
+          <span>调入职位：</span>
+          <span>{{ dataList.businessObject.newPosition }}</span>
+        </div>
+        <div *ngIf="dataList.type === '调岗'" class="clearfix">
+          <span>原本职位：</span>
+          <span>{{ dataList.businessObject.position }}</span>
+        </div>
+        <div *ngIf="dataList.type === '调岗'" class="clearfix">
+          <span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>
+          <span>{{ dataList.businessObject.applyRemark }}</span>
+        </div>
+      </div>
+      <div class="copy-to">
+        <div class="clearfix">
+          <span class="h1">抄送</span>(审批通过后，将通知抄送人)
+        </div>
+        <div class="clearfix" *ngIf="dataList.hrmApprovalCarboncopies.length != 0">
+          <span class="head">{{ dataList.hrmApprovalCarboncopies[0].name }}</span>
+          <span class="text">{{ dataList.hrmApprovalCarboncopies[0].name }}</span>
+        </div>
+        <div class="clearfix" *ngIf="dataList.hrmApprovalCarboncopies.length == 0">
+          <span class="head">无</span>
+          <span class="text"></span>
+        </div>
+      </div>
+    </div>
+    <div class="right" nz-col nzSpan="16">
+      <div class="title">
+        审批流程图
+      </div>
+      <div class="list">
+        <div class="clearfix">
+          <div class="head">{{ dataList.userName }}</div>
+          <div class="name">{{ dataList.userName }}</div>
+          <div class="state">发起申请</div>
+          <i></i>
+        </div>
+        <div class="clearfix" *ngFor="let item of dataList.hrmApprovalHistories">
+          <div class="head">{{ item.name }}</div>
+          <div class="name">{{ item.name }}</div>
+          <div class="state state1" *ngIf="item.status === 0"> 审批中 </div>
+          <div class="state state1" *ngIf="item.status === 1"> 已审批 </div>
+          <i></i>
+        </div>
+        <div class="clearfix" *ngIf="lastState === '2'">
+          <div class="head"></div>
+          <div class="name"></div>
+          <div class="state"> 已完成 </div>
+          <i></i>
+        </div>
+        <div class="clearfix" *ngIf="lastState !== '2'" style="display: none;">
+          <div class="head"></div>
+          <div class="name"></div>
+          <div class="state"> 已完成 </div>
+          <i></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #titleValue>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>审批详情</span>
+  </ng-template>
+
+</nz-card>

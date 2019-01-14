@@ -1,0 +1,68 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>个人信息</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>个人信息</span>
+    </ng-template>
+    <div nz-row class="user-info-box">
+        <div nz-col [nzSpan]="18">
+            <div nz-col [nzSpan]="18">
+                <div class="title">个人头像</div>
+                <div nz-col [nzSm]="16">
+                    <nz-upload
+                            [nzAction]="uploaderUrl"
+                            nzListType="picture-card"
+                            nzName="file"
+                            [(nzFileList)]="fileList"
+                            [nzShowButton]="fileList.length < 1"
+                            [nzPreview]="handlePreview"
+                            (nzChange)="handleChange($event)"
+                    >
+                        <i class="anticon anticon-plus"></i>
+                        <div class="ant-upload-text">点击上传</div>
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                              (nzOnCancel)="previewVisible=false">
+                        <ng-template #modalContent>
+                            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+                        </ng-template>
+                    </nz-modal>
+
+                </div>
+            </div>
+            <div nz-col [nzSpan]="18">
+                <div nz-col [nzSm]="12">
+                    <div class="title">基础信息 <a routerLink="/userInfo/authentication/one">进行高级认证  解锁更多功能   </a></div>
+                    <div class="list">
+                        <span>姓名：{{ userInfo.name }}</span>                        <span class="state">已认证</span>
+                    </div>
+                    <div class="list">
+                        <span>身份证号： {{ userInfo.idNumber }}</span> <span class="state">已设置<i class="anticon anticon-form"></i></span>
+                    </div>
+                    <div class="list">
+                        <span>绑定手机号： {{ userInfo.phone }}</span><span class="state">已设置<i class="anticon anticon-form"></i></span>
+                    </div>
+                    <div class="list">
+                        <span>登录密码： **********</span><span class="state state1">未设置<i class="anticon anticon-form"></i></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [disabled]="readonly" nzType="primary" routerLink="/userInfo/authentication/next">下一步</button>
+    <button nz-button [disabled]="!validateForm.valid" nzType="primary" (click)="submitForm()">保存</button>
+</ng-template>

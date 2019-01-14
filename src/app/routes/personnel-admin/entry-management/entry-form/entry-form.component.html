@@ -1,0 +1,306 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div (click)="to(i)"> {{i.tab}} </div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #title>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>入职管理</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+      <button nz-button (click)="cancel()">返 回</button>
+      <button nz-button (click)="return()">重新填写登记表</button>
+      <button nz-button type="button" (click)="entryPost()" nzType="primary">办理入职</button>
+    </ng-template>
+  </nz-card-tab>
+  <div nz-row style="position: relative;">
+    <div nz-col class="employee-update">
+      <div>
+        <p class="account-name">基本信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">姓名：</p>
+            <p class="item-box"> {{ hrmEntryDTO.name }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">性别：</p>
+            <p class="item-box"> {{ hrmEntryDTO.gender}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">生日：</p>
+            <p class="item-box"> {{ hrmEntryDTO.birthday | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">年龄：</p>
+            <p class="item-box">{{ hrmEntryDTO.age }}</p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">民族：</p>
+            <p class="item-box"> {{ hrmEntryDTO.nation}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">政治面貌：</p>
+            <p class="item-box"> {{ hrmEntryDTO.politicalOutlook}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">婚姻状况：</p>
+            <p class="item-box"> {{ hrmEntryDTO.marriage }}</p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">子女状态：</p>
+            <p *ngIf="hrmEntryDTO.haveChildren === 0" class="item-box">无</p>
+            <p *ngIf="hrmEntryDTO.haveChildren === 1" class="item-box">有</p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证件类型：</p>
+            <p class="item-box">{{ hrmEntryDTO.idType}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证件号码：</p>
+            <p class="item-box">{{ hrmEntryDTO.idNumber}}</p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">籍贯：</p>
+            <p class="item-box"> {{ hrmEntryDTO.nativePlace }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">户口性质：</p>
+            <p class="item-box">{{ hrmEntryDTO.accountsNature}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">户籍所在地：</p>
+            <p class="item-box">
+              {{ hrmEntryDTO.censusRegister }}
+            </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">详细地址：</p>
+            <p class="item-box">{{ hrmEntryDTO.censusRegisterAddress }} </p>
+          </div>
+          <div *ngIf="hrmEntryDTO.idCardFrontId !== ''" nz-col nzSpan="12">
+            <p class="item-name">身份证正面：</p>
+            <a (click)="showModalss(hrmEntryDTO.idCardFrontId)">查看身份证正面</a>
+          </div>
+          <div *ngIf="hrmEntryDTO.idCardBackId !== ''" nz-col nzSpan="12">
+            <p class="item-name">身份证反面：</p>
+            <a (click)="showModalss(hrmEntryDTO.idCardBackId)">查看身份证反面</a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.welfareFlag === '1'">
+        <p class="account-name">工资卡信息</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.welfareFlag === '1'" style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">开户行：</p>
+            <p class="item-box"> {{ hrmEntryWelfareDTO.bankOfdeposit }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">银行卡号：</p>
+            <p class="item-box"> {{ hrmEntryWelfareDTO.cardNumber}} </p>
+          </div>
+          <div *ngIf="hrmEntryWelfareDTO.salaryCard !== ''" nz-col nzSpan="12">
+            <p class="item-name">工资卡附件：</p>
+            <a (click)="showModalss(hrmEntryWelfareDTO.salaryCard)">查看工资卡附件</a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.contactFlag === '1'">
+        <p class="account-name">通讯信息</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.contactFlag === '1'" style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">手机号码：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.phone }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">个人邮箱：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.email}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">QQ号：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.qq }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">微信号：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.wechat}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">现居住地：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.live}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">现居住地详细地址：</p>
+            <p class="item-box"> {{ hrmEntryContactDTO.liveAddress}} </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="account-name" *ngIf="hrmEntrySettingDTO.employmentFlag === '1'">工作经历</p>
+      </div>
+      <div style="padding: 18px 24px" *ngIf="hrmEntrySettingDTO.employmentFlag === '1'">
+        <div nz-row *ngFor="let item of hrmEntryEmploymentDTOs">
+          <div nz-col nzSpan="24" class='ed-box'>
+            <p class="userEducations">{{item.entryTime | dateTrans:'YYYY-MM-dd' }} 至 {{ item.quitTime | dateTrans:'YYYY-MM-dd' }}</p>
+            <div style="width: calc(50% - 200px);padding-left: 18px" class="educations">
+              <p class="userEducations-box">{{item.enterpriseName}}</p>
+              <p class="item-name">{{item.position}}
+                <a *ngIf="item.dimission !== ''" (click)="showModalss(item.dimission)"> | 查看离职证明</a>
+              </p>
+              <p class="item-name">
+                <span style="background: #80c2ff;color:#fff;padding: 0 6px;border-radius: 4px">离职原因</span>
+                {{item.dimissionReason}}
+              </p>
+            </div>
+            <div style="width:50%;padding-left: 18px" class="educations">
+              <p class="item-name">证明人：{{item.witness}}</p>
+              <p class="item-name">
+                证明人联系电话：：{{item.witnessPhone}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.educationFlag === '1'">
+        <p class="account-name">教育信息</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.educationFlag === '1'" style="padding: 18px 24px">
+        <div nz-row *ngFor="let item of hrmEntryEducationDTOs">
+          <div nz-col nzSpan="24" class='ed-box'>
+            <p class="userEducations">{{item.education}}
+            </p>
+            <div style="width: calc(50% - 200px);padding-left: 18px" class="educations">
+              <p class="userEducations-box">{{item.schoolName}}</p>
+              <p class="item-name">{{item.major}}
+                <a (click)="showModalss(item.graduationCertificate)" *ngIf="item.education !== ''"> | 查看毕业证</a>
+                <a *ngIf="item.diploma !== ''" (click)="showModalss(item.diploma)"> | 查看学位证</a>
+              </p>
+            </div>
+            <div class="userEducations-time">
+              毕业于：{{ item.graduateTime | dateTrans:'YYYY年MM月dd日' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div *ngIf="hrmEntrySettingDTO.salaryFlag === '1'">
+        <p class="account-name">紧急联系人信息</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.salaryFlag === '1'" style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="6">
+            <p class="item-name">紧急联系人：</p>
+            <p class="item-box"> {{ hrmEntryEmergencyDTO.emergencyContact }} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">关系：</p>
+            <p class="item-box"> {{ hrmEntryEmergencyDTO.relation}} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">紧急联系人手机：</p>
+            <p class="item-box"> {{ hrmEntryEmergencyDTO.emergencyPhone}} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">联系地址：</p>
+            <p class="item-box"> {{ hrmEntryEmergencyDTO.contactAddress}}{{ hrmEntryEmergencyDTO.contactDetailAddress}} </p>
+          </div>
+        </div>
+      </div>
+      <!-- <div *ngIf="hrmEntrySettingDTO.trainingFlag === '1'">
+        <p class="account-name">培训信息</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.trainingFlag === '1'" style="padding: 18px 40px">
+        <div *ngFor="let index of hrmEntryTrainingDTOs" nz-row>
+          <div nz-col nzSpan="6">
+            <p class="item-name">培训名称：</p>
+            <p class="item-box"> {{ index.name }} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">培训时间：</p>
+            <p class="item-box"> {{ index.trainingTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">培训获得证书：</p>
+            <p class="item-box"> {{ index.certificateName }} </p>
+          </div>
+          <div nz-col nzSpan="6">
+            <p class="item-name">培训备注：</p>
+            <p class="item-box"> {{ index.remark}} </p>
+          </div>
+        </div>
+      </div> -->
+      <div>
+        <p class="account-name" *ngIf="hrmEntrySettingDTO.trainingFlag === '1'">培训信息</p>
+      </div>
+      <div style="padding: 18px 24px" *ngIf="hrmEntrySettingDTO.trainingFlag === '1'">
+        <div nz-row *ngFor="let item of hrmEntryTrainingDTOs">
+          <div nz-col nzSpan="24" class='ed-box'>
+            <p class="userEducations">{{item.trainingTime | dateTrans:'YYYY-MM-dd' }}</p>
+            <div style="width: calc(50% - 200px);padding-left: 18px" class="educations">
+              <p class="item-name">培训名称：{{item.name}}</p>
+              <p class="item-name">获得证书：{{item.certificateName}}
+                <!-- <a *ngIf="item.dimission !== ''" (click)="showModalss(item.dimission)"> | 查看证书</a> -->
+              </p>
+            </div>
+            <div style="width:50%;padding-left: 18px" class="educations">
+              <p class="item-name">培训备注：</p>
+              <p class="item-name">
+                {{item.remark}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.titleFlag === '1'">
+        <p class="account-name">职称</p>
+      </div>
+      <div *ngIf="hrmEntrySettingDTO.titleFlag === '1'" style="padding: 18px 40px">
+        <div *ngFor="let index of hrmEntryTitleDTOs" nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">职称名称：</p>
+            <p class="item-box"> {{ index.name }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">职称获取时间：</p>
+            <p class="item-box"> {{ index.titleTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">职称备注：</p>
+            <p class="item-box"> {{ index.remark }} </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="account-name">入职声明</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <P class="item-name">1、本人承诺以上各项信息资料均真实有效，如有不实，公司可立即无条件辞退本人。</P>
+        <P class="item-name">2、我保证在贵公司报道前，已与原单位解除劳动合同等关系，并不会将原工作单位的任何商业秘密带到贵公司。如与原工作单位因劳动合同或商业秘密问题出现法律纠纷，我愿意承担一切责任。</P>
+        <P class="item-name">3、我同意授权公司对所填写信息进行核实。</P>
+      </div>
+    </div>
+  </div>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisibles" nzTitle="办理入职" (nzOnCancel)="handleCancels()" (nzOnOk)="handleOks()">
+  <p>入职信息核对无误，确认办理入职</p>
+</nz-modal>
+<nz-modal [(nzVisible)]="reason" nzTitle="重新填写入职登记表" (nzOnCancel)="handreason()" (nzOnOk)="reasonOk()">
+  <input style='width: 100%;border:1px solid #e2e2e2;height: 36px;' [(ngModel)]="returnReason" placeholder="退回原因：字数限50字内" maxlength='50'
+  />
+</nz-modal>
+<nz-modal nzWidth="700px" [(nzVisible)]="isVisibless" nzTitle="" [nzFooter]='null' nzClosable="false" (nzOnCancel)="Cancel()"
+  (nzOnOk)="Ok()">
+  <img (click)="handleOkss()" width="100%" height="400" src="{{ templateimgUrl }}" alt="">
+</nz-modal>

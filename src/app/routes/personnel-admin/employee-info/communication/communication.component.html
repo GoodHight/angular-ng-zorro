@@ -1,0 +1,289 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>员工信息管理</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <button nz-button type="button" [disabled]="!form.valid" (click)="_submitForm()" nzType="primary">保存</button>
+            <button nz-button (click)="cancel()">返 回</button>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+        <div nz-col class="employee-update">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div id="message-information">
+                    <!-- <legend>通讯信息</legend> -->
+                    <nz-form-item nz-row>
+                        <nz-form-label nzRequired nz-col [nzSm]="4">
+                            手机号
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input [maxLength]='11' formControlName="phone" placeholder="请填写手机号码">
+                            <nz-form-explain *ngIf="form.get('phone').dirty && (form.get('phone').hasError('required') || form.get('phone').hasError('mobile'))">
+                                <ng-container *ngIf="form.get('phone').hasError('required')">
+                                    请填写手机号！
+                                </ng-container>
+                                <ng-container *ngIf="form.get('phone').hasError('mobile') && !form.get('phone').hasError('required')">
+                                    手机号格式错误！
+                                </ng-container>
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            是否隐藏手机号码
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="hidePhone">
+                                    <label nz-radio *ngFor="let option of hidePhone" [nzValue]="option.guid">{{ option.dictName }}</label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            企业邮箱
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="workEmail" placeholder="请填写企业邮箱">
+                            <nz-form-explain *ngIf="form.get('workEmail').dirty && form.get('workEmail').errors">
+                                请输入正确的企业邮箱
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            QQ
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="qq" placeholder="请填写QQ">
+                                <nz-form-explain *ngIf="form.get('qq').dirty && form.get('qq').errors">
+                                    请输入正确的数字QQ号
+                                </nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            微信
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="wechat" placeholder="请填写微信">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            分机号
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="extNumber" placeholder="请填写分机号">
+                                <nz-form-explain *ngIf="form.get('extNumber').dirty && form.get('extNumber').errors">
+                                    请输入正确的分机号
+                                </nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            办公地点
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="workProvinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="workCityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="workAreasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            办公详细地点
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="workAddress" placeholder="请填写办公地点">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            现居住地
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="liveProvinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="liveCityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="liveAreasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            现居住详细地址
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="liveAddress" placeholder="请填写员工现居住地址">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            居住证日期
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzFormat]="dateFormat" formControlName="liveStartDate" nzPlaceHolder="start"
+                                (ngModelChange)="onStartChange($event)" (nzOnOpenChange)="handleStartOpenChange($event)">
+                            </nz-date-picker>
+                            至
+                            <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzFormat]="dateFormat" formControlName="liveEndDate" nzPlaceHolder="End"
+                                [nzOpen]="endOpen" (ngModelChange)="onEndChange($event)" (nzOnOpenChange)="handleEndOpenChange($event)">
+                            </nz-date-picker>
+                            <!-- <div nz-col [nzSpan]="6">
+                                <nz-date-picker formControlName="liveStartDate" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div>
+                            <div nz-col [nzSpan]="1">
+                                <p nz-form-split>至</p>
+                            </div>
+                            <div nz-col [nzSpan]="6">
+                                <nz-date-picker formControlName="liveEndDate" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div> -->
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            个人邮箱
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="email" placeholder="请填写员工个人邮箱">
+                            <nz-form-explain *ngIf="form.get('email').dirty && form.get('email').errors">
+                                请输入正确的个人邮箱
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            紧急联系人
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="emergencyContact" placeholder="请填写紧急联系人">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            紧急联系人手机
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="emergencyPhone" placeholder="请填写紧急联系人手机">
+                            <nz-form-explain *ngIf="form.get('emergencyPhone').dirty && form.get('emergencyPhone').errors">
+                                请输入正确的紧急人手机
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            关系
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="relation" placeholder="请填写紧急联系人关系">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            联系地址
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="provinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="cityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="areasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            详细地址
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="address" placeholder="请填写紧急联系人详细地址">
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</nz-card>

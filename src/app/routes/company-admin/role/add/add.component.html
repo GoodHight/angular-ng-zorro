@@ -1,0 +1,44 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>权限管理</span>
+    </ng-template>
+    <div nz-row>
+        <form nz-form [formGroup]="form" (ngSubmit)="submit()">
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label nzRequired nzSm="2">权限名称</nz-form-label>
+                    <nz-form-control nzSm="16">
+                    <input nz-input formControlName="roleName" [(ngModel)]="formData.roleName"  placeholder="权限名称">
+                    <nz-form-explain *ngIf="form.get('roleName').dirty && form.get('roleName').errors">请输入权限名称</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label nzRequired nzSm="2">权限范围</nz-form-label>
+                    <nz-form-control nzSm="16">
+                    <input nz-input formControlName="roleScope" [(ngModel)]="formData.roleScope" placeholder="权限范围">
+                    <nz-form-explain *ngIf="form.get('roleScope').dirty && form.get('roleScope').errors">请输入权限范围</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button nzType="primary" (click)="submit()" type="submit" [nzLoading]="submitting">提 交</button>
+    <button nz-button [routerLink]="['/companyadmin/role']" nzType="primary">返回</button>
+</ng-template>

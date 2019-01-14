@@ -1,0 +1,139 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>政策补贴</span>
+  </ng-template>
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[areas,saveAction,search, cancelAction]">
+        <span>今日（{{extraData.todayDate}}）</span>
+        <span>新增</span>
+        <span class="bule">{{extraData.todayNewAddCount}}</span>
+        <span>条政策补贴</span>
+        <ng-template #areas>
+          <span>选择地区：</span>
+          <nz-select nzPlaceHolder="请选择省" [(ngModel)]="provinceId" (ngModelChange)="CitysListChange($event)" style="width: 130px;margin-right: 0;"
+            nzAllowClear>
+            <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+            </nz-option>
+          </nz-select>
+          <nz-select nzPlaceHolder="请选择市" [(ngModel)]="cityId" (ngModelChange)="CountyListChange($event)" style="width:130px;margin-right: 0;"
+            nzAllowClear>
+            <nz-option *ngFor="let option of selectDataShi" [(nzLabel)]="option.name" [nzValue]="option.code">
+            </nz-option>
+          </nz-select>
+          <nz-select nzPlaceHolder="请选择区" [(ngModel)]="areaId" (ngModelChange)="areaListChange($event)" style="width: 130px;margin-right: 0;"
+            nzAllowClear>
+            <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+            </nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #saveAction>
+          <span>政策类型：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="typeId" (ngModelChange)="typeChange($event)">
+            <nz-option *ngFor="let option of policyTypelist" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #search>
+          <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+            <input type="text" nz-input placeholder="请输入搜索内容" [(ngModel)]="q.searchStr">
+          </nz-input-group>
+          <ng-template #suffixIconButton>
+            <button (click)="getData()" nz-button nzType="primary" nzSearch>
+              <i class="anticon anticon-search"></i>
+            </button>
+          </ng-template>
+        </ng-template>
+        <ng-template #cancelAction>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="policylist" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+    [nzLoading]="loading" (nzPageIndexChange)="pageChange($event, 1)" nzNoResult="没有数据">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>地区</th>
+        <th>类型</th>
+        <th>发布日期</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of ajaxTable.data let no = index">
+        <td>{{i.title}}</td>
+        <td>{{i.provinceName}}{{i.cityName}}{{i.areaName}}</td>
+        <td>{{i.typeName}}</td>
+        <td>{{i.pubTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+        <td>{{i.stateValue}}</td>
+        <td>
+          <a (click)="details(i.guid)">详情</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a *ngIf="i.state === 0" (click)="applyShowModel(i.guid)">申请</a>
+          <a *ngIf="i.state === -2" (click)="applyShowModel(i.guid)">重新申请</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>
+<nz-modal [nzFooter]="null" [(nzVisible)]="isVisible" nzTitle="政策文件" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <p *ngFor="let item of detalislist" style="overflow: hidden;">
+    <span style="float: left">{{item.fileName}}</span>
+    <a style="float: right" target="target" href="{{item.fileUrl}}">预览文件</a>
+  </p>
+</nz-modal>
+<nz-modal [(nzVisible)]="apply" nzTitle="申请政策补贴" (nzOnCancel)="applyCancel()" (nzOnOk)="applyOk()">
+  <form nz-form [formGroup]="form" (ngSubmit)="handleOk()">
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="7" nzRequired>
+        姓名
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="14">
+        <nz-input-group>
+          <input nz-input type='text' maxlength='15' formControlName="applyName" placeholder="请填写姓名">
+        </nz-input-group>
+        <nz-form-explain *ngIf="form.get('applyName').dirty && form.get('applyName').hasError('required')">请填写姓名</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="7" nzRequired>
+        联系电话
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="14">
+        <nz-input-group>
+          <input nz-input type='text' formControlName="applyPhone" maxlength='11' oninput="value=value.replace(/[^\d]/g,'')" placeholder="请填写联系电话">
+        </nz-input-group>
+        <nz-form-explain *ngIf="(form.get('applyPhone').dirty || form.get('applyPhone').touched) && form.get('applyPhone').errors">
+          请填写正确的联系电话
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="7" nzRequired>
+        职务
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="14">
+        <nz-input-group>
+          <input nz-input type='text' maxlength='20' formControlName="applyPostion" placeholder="请填写职务">
+        </nz-input-group>
+        <nz-form-explain *ngIf="form.get('applyPostion').dirty && form.get('applyPostion').hasError('required')">请填写职务</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="7" nzRequired>
+        办公地址
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="14">
+        <nz-input-group>
+          <input nz-input type='text' maxlength='26' formControlName="officeAddress" placeholder="请填写办公地址">
+        </nz-input-group>
+        <nz-form-explain *ngIf="form.get('officeAddress').dirty && form.get('officeAddress').hasError('required')">请填写办公地址</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

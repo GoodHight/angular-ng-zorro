@@ -1,0 +1,80 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>版本管理</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[searchAction, selectAction, addAction]">
+                <ng-template #itemContentTemplate></ng-template>
+                <ng-template #searchAction>
+                    <div *ngIf="serachType === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchStr">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="pageChange(1)" nz-button nzType="primary" nzSearch>
+                                <i class="anticon anticon-search"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="serachType === 0" (click)="serachType = 1">
+                        <span>
+                            <i class="icon iconfont icon-sousuo"></i>搜索
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template #selectAction>
+                    <nz-select style="width: 120px;" [(ngModel)]="client" (ngModelChange)="pageChange(1)" nzAllowClear nzPlaceHolder="选择客户端">
+                        <nz-option nzValue="app" nzLabel="移动端"></nz-option>
+                        <nz-option nzValue="pc" nzLabel="管理端"></nz-option>
+                    </nz-select>
+                </ng-template>
+                <ng-template #addAction>
+                    <button nz-button nzType="primary" [routerLink]="['/admin/version/add']">添加</button>
+                </ng-template>
+                
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content">
+            <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataList" [nzTotal]="pageTotal" [nzPageIndex]="pageNum" [nzPageSize]="pageSize"
+                [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>版本名</th>
+                        <th>版本号</th>
+                        <th>创建时间</th>
+                        <th>版本标签</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ajaxTable.data; let index = index">
+                        <td>{{index + (pageNum - 1) * pageSize + 1}}</td>
+                        <td>{{item.versionName}}</td>
+                        <td>{{item.versionNumber}}</td>
+                        <td>{{item.createTime | dateTrans:'YYYY年MM月dd日'}}</td>
+                        <td>{{item.versionNameTag}}</td>
+                        <td>{{item.state == 1 ? '开启' : '停用'}}</td>
+                        <td>
+                            <a (click)="confirmState(item)">{{item.state == 0 ? '开启' : '停用'}}</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a routerLink="/admin/template/index/{{ item.guid }}/{{ item.versionName }}">功能维护</a>
+                            <nz-divider nzType="vertical" *ngIf="item.isConfig == 1"></nz-divider>
+                            <a [routerLink]="['/admin/version/edit', item.guid]" *ngIf="item.isConfig == 1">编辑</a>
+                            <nz-divider nzType="vertical" *ngIf="item.isConfig == 1"></nz-divider>
+                            <a style="color: red;" (click)="confirmDelete(item)" *ngIf="item.isConfig == 1">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </section>
+    </div>
+</nz-card>

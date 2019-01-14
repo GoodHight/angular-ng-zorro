@@ -1,0 +1,116 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>证书签发</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset (nzSelectChange)="tabSelectChange($event)">
+                <nz-tab [nzTitle]="nzTitle0">
+                    <ng-template #nzTitle0>
+                        <div>已签发({{pageIssuedTotal}})</div>
+                    </ng-template>
+                </nz-tab>
+                <nz-tab [nzTitle]="nzTitle1">
+                    <ng-template #nzTitle1>
+                        <div>未签发({{pageNotIssueTotal}})</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <div nz-col [nzSpan]="4">
+            <nz-list class="class-list" [nzDataSource]="classes" nzBordered [nzRenderItem]="item" [nzItemLayout]="'vertical'">
+                <ng-template #item let-item>
+                    <nz-list-item *ngIf="item" [ngClass]="{'select': item['guid'] === currentItemGuid}" [nzContent]="item.name" (click)="selectClass(item)"></nz-list-item>
+                </ng-template>
+            </nz-list>
+        </div>
+        <div nz-col [nzSpan]="20" class="right-content">
+            <nz-card [nzBordered]="false" [nzBodyStyle]="{'padding-top': '0', 'padding-right': '0'}">
+                <nz-table *ngIf="tabSelect === 0" #ajaxTable (nzPageIndexChange)="pageChange($event, 1)" [nzPageSize]="pageSize" [nzPageIndex]="pageNum" [nzTotal]="pageIssuedTotal" [nzData]="alreadyIssues" [nzFrontPagination]="false" [nzLoading]="loading" nzNoResult="没有数据">
+                    <thead>
+                        <tr>
+                            <th>
+                                <span>序号</span>
+                            </th>
+                            <th>
+                                <span>学生姓名</span>
+                            </th>
+                            <th>
+                                <span>联系电话</span>
+                            </th>
+                            <th>
+                                <span>身份证号</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                        <tr *ngFor="let item of ajaxTable.data; let no = index">
+                            <td>{{ no + 1 }}</td>
+                            <td>{{item.studentName}}</td>
+                            <td>{{item.studentPhone | hiddenNumber:2 }}</td>
+                            <td>{{item.idCardNumber | hiddenNumber:2}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+                <nz-table #ajaxTable *ngIf="tabSelect === 1" (nzPageIndexChange)="pageChange($event, 0)" [nzData]="notIssues" [nzPageSize]="pageSize" [nzPageIndex]="pageNum" [nzTotal]="pageNotIssueTotal" [nzFrontPagination]="false" [nzLoading]="loading" nzNoResult="没有数据">
+                    <thead>
+                        <tr>
+                            <!-- <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th> -->
+                            <th>
+                                <span>序号</span>
+                            </th>
+                            <th>
+                                <span>学生姓名</span>
+                            </th>
+                            <th>
+                                <span>联系电话</span>
+                            </th>
+                            <th>
+                                <span>身份证号</span>
+                            </th>
+                            <th>
+                                <span>操作</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                        <tr *ngFor="let item of ajaxTable.data; let no = index">
+                            <!-- <td nzShowCheckbox [(nzChecked)]="item.checked" (nzCheckedChange)="refreshStatus($event)"></td> -->
+                            <td>{{ no + 1 }}</td>
+                            <td>{{item.studentName}}</td>
+                            <td>{{item.studentPhone | hiddenNumber:2 }}</td>
+                            <td>{{item.idCardNumber | hiddenNumber:2}}</td>
+                            <td>
+                                <a (click)="$event.stopPropagation();approvalCertificate(item)">签发</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="$event.stopPropagation();refuseCertificate(item, applyModalContent, applyModalFooter)">拒绝</a>
+                                <ng-template #applyModalContent>
+                                    <div nz-row>
+                                        <nz-form-item>
+                                            <nz-form-label required>拒绝原因</nz-form-label>
+                                            <nz-form-control [nzSpan]="24">
+                                                <textarea row="4" nz-input [(ngModel)]="refuseReason"></textarea>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </ng-template>
+                                <ng-template #applyModalFooter>
+                                    <button nz-button nzType="primary" (click)="refuseOk(item)" [disabled]="!refuseReason">
+                                            确定
+                                        </button>
+                                    <button nz-button nzType="default" (click)="refuseCancel()">
+                                            取消
+                                        </button>
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+</nz-card>

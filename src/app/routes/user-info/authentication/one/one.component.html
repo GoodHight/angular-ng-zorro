@@ -1,0 +1,60 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>用户认证</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>用户认证</span>
+    </ng-template>
+    <div class="authenticate-box" nz-row>
+        <div class="steps-content" nz-col [nzSpan]="18">
+            <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+                <nz-form-item nz-row>
+                    <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>用户姓名</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input type="text" formControlName="realName" [readonly]="readonly">
+                        <nz-form-explain
+                                *ngIf="validateForm.get('realName').dirty && validateForm.get('realName').errors">
+                            <ng-container *ngIf="validateForm.get('realName').hasError('required')">
+                                请输入用户姓名
+                            </ng-container>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        身份证号
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="idCardNumber" placeholder="请输入身份证号" MAXLENGTH="18"
+                               [readonly]="readonly">
+                    </nz-form-control>
+                    <nz-form-explain
+                            *ngIf="validateForm.get('idCardNumber').dirty && validateForm.get('idCardNumber').errors">
+                        请输入身份证号
+                    </nz-form-explain>
+                </nz-form-item>
+            </form>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-steps [(nzCurrent)]="current" [nzDirection]="'vertical'">
+                <nz-step [nzTitle]="'填写法人基本信息'" [nzDescription]="''"></nz-step>
+                <nz-step [nzTitle]="'填写企业基本信息'" [nzDescription]="''"></nz-step>
+                <nz-step [nzTitle]="'操作成功'" [nzDescription]="''"></nz-step>
+            </nz-steps>
+        </div>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [disabled]="readonly" nzType="primary" routerLink="/userInfo/authentication/next">下一步</button>
+    <button nz-button [disabled]="!validateForm.valid" nzType="primary" (click)="submitForm()">保存</button>
+</ng-template>

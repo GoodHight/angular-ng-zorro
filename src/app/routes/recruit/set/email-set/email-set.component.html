@@ -1,0 +1,113 @@
+
+    <nz-table #basicTable [nzData]="dataList" nzNoResult="没有数据">
+        <thead>
+        <tr>
+
+            <th>
+                <span>绑定邮箱</span>
+            </th>
+            <th>
+                <span>绑定状态</span>
+            </th>
+            <th>
+                <span>上次成功收取时间</span>
+            </th>
+            <th>
+                <span>绑定人</span>
+            </th>
+
+            <th>
+                <span>操作</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr *ngFor="let i of dataList let no = index">
+            <td>{{i.bindEmail}}</td>
+            <td>{{i.bindState === 1 ? '已绑定':'未绑定'}}</td>
+            <td>{{ i.lastSuccessReceiveTime }}</td>
+            <td>{{i.bindUserName}}</td>
+            <td>
+                <a  (click)="$event.stopPropagation();handle(0,i.guid)">{{ i.bindState === 1 ? '停用':'启用'  }}</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="$event.stopPropagation();handle(1,i.guid)">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisibleMiddle" nzTitle="绑定账号"
+              (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <form nz-row [nzGutter]="16" nz-form [formGroup]="form" class="login-form">
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    招聘渠道
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <nz-select nzAllowClear nzPlaceHolder="请选择渠道" formControlName="channelId"  [(ngModel)]="addDataList.channelId" (ngModelChange)="getQudaoName()">
+                        <nz-option
+                                *ngFor="let option of positionList[16]['childrenDictionaries']"
+                                [nzLabel]="option.dictName"
+                                [nzValue]="option.guid"
+                        >
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    邮箱
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input formControlName="bindEmail" [(ngModel)]="addDataList.bindEmail" placeholder="请输入邮箱">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    邮箱密码
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input type="password" formControlName="emailPassWord" [(ngModel)]="addDataList.emailPassWord" placeholder="请输入邮箱密码">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    服务器地址
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input formControlName="serverAddress" [(ngModel)]="addDataList.serverAddress" placeholder="请输入服务器地址">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    端口号
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input formControlName="serverPort" [(ngModel)]="addDataList.serverPort" placeholder="请输入端口号">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    收取起始日期
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input formControlName="startReceiveTime" [(ngModel)]="addDataList.startReceiveTime" placeholder="请输入收取起始日期">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nzRequired nz-col [nzSm]="6">
+                    收取结束日期
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="12">
+                    <input nz-input formControlName="endReceiveTime" [(ngModel)]="addDataList.endReceiveTime" placeholder="请输入收取起始日期">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <div nz-col [nzSm]="6">
+
+                </div>
+                <nz-form-control nz-col [nzSm]="12">
+                    <button nz-button type="button"  nzType="primary" (click)="testEmail()">测试邮箱</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>

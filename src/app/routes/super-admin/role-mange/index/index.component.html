@@ -1,0 +1,85 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="1" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>角色管理</span>
+    </ng-template>
+    <div nz-row>
+        <nz-table #basicTable [nzData]="roleList" [nzFrontPagination]="true" [nzTotal]="q.total" [nzPageSize]="q.pageSize" (nzPageIndexChange)="pageChange($event, 1)"
+            nzNoResult="没有数据">
+            <thead>
+                <tr>
+                    <th>
+                        <span>角色名称</span>
+                    </th>
+                    <th>
+                        <span>角色状态</span>
+                    </th>
+                    <th> 
+                        <span>角色权限</span>
+                    </th>
+                    <th>
+                        <span>操作</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody nz-tbody>
+                <tr *ngFor="let i of basicTable.data let no = index">
+                    <td>{{i.name}}</td>
+                    <!-- <td>{{ i.state == 1 ? '开启' : '停用' }}</td> -->
+                    <td>开启</td>
+                    <td>
+                       <p style="max-width: 1000px;"> {{ i.menusList }}</p>
+                    </td>
+                    <td>
+                        <!-- <a [routerLink]="['/companyadmin/role/details/',i.guid]" (click)="$event.stopPropagation()">详情</a>
+                        <nz-divider nzType="vertical"></nz-divider> -->
+                        <!-- <a (click)="$event.stopPropagation();changeRoleState(i);">{{ i.roleState == 1 ? '停用' : '开启' }}</a> -->
+                        <!-- <nz-divider nzType="vertical" *ngIf="i.isConfig != 0"></nz-divider> -->
+                        <a (click)="$event.stopPropagation();maintainFun(i.guid,no)" *ngIf="i.isConfig != 0">配置权限</a>
+                        <nz-divider nzType="vertical" *ngIf="i.isTemplate != 1"></nz-divider>
+                        <a (click)="$event.stopPropagation();edit(i)" *ngIf="i.isTemplate != 1">编辑</a>
+                        <nz-divider nzType="vertical" *ngIf="i.isTemplate != 1"></nz-divider>
+                        <a (click)="$event.stopPropagation();deleteRole(i)" *ngIf="i.isTemplate != 1">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除角色"
+        (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <p>确定删除？</p>
+    </nz-modal>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [routerLink]="['/admin/authority/role/add/0']" nzType="primary">添 加</button>
+</ng-template>
+<!-- 权限弹出框 -->
+<nz-modal nzWrapClassName="vertical-center-modal" [nzWidth]='800' nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisible" nzTitle="添加权限"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <div *ngFor="let item of dataList;let no = index">
+        <div style="border-bottom: 1px solid rgb(233, 233, 233);">
+            <label>
+                {{ item.name }}
+            </label>
+        </div>
+        <div>
+            <label nz-checkbox *ngFor="let items of item.subMenus;let no1 = index" [(ngModel)]="items.checked" (ngModelChange)="updateAllChecked(no,no1)">
+                {{ items.name }}
+            </label>
+        </div>
+        <br>
+        <!-- <nz-checkbox-group [(ngModel)]="item.subMenus" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group> -->
+    </div>
+</nz-modal>

@@ -1,0 +1,123 @@
+<nz-row [nzGutter]="24" class="dictionary-box">
+    <div nz-col [nzSpan]="6" class="mb-md">
+        <div class="dictionary-serach">
+            <input nz-input [(ngModel)]='inputVale' placeholder="搜索(类别名)" type="search">
+        </div>
+        <div class="listContent father">
+            <ul>
+                <li  *ngFor="let i of typeList" [ngClass]="{'active': currentId === i.dictType }" (click)="getListData(i.dictType,'0')">{{ i.dictTypeName }}</li>
+            </ul>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="18" >
+        <div class="">
+            <button nz-button (click)="add(0)" [nzType]="'primary'" [nzSize]="'large'">
+                <i class="anticon anticon-plus"></i><span>新建字典</span>
+            </button>
+            <button nz-button (click)="add(1)" [nzType]="'primary'" [nzSize]="'large'">
+                <i class="anticon anticon-plus"></i><span>新建字典类型</span>
+            </button>
+        </div>
+        <nz-table #nzTable [nzData]="listData" [nzPageSize]="q.pageSize" [nzTotal]="listTotal" [nzLoading]="loading"
+                  (nzPageIndexChange)="pageChange($event)">
+            <thead nz-thead>
+            <tr>
+                <th nz-th><span>序号</span></th>
+                <th nz-th><span>条目编号</span></th>
+                <th nz-th>
+                    <span>条目值</span>
+                </th>
+                <th nz-th>
+                    <span>条目状态</span>
+                </th>
+                <th nz-th><span>操作</span></th>
+            </tr>
+            </thead>
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let i of listData">
+                <td nz-td>{{i.index}}</td>
+                <td nz-td>{{i.dictCode}}</td>
+                <td nz-td >{{i.dictName}} </td>
+                <td nz-td>{{ i.dictState }}</td>
+                <td nz-td>
+                    <a (click)="update(i.guid,i.dictName,i.dictCode,i.dictState,i.remark,i.dictTypeCode,i.dictTypeName,i.dictType)">编辑</a>
+                    <nz-divider  nzType="vertical"></nz-divider>
+                    <a (click)="delete(i.guid)">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+
+    <nz-modal [nzVisible]="modalVisible" [nzTitle]="'新建规则'" [nzContent]="modalContent"
+              (nzOnCancel)="modalVisible=false" (nzOnOk)="save()">
+        <ng-template #modalContent>
+            <nz-form-item nz-row class="d-flex"  *ngIf=" addType === 0 ">
+                <nz-form-label nz-col [nzSm]="6">字典类型</nz-form-label>
+                <nz-form-control class="flex-1" nz-col [nzSm]="8">
+                    <nz-select [(ngModel)]="dataList.dictType" [nzShowSearch]="true" name="dictType" [nzPlaceHolder]="'请选择字典类型'"
+                               nzAllowClear style="width: 100%;height: 40px"  (ngModelChange)="setDictName(0)" (nzSearchChange)="serachData()">
+                        <nz-option
+                            *ngFor="let option of typeList"
+                            [nzLabel]="option.dictTypeName"
+                            [nzValue]="option.dictType"
+                        >
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row class="d-flex">
+                <nz-form-label nz-col [nzSm]="6">
+                    字典类型名称
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="8" class="flex-1">
+                    <input nz-input  [(ngModel)]="dataList.dictName" [nzSize]="'large'" placeholder="请输入" nzId="no">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row class="d-flex">
+                <nz-form-label nz-col [nzSm]="6" *ngIf=" addType === 0 ">
+                    字典编码
+                </nz-form-label>
+                <nz-form-label nz-col [nzSm]="6" *ngIf=" addType === 1 ">
+                    类型编码
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="8" class="flex-1">
+                    <input nz-input [(ngModel)]="dataList.dictCode"  [nzSize]="'large'" placeholder="请输入" nzId="no">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row class="d-flex">
+                <nz-form-label nz-col [nzSm]="6">是否启用</nz-form-label>
+                <nz-form-control nz-col [nzSm]="8" class="flex-1">
+                    <nz-radio-group [(ngModel)]="dataList.dictState">
+                        <label nz-radio [nzValue]="1">
+                            <span>开启</span>
+                        </label>
+                        <label nz-radio [nzValue]="0">
+                            <span>关闭</span>
+                        </label>
+                    </nz-radio-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row class="d-flex">
+                <nz-form-label nz-col [nzSm]="6">上级字典</nz-form-label>
+                <nz-form-control class="flex-1" nz-col [nzSm]="8">
+                    <nz-select  [(ngModel)]="dataList.dictParentGuid" [nzShowSearch]="true" name="dictParentGuid" (ngModelChange)="setDictName(1)" placeholder="请选择上级字典类型"
+                                nzAllowClear style="width: 100%;height: 32px" >
+                        <nz-option
+                                *ngFor="let option of typeList"
+                                [nzLabel]="option.dictTypeName"
+                                [nzValue]="option.dictType"
+                        >
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row class="d-flex">
+                <nz-form-label nz-col [nzSm]="6">备注</nz-form-label>
+                <nz-form-control nz-col [nzSm]="8" class="flex-1">
+                    <input nz-input [(ngModel)]="dataList.remark" name="remark" [nzSize]="'large'" placeholder="请输入" nzId="no">
+                </nz-form-control>
+            </nz-form-item>
+        </ng-template>
+    </nz-modal>
+</nz-row>

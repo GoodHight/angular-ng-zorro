@@ -1,0 +1,85 @@
+:host ::ng-deep .ant-upload-list-item-name {
+  height: 21px;
+  line-height: 21px;
+}
+:host ::ng-deep .ant-upload-list-item-info {
+  height: 22px;
+  line-height: 22px;
+  position: relative;
+  margin-top: 8px;
+}
+:host ::ng-deep .ant-upload-list-item-info:hover {
+  background-color: #e6f7ff;
+}
+:host ::ng-deep .ant-upload-list-item-info:hover .anticon-cross {
+  opacity: 1;
+}
+:host ::ng-deep .anticon-cross {
+  font-size: 12px;
+}
+:host ::ng-deep .anticon-cross {
+  display: inline-block;
+  font-size: 12px;
+  font-size: 10px \9;
+  -webkit-transform: scale(0.83333333) rotate(0deg);
+  transform: scale(0.83333333) rotate(0deg);
+  transition: all .3s;
+  opacity: 0;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 4px;
+  color: rgba(0, 0, 0, 0.45);
+  line-height: 22px;
+}
+:host ::ng-deep .centent_item .ant-form-item-control {
+  line-height: normal;
+}
+:host ::ng-deep .centent_item .edui-default .edui-editor-toolbarbox {
+  box-shadow: none;
+}
+:host ::ng-deep .centent_item .edui-default .edui-editor-toolbarboxouter {
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+:host ::ng-deep .centent_item .upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-right: 8px;
+}
+:host ::ng-deep .ant-form {
+  margin-top: 0px;
+}
+:host ::ng-deep .content_header,
+:host ::ng-deep .ant-card-head {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  z-index: 10;
+}
+:host ::ng-deep .update-title {
+  font-size: 14px;
+  color: #1890ff;
+  border-bottom: 4px #1890ff solid;
+  margin-bottom: -7px;
+}
+:host ::ng-deep .content_header .ant-card-head-title,
+:host ::ng-deep .ant-card-head .ant-card-head-title {
+  margin-left: 207px;
+}
+:host ::ng-deep .ant-card-body {
+  padding-top: 130px;
+}
+.choose-people {
+  min-width: 200px;
+  color: #666;
+  border: 1px #ddd solid;
+  background: #fff;
+  border-radius: 5px;
+  padding: 0 10px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 12px;
+  cursor: pointer;
+}

@@ -1,0 +1,221 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[showAction, saveAction, cancelAction]">
+                <ng-template #showAction>
+                    <button nz-button [disabled]="!form.valid" nzType="primary" (click)="showInterview()">
+                        查看面试通知
+                    </button>
+                </ng-template>
+                <ng-template #saveAction>
+                    <button nz-button nzType="primary" [disabled]="!form.valid" (click)="_submitForm()">确定</button>
+                </ng-template>
+                <ng-template #cancelAction>
+                    <button nz-button nzType="default" (click)="cancel()">
+                        取消
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleValue>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>面试通知</span>
+        </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+    <div nz-row [nzGutter]="12" class="resume-recommend-box">
+        <nz-col [nzMd]="24" class="employee-add">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div nz-row class="resume-recommend-title">
+                    <div nz-col [nzSm]="4">
+                    </div>
+                    <div nz-col [nzSm]="16">
+                        <div class="title"><span>{{detailData.name}} - {{detailData.phone}} - {{detailData.email}}</span></div>
+                    </div>
+                </div>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        面试职位
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="interviewPostion" [(ngModel)]="dataList.interviewPostion" placeholder="请输入职位">
+                        <div nz-form-explain *ngIf="(form.get('interviewPostion').dirty ||form.get('interviewPostion').touched) && form.get('interviewPostion').errors">
+                            请填写职位
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+               
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        面试部门
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="departmentId"  nzPlaceHolder="请选择部门" nzAllowClear [(ngModel)]="dataList.departmentId">
+                            <nz-option *ngFor="let item of managerList;let i = index;" [nzLabel]="item.departmentName" [nzValue]="item.guid">
+                            </nz-option>
+                        </nz-select>
+                        <div nz-form-explain *ngIf="(form.get('departmentId').dirty ||form.get('departmentId').touched) && form.get('departmentId').errors">
+                            请填写职位
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        面试日期
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-date-picker [nzDisabledDate]="disabledDate" formControlName="interviewDate"></nz-date-picker>
+                        <div nz-form-explain *ngIf="(form.get('interviewDate').dirty || form.get('interviewDate').touched) && form.get('interviewDate').errors">
+                            请选面试日期
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        面试时间
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-time-picker [(ngModel)]="time" [nzDefaultOpenValue]="defaultOpenValue" formControlName="interviewTime"></nz-time-picker>
+                        <div nz-form-explain *ngIf="(form.get('interviewTime').dirty || form.get('interviewTime').touched) && form.get('interviewTime').errors">
+                            请选入面试时间
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="4">
+                        添加面试官
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <span class="interview" nz-button nzType="default" (click)="setEmployeeshowModal('0')">
+                            <span *ngIf="selectPeopleIdCopy === ''">
+                                    + 添加面试官
+                                </span>
+                                <span *ngIf="selectPeopleIdCopy !== ''">
+                                    {{selectPeopleNameCopy}}
+                                </span>
+                        </span>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="4">
+                        公司联系人
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                            <span class="interview" nz-button nzType="default" (click)="setEmployeeshowModal('1')"><span *ngIf="selectId === ''">+
+                                    添加公司联系人
+                                </span>
+                                <span *ngIf="selectId !== ''">{{selectName}}</span></span>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="4">
+                        联系人电话
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="responsiblePhone" [(ngModel)]="dataList.responsiblePhone" placeholder="请输入联系人电话">
+                        <div nz-form-explain *ngIf="(form.get('responsiblePhone').dirty ||form.get('responsiblePhone').touched) && form.get('responsiblePhone').errors">
+                            请填写联系人电话
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nzRequired nz-col [nzSm]="4">
+                        面试地点
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <input nz-input formControlName="interviewAddress" [(ngModel)]="dataList.interviewAddress" placeholder="请输入面试地点">
+                        <div nz-form-explain *ngIf="(form.get('interviewAddress').dirty ||form.get('interviewAddress').touched) && form.get('interviewAddress').errors">
+                            请填写面试地点
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4">
+                        备注
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <textarea nz-input [(ngModel)]="dataList.remark" formControlName="remark" placeholder="输入备注信息">
+                        </textarea>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label nz-col [nzSm]="4" nzRequired>
+                        面试通知邮件模板
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select formControlName="interviewNotifyEmailTemplateId" nzAllowClear nzPlaceHolder="系统通用邮件通知" [(ngModel)]="emailType">
+                            <nz-option *ngFor="let option of templateDataEamil" [nzLabel]="option.templateName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row>
+                    <nz-form-label class="item-label" nz-col [nzSm]="4">
+                        <label nz-checkbox [(ngModel)]="checked" [ngModelOptions]="{standalone: true}">发送面试通知短信</label>
+                    </nz-form-label>
+                    <nz-form-control nz-col [nzSm]="16">
+                        <nz-select [ngModelOptions]="{standalone: true}" nzAllowClear nzPlaceHolder="请选择工作性质" [(ngModel)]="msgType">
+                            <nz-option *ngFor="let option of templateDataMsg" [nzLabel]="option.templateName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-col>
+    </div>
+    <!-- 选择面试官弹出 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="setEmployeeState" nzTitle="选择面试官"
+        (nzOnCancel)="setEmployeesCancel()" (nzOnOk)="setEmployeesOk()">
+        <div nz-row>
+            已选面试官：{{selectPeopleName }}
+        </div>
+        <div nz-row>
+            <div nz-col nzSpan="12" style="border-right:1px #ddd solid;min-height:100px">
+                <nz-tree [(ngModel)]="employeeList" [nzCheckable]="false" [nzMultiple]="false" (nzClick)="mouseAction('click',$event)" (nzDblClick)="mouseAction('dblclick', $event)"
+                    (nzCheckBoxChange)="mouseAction('checkout', $event)">
+                </nz-tree>
+            </div>
+            <div nz-col nzSpan="12" style="padding-left:20px;min-height:100px">
+                <nz-radio-group [(ngModel)]="selectPeopleData" (ngModelChange)="getChecked()">
+                    <label nz-radio style="width: 50%;margin-right:0 " *ngFor="let item of peopleData;let no = index" [nzValue]="item.guid">{{ item.name }}</label>
+                </nz-radio-group>
+            </div>
+        </div>
+    </nz-modal>
+    <!-- 选择面试负责人弹出 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="setEmployeeStateReponse" nzTitle="选择公司联系人"
+        (nzOnCancel)="setEmployeesReponseCancel()" (nzOnOk)="setEmployeesOk()">
+        <div nz-row>
+            已选公司联系人：{{selectPeopleName }}
+        </div>
+        <div nz-row>
+            <div nz-col nzSpan="12" style="border-right:1px #ddd solid;min-height:100px">
+                <nz-tree [(ngModel)]="employeeList" [nzCheckable]="false" [nzMultiple]="false" (nzClick)="mouseAction('click',$event)" (nzDblClick)="mouseAction('dblclick', $event)"
+                    (nzCheckBoxChange)="mouseAction('checkout', $event)">
+                </nz-tree>
+            </div>
+            <div nz-col nzSpan="12" style="padding-left:20px;min-height:100px">
+                <nz-radio-group [(ngModel)]="selectPeopleData" (ngModelChange)="getChecked()">
+                    <label nz-radio style="width: 50%;margin-right:0 " *ngFor="let item of peopleData;let no = index" [nzValue]="item.guid">{{ item.name }}</label>
+                </nz-radio-group>
+            </div>
+        </div>
+    </nz-modal>
+
+</nz-card>
+<!-- 查看通知 -->
+<nz-modal [(nzVisible)]="isVisibleNotice" [nzTitle]="inteviewNoticeTitleTemplate" [nzWidth]="800" [nzContent]="modalContent" [nzFooter]="modalFooter"  (nzOnCancel)="handleCanceloffer()">
+    <ng-template #inteviewNoticeTitleTemplate>
+        查看面试通知
+    </ng-template>  
+    <ng-template #modalContent>
+        <div  [innerHtml] = 'inteviewNoticeTitle'></div>
+        <div [innerHtml] = 'inteviewNoticeContent'></div>
+    </ng-template>  
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCanceloffer()">返回</button>
+    </ng-template>  
+</nz-modal>

@@ -1,0 +1,427 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div> 离职详细信息 </div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #title>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>离职员工信息</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+      <button nz-button (click)='cancel()'>返 回</button>
+    </ng-template>
+  </nz-card-tab>
+  <div nz-row style="position: relative;">
+    <div nz-col class="employee-update">
+      <!-- <div>
+        <p class="account-name">离职信息</p>
+      </div> -->
+      <div style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">姓名：</p>
+            <p class="item-box">{{ employeeDimission.name }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">离职类型：</p>
+            <p class="item-box">{{ employeeDimission.dimissionType }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">离职原因：</p>
+            <p class="item-box">{{ employeeDimission.reason }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">离职时间：</p>
+            <p class="item-box">{{ employeeDimission.dimissionaTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">交接人：</p>
+            <p class="item-box">{{ employeeDimission.handoverName }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+              <p class="item-name">交接事项：</p>
+              <p class="item-box">{{ employeeDimission.handoverItem }} </p>
+            </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">离职证明：</p>
+            <p class="item-box">{{ employeeDimission.needDimissionName }} </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="account-name">基本信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">姓名：</p>
+            <p class="item-box">{{ employee.name }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证件类型：</p>
+            <p class="item-box">{{ employee.idType}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证件号码：</p>
+            <p class="item-box">{{ employee.idNumber}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">性别</p>
+            <p class="item-box">{{ employee.gender}} </p>
+          </div>
+          <!-- <div nz-col nzSpan="12">
+            <p class="item-name">身高：</p>
+            <p class="item-box">{{ employee.height}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">体重：</p>
+            <p class="item-box">{{ employee.weight}} </p>
+          </div> -->
+          <div nz-col nzSpan="12">
+            <p class="item-name">年龄：</p>
+            <p class="item-box">{{ employee.age}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">出生日期：</p>
+            <p class="item-box"> {{ employee.birthday | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">属相：</p>
+            <p class="item-box">{{ employee.zodiac}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">星座：</p>
+            <p class="item-box"> {{ employee.constellation}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">国籍：</p>
+            <p class="item-box">{{ employee.nationality}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">户口性质：</p>
+            <p class="item-box">{{ employee.accountsNature}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">籍贯：</p>
+            <p class="item-box">{{ employee.nativePlace}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">民族：</p>
+            <p class="item-box"> {{ employee.nation}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">血型：</p>
+            <p class="item-box"> {{ employee.blood}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">招聘渠道：</p>
+            <p class="item-box"> {{ employee.recruitmentType}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">婚姻状况：</p>
+            <p class="item-box"> {{ employee.marriage}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">政治面貌：</p>
+            <p class="item-box">{{ employee.politicalOutlook}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">入党日期：</p>
+            <p class="item-box">{{ employee.joinPartyTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">存档机构：</p>
+            <p class="item-box">{{ employee.fileOrganization}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">子女状态：</p>
+            <p class="item-box">{{ employee.haveChildren}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">子女有无商业保险：</p>
+            <p class="item-box"> {{ employee.childrenCommercialInsurance}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">有无违法违纪行为：</p>
+            <p class="item-box">{{ employee.haveIllegal}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">有无重大病史：</p>
+            <p class="item-box"> {{ employee.haveMedicalHistory}} </p>
+          </div>
+          <!-- <div nz-col nzSpan="12">
+            <p class="item-name">入职体检单：</p>
+            <p class="item-box">{{ employee.nationality}} </p>
+          </div> -->
+          <div nz-col nzSpan="12">
+            <p class="item-name">备注：</p>
+            <p class="item-box">{{ employee.remark}} </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="account-name">通讯信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div *ngFor="let index of employeeContacts" nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">手机号码：</p>
+            <p class="item-box">{{ index.phone }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">企业邮箱：</p>
+            <p class="item-box">{{ index.workEmail}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">qq：</p>
+            <p class="item-box">{{ index.qq }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">微信：</p>
+            <p class="item-box">{{ index.wechat}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">分机号：</p>
+            <p class="item-box">{{ index.extNumber}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 办公地点：</p>
+            <p class="item-box">{{ index.workAddress}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">办公地点详细地址：</p>
+            <p class="item-box">{{ index.workDetailAddress}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">居住地</p>
+            <p class="item-box">{{ index.liveAddress}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">居住地详细地址：</p>
+            <p class="item-box">{{ index.liveDetailAddress}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">居住证开始日期：</p>
+            <p class="item-box">{{ index.liveStartDate | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 居住证到期(结束)日期：</p>
+            <p class="item-box">{{ index.liveEndDate | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">个人邮箱：</p>
+            <p class="item-box">{{ index.email}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">紧急联系人姓名：</p>
+            <p class="item-box">{{ index.emergencyContact}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">紧急联系人电话：</p>
+            <p class="item-box">{{ index.emergencyPhone}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">关系：</p>
+            <p class="item-box">{{ index.relation}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 联系地址：</p>
+            <p class="item-box">{{ index.address}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 联系地址详细地址：</p>
+            <p class="item-box">{{ index.detailAddress}} </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="account-name">岗位信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">员工状态：</p>
+            <p class="item-box">{{ employeeStation.status }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">入职日期：</p>
+            <p class="item-box">{{ employeeStation.entryTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">试用期限：</p>
+            <p class="item-box">{{ employeeStation.probationTime}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">转正时间：</p>
+            <p class="item-box">{{ employeeStation.fullmemTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">转正工资：</p>
+            <p class="item-box">{{ employeeStation.fullmemMoney}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">试用工资：</p>
+            <p class="item-box">{{ employeeStation.trialMoney}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">转正评价：</p>
+            <p class="item-box">{{ employeeStation.fullmemEvaluate}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">工作性质：</p>
+            <p class="item-box"> {{ employeeStation.workType}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">工作年龄(年)：</p>
+            <p class="item-box">{{ employeeStation.workTime}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">部门：</p>
+            <p class="item-box">{{ employeeStation.departmentName}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">直属部门主管：</p>
+            <p class="item-box">{{ employeeStation.managerName}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">职位：</p>
+            <p class="item-box">{{ employeeStation.position}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">岗位：</p>
+            <p class="item-box"> {{ employeeStation.stationName}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">调岗时间：</p>
+            <p class="item-box"> {{ employeeStation.stationTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">调岗原因：</p>
+            <p class="item-box"> {{ employeeStation.stationReason}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">工号：</p>
+            <p class="item-box"> {{ employeeStation.jobNumber}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="account-name">合同信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div *ngFor="let index of employeeContracttables" nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">首次合同开始日期：</p>
+            <p class="item-box">{{ index.contracttableStartTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">首次合同结束日期：</p>
+            <p class="item-box">{{ index.contracttableEndTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">现合同开始日期：</p>
+            <p class="item-box">{{ index.contracttableNowstartTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">现合同结束日期：</p>
+            <p class="item-box">{{ index.contracttableNowendTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">合同期限：</p>
+            <p class="item-box">{{ index.contracttableTime}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 续签次数：</p>
+            <p class="item-box">{{ index.renewalNum}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="account-name">社保信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">工资卡号：</p>
+            <p class="item-box">{{ employeeWelfare.cardNumber }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">开户行：</p>
+            <p class="item-box">{{ employeeWelfare.bankOfdeposit}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">社保起始月：</p>
+            <p class="item-box">{{ employeeWelfare.insuranceTime}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">社保账号：</p>
+            <p class="item-box">{{ employeeWelfare.insuranceNumber }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">社保缴纳地：</p>
+            <p class="item-box">{{ employeeWelfare.accumulationAddress}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">公积金账户：</p>
+            <p class="item-box">{{ employeeWelfare.accumulationNumber}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">公积金缴纳起时间：</p>
+            <p class="item-box">{{ employeeWelfare.accumulationTime}} </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="account-name">从业信息</p>
+      </div>
+      <div style="padding: 18px 40px">
+        <div *ngFor="let index of employeeEmployments" nz-row>
+          <div nz-col nzSpan="12">
+            <p class="item-name">公司名称：</p>
+            <p class="item-box">{{ index.enterpriseName}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">职位：</p>
+            <p class="item-box">{{ index.position}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证明人：</p>
+            <p class="item-box">{{ index.witness}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">证明人联系电话：</p>
+            <p class="item-box">{{ index.witnessPhone}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">入职时间：</p>
+            <p class="item-box">{{ index.entryTime | dateTrans:'YYYY年MM月dd日' }} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name">离职时间：</p>
+            <p class="item-box">{{ index.quitTime | dateTrans:'YYYY年MM月dd日'}} </p>
+          </div>
+
+          <!-- <div nz-col nzSpan="12">
+            <p class="item-name">离职证明：</p>
+            <p class="item-box">{{ index.dimission}} </p>
+          </div>
+          <div nz-col nzSpan="12">
+            <p class="item-name"> 简历：</p>
+            <p class="item-box">{{ index.resume}} </p>
+          </div> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nz-card>

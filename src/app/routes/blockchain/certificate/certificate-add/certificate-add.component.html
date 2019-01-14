@@ -1,0 +1,77 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[saveAction, cancelAction]">
+                <ng-template #saveAction>
+                    <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)="save()" [nzLoading]="confirmButtonLoading">
+                            保存
+                    </button>
+                </ng-template>
+                <ng-template #cancelAction>
+                    <button nz-button nzType="default" (click)="cancel()">
+                            返回
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>{{titleText}}班级</span>
+        </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate> 
+    </ng-template>
+</nz-card>
+<nz-row nzAlign="bottom">
+    <nz-col>
+        <nz-spin [nzSpinning]="loading">
+            <form nz-form [formGroup]="validateForm">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="3" nzRequired>班级名称</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <input nz-input formControlName="name" placeholder="请填写完整的班级名称，并在证书中显示">
+                        <nz-form-explain *ngIf="validateForm.get('name').dirty && 
+                        (validateForm.get('name').hasError('required') || validateForm.get('name').hasError('minlength'))">
+                            班级名称不能为空且最少4个字符！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="3" nzRequired>专业名称</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <input nz-input formControlName="major" placeholder="请输入专业名称">
+                        <nz-form-explain *ngIf="validateForm.get('major').dirty && validateForm.get('major').hasError('required')">
+                            专业名称不能为空！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="3" nzRequired>培训有效期</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                            <nz-range-picker formControlName="rangeTime"></nz-range-picker>
+                        <nz-form-explain *ngIf="validateForm.get('rangeTime').dirty&&validateForm.get('rangeTime').hasError('required')">
+                            请选择有效期的起止时间！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="3" nzRequired>导师</nz-form-label>
+                    <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <input nz-input formControlName="tutorName">
+                        <nz-form-explain *ngIf="validateForm.get('tutorName').dirty&&validateForm.get('tutorName').hasError('required')">请输入导师名！</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="3">班级简介</nz-form-label>
+                    <nz-form-control [nzSpan]="12">
+                        <textarea row="6" nz-input formControlName="introduction" placeholder="介绍专业及班级，字数在200字内。"></textarea>
+                        <nz-form-explain *ngIf="validateForm.get('introduction').dirty && validateForm.get('introduction').hasError('maxlength')">
+                            最大200个字符！
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-spin>
+    </nz-col>
+</nz-row>

@@ -1,0 +1,29 @@
+<div *ngFor="let fileTemplate of fileTemplates">
+  <nz-form-item>
+    <nz-form-label nzSm="4" [nzRequired]="(fileTemplate.isRequired==1)?true:false">{{fileTemplate.tagTitle}}</nz-form-label>
+    <nz-form-control nzSm="4">
+        <nz-upload class="avatar-uploader"
+              [nzAction]="postUrl + getUploadParams(fileTemplate)"
+              [nzData]="dataFun(fileTemplate)"
+              [nzSize]="fileTemplate.tagAllowSize"
+              [nzFileList]="fileTemplateMap.get(fileTemplate.guid)"
+              nzListType="picture-card"
+              [nzLimit]="'1'"
+              [nzAccept]="fileTemplate.tagAllowFormat"
+              [nzShowButton]="!fileTemplateMap.get(fileTemplate.guid) && loading===false"
+              (nzChange)="handleChange(fileTemplate,$event)">
+              <ng-container *ngIf="!fileTemplateMap.get(fileTemplate.guid) && loading===false">
+                <i class="anticon anticon-plus"></i>
+                <div class="ant-upload-text">上传文件</div>
+              </ng-container>
+        </nz-upload>
+    </nz-form-control>
+    <p nzSm="6">{{fileTemplate.tagDescription}}</p>
+  </nz-form-item>
+  <nz-form-item *ngIf="!showFileTemplate">
+      <nz-form-label nzSm="2">附件服务地址</nz-form-label>
+      <nz-form-control nzSm="12">
+          <label *ngIf="fileTemplateMap.get(fileTemplate.guid) && bizID">{{(fileTemplateMap.get(fileTemplate.guid))[0].data_url}}</label>
+      </nz-form-control>  
+  </nz-form-item>
+</div>

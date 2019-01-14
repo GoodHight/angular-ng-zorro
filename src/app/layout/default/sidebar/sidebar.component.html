@@ -1,0 +1,25 @@
+<div class="aside-inner">
+    <!--
+    <nz-dropdown nzTrigger="click" class="user-block">
+        <div nz-dropdown class="user-block-dropdown">
+            <nz-avatar class="avatar" [nzSrc]="settings.user.avatar"></nz-avatar>
+            <div class="info">
+                <strong>{{settings.user.name}}</strong>
+                <p class="text-truncate mb0">{{settings.user.email}}</p>
+            </div>
+        </div>
+        <ul nz-menu>
+            <li nz-menu-item (click)="msgSrv.success('profile')">{{ 'profile' | translate }}</li>
+            <li nz-menu-item (click)="msgSrv.success('settings')">{{ 'settings' | translate }}</li>
+            <li nz-menu-item (click)="msgSrv.success('logout')">{{ 'logout' | translate }}</li>
+        </ul>
+    </nz-dropdown>
+    -->
+    <div class="logo">
+        <a [routerLink]="['/']">
+            <img class="expanded" src="./assets/img/logo-full.svg" alt="{{settings.app.name}}" style="max-height:95px;" />
+            <img class="collapsed" src="./assets/img/logo.svg" alt="{{settings.app.name}}" style="max-height:35px;margin-top:15px" />
+        </a>
+    </div>
+    <sidebar-nav (select)="menuChange($event)" class="d-block py-lg"></sidebar-nav>
+</div>

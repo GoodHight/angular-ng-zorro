@@ -1,0 +1,74 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,datasda,editAction]">
+        <ng-template #serachActive>
+          <div *ngIf="serachType === 1">
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key" (keyup.enter)="enterEvent()">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="refreshNzTable()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div>
+          <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div>
+        </ng-template>
+        <ng-template #datasda>
+          <div>
+              <nz-date-picker [nzAllowClear]="false" [nzShowTime]="false"  [(ngModel)]="starttime" [nzFormat]="dateFormat"  (ngModelChange)="onChange($event, 'start')"  nzShowTime></nz-date-picker>
+              至
+              <nz-date-picker [nzAllowClear]="false" [nzShowTime]="false" [(ngModel)]="endtime" [nzFormat]="dateFormat" (ngModelChange)="onChange($event, 'end')"  nzShowTime></nz-date-picker>
+          </div>
+        </ng-template>
+        <ng-template #editAction>
+          <button nz-button nzType="primary"  [disabled]="dataSet.length <= 0" (click)="export()">
+            导出报表
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>原始记录</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table #nzTable [nzData]="dataSet" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="queryParams.totals" [(nzPageIndex)]="queryParams.pageIndex"
+  [(nzPageSize)]="queryParams.pageSize" (nzPageIndexChange)="pageChange($event)">
+    <thead>
+      <tr>
+        <th nzWidth="180px" nzLeft="0px" [class.inline-block-4564635]="true">姓名</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">部门</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">工号</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">职位</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">考勤日期</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">考勤时间</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">打卡时间</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">打卡结果</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">打卡地址</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">打卡备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data">
+        <td nzLeft="0px">{{ data.userName }}</td>
+        <td>{{data.deptName}}</td>
+        <td>{{data.jobNumber}}</td>
+        <td>{{data.job}}</td>
+        <td>{{data.attendanceTime}}</td>
+        <td>{{data.clockinTime}}</td>
+        <td>{{data.workTime}}</td>
+        <td>{{data.workStatus}}</td>
+        <td>{{data.site}}</td>
+        <td>{{data.remark}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>

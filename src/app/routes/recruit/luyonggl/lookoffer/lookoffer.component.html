@@ -1,0 +1,38 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[cancelAction]">
+                <ng-template #cancelAction>
+                    <button nz-button nzType="default" [routerLink]="['/recruit/hire-manage']">
+                        返回
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleValue>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>入职通知书</span>
+        </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+    <div>
+        <div nz-col nzSpan="12" nzOffset="6">
+            <h4 class="title">{{inteviewNoticeTitle}}</h4>
+            <div class="inteviewNoticeContent" nz-row [innerHTML]='inteviewNoticeContent'></div>
+        </div>
+        <!-- {{this.contentEmail}} -->
+    </div>
+    <!-- 有样式的 -->
+    <!-- <div nz-row>
+        <div nz-col nzSpan="12" nzOffset="6" class="title">
+          <p>{{dataList.name}} <b>先生/女生:</b></p>
+          <p> 您好，很高兴与您沟通， 经过我们仔细查看您的简历，您已通过职位 {{dataList.interviewPostion}} 的面试筛选，期待 {{dataList.interviewDate}} 与您的面谈。请携带 简历 和 黑色签字笔，谢谢～</p>
+          <p>收到请电话回复，如有变故请提前通知。</p>
+          <p><b>公司联系人: </b> {{dataList.responsibleName}}</p>
+          <p><b>联系人电话: </b>{{dataList.responsiblePhone}}</p>
+          <p><b>地址: </b>{{dataList.interviewAddress}}</p>
+        </div>
+      </div> -->
+</nz-card>

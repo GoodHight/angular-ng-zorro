@@ -1,0 +1,350 @@
+.main-layout-content {
+  position: relative;
+  width: 1080px;
+  min-height: 800px;
+  margin: 20px 0;
+  color: #000;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #dedede;
+  -webkit-box-shadow: 1px 0 0 0 #ebebeb;
+  box-shadow: 1px 0 0 0 #ebebeb;
+  font-size: 14px;
+}
+
+.common-header .title-container {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+div.common-header {
+  height: 56px;
+  line-height: 56px;
+  padding: 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.approval-page-container {
+  padding: 20px 60px;
+  position: relative;
+}
+
+.canedit-content .common-row-title {
+  padding-left: 30px;
+}
+
+.common-row-title {
+  font-size: 12px;
+  color: #999;
+}
+
+.common-row {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.cut-line-large {
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 20px;
+  clear: both;
+}
+
+.date-tip {
+  color: #aaa;
+  font-size: 13px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.normal-btn {
+  color: #49a9ee;
+  border-color: #49a9ee;
+}
+
+.common-tips {
+  font-size: 12px;
+  color: #333;
+  margin-left: 5px;
+}
+
+
+.approval-page-footer {
+  margin: 0 10px;
+  padding-bottom: 20px;
+}
+
+.approval-page-footer .main-save {
+  margin-left: 50px;
+}
+.main-save {
+  border-radius: 4px;
+  font-size: 14px;
+  height: 32px;
+  width: 90px;
+}
+.normal-btn {
+  color: #49a9ee;
+  border-color: #49a9ee;
+}
+.process-check-btn {
+  width: auto;
+  height: 34px;
+}
+
+.ant-btn-primary {
+  color: #fff;
+  background-color: #38adff;
+  border-color: #38adff;
+}
+.plus-icon{
+  cursor: pointer;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-top: 7px;
+  font-size: 24px;
+}
+.plus-icon:hover {
+  color: #38adff;
+}
+.approval-node-setting {
+  position: fixed;
+  right: -800px;
+  top: 0;
+  bottom: 0;
+  width: 800px;
+  background: #fff;
+  -webkit-box-shadow: -3px 0 3px #dedede;
+  box-shadow: -3px 0 3px #dedede;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  z-index: 100;
+}
+.approval-node-setting .common-row {
+  margin-left: 30px;
+}
+.approval-node-setting .common-row-title {
+  position: relative;
+  text-align: right;
+  padding-right: 40px;
+}
+.approval-node-setting .common-row-title .anticon-info-circle {
+  position: absolute;
+  right: 20px;
+  top: 2px;
+}
+.approval-node-setting.show {
+  transform: translateX(-800px);
+  -webkit-transform: translateX(-800px);
+  -ms-transform: translateX(-800px);
+}
+
+.node-setting-title {
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 35px;
+  height: 62px;
+  padding: 12px 30px;
+  border-bottom: 1px solid #dedede;
+}
+
+.node-setting-form {
+  /* margin: 30px; */
+  padding-top: 16px;
+}
+
+button.node-delBtn {
+  color: #f21;
+  border: 1px solid #f21;
+}
+
+button.node-delBtn:hover {
+  color: #f44;
+  border: 1px solid #f44;
+}
+
+.approval-node-setting .slideFormBtn{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  border-top:1px solid #ebebeb;
+  text-align: center;
+}
+
+.approval-node-setting .approval-radio {
+  height: 30px;
+}
+
+.node-setting-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99;
+  opacity: 0.4;
+  background: #fff;
+}
+
+.approval-charge-content .approval-radio {
+  line-height: 40px;
+  height: 40px;
+}
+
+.charge-end-label {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 12px;
+  color: #333333;
+  margin-right: 10px;
+  height: 40px;
+  line-height: 40px;
+  background: #F8F8F8;
+  border-radius: 4px;
+  padding: 0px 20px 0px 10px;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 0 16px;
+  padding-right: 24px;
+  width: 140px;
+}
+
+.charge-end-label img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.choosen-span {
+  max-width: 190px;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.charge-end-label .close {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  font-size: 14px;
+  color: rgb(167, 163, 163);
+  display: none;
+}
+
+.charge-end-label:hover .close {
+  display: block;
+}
+.slideFormBtn button {
+  margin-right: 15px;
+  height: 32px!important;
+}
+.overlimit-tip {
+  margin-left: 20px;
+}
+:host ::ng-deep{
+  .ant-btn {
+    height: 28px;
+  }
+  .ant-select-selection-selected-value{
+    font-size: 12px!important;
+  }
+  .ant-select-selection__rendered{
+    line-height: 28px;
+  }
+  .ant-select-selection--single{
+    height: 28px;
+  }
+  .ant-btn-lg {
+    padding: 0 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    height: 32px;
+  }
+  .ant-radio-wrapper{
+    font-size: 12px;
+  }
+  .dingtalk-select .ant-select-selection__rendered{
+    line-height: 26px;
+    height: 26px!important;
+  }
+  .dingtalk-select .ant-select-selection--single{
+    height: 26px!important;
+  }
+}
+.stream-user .stream-user-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
+  display: none;
+  cursor: pointer;
+}
+.stream-user {
+  display: inline-block;
+  position: relative;
+}
+.stream-user:hover .stream-user-close{
+  display: block;
+}
+.stream-user-content-approval {
+  float: left;
+  height: 80px;
+}
+.approval-sorted .approval-stream-card{
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+  cursor: move;
+}
+.stream-user-content-approval .approval-stream-card {
+  min-width: 140px;
+  padding-left: 16px;
+  background: #f8f8f8;
+  border-radius: 4px;
+}
+.approval-sorted .approval-stream-card:hover{
+  background: #EDF5FA;
+}
+.approval-stream-card .node-avatar {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 40px;
+  font-size: 12px;
+  color: #333;
+  padding-right: 16px;
+}
+.approval-stream-card .common-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
+.approval-stream-card .node-avatar span {
+  vertical-align: top;
+  line-height: 24px;
+  margin-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+.stream-user-content-approval .anticon-arrow-right {
+  color: #eaeaea;
+  font-size: 20px;
+  line-height: 40px;
+  width: 27px;
+  vertical-align: top;
+}
+

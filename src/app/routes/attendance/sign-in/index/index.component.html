@@ -1,0 +1,83 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[time,selectAction,serachActive,editAction]">
+        <ng-template #selectAction>
+            <span>部门筛选：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.employeeState" (ngModelChange)="employeeStateChange($event)">
+            <nz-option *ngFor="let option of employeeStateList" [nzLabel]="option.departmentName" [nzValue]="option.guid"></nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #time>
+          <span>时间筛选：</span>
+          <nz-range-picker nzFormat="yyyy-MM-dd" ngModel (ngModelChange)="onChange($event)" style="margin-right: 20px"></nz-range-picker>
+        </ng-template>
+        <ng-template #serachActive>
+          <div>
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入员工姓名" [(ngModel)]="key">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="getData()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template> 
+          </div>
+          <!-- <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div> -->
+        </ng-template>
+        <ng-template #editAction>
+          <button nz-button (click)='exportReport()' nzType="primary" [disabled]="outdisabled">
+            导出报表
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>签到记录</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="reportList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+    [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+    <thead>
+      <tr>
+        <th>
+          序号
+        </th>
+        <th>员工姓名</th>
+        <th>部门</th>
+        <th>职位</th>
+        <th>工号</th>
+        <th>签到时间 </th>
+        <th>签到地点 </th>
+        <th>拜访对象</th>
+        <th>签到备注</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of ajaxTable.data let no = index">
+        <td>{{ code + no }}</td>
+        <td>{{i.employName}}</td>
+        <td>{{i.departmentName}}</td>
+        <td>{{i.position}}</td>
+        <td>{{i.jobNumber}}</td>
+        <td>{{ i.dateTime | dateTrans:'YYYY-MM-dd HH:mm'}}</td>
+        <td>{{i.signLocation}}</td>
+        <td>{{i.signObject}}</td>
+        <td>
+          <p class="signRemark">{{i.signRemark}}</p>
+        </td>
+        <td>
+          <a (click)='details(i.guid)'>详情</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>

@@ -1,0 +1,99 @@
+<nz-layout>
+        <nz-header class="content_header">
+            <section nz-row>
+                <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+                <span class="_subtitle">欢迎
+                    <a href="#">{{realName}}</a>，登陆系统 </span>
+            </section>
+            <section nz-row>
+                <nz-list-item [nzContent]="itemContentTemplate">
+                </nz-list-item>
+            </section>
+            <ng-template #itemContentTemplate>
+                <div class="subtitle">
+                    本月:
+                    <span>{{statistics.date || 0}}</span>在职员工:
+                    <span>{{statistics.onJob || 0}}</span>人 | 本月 &nbsp;&nbsp;&nbsp;&nbsp;入职:
+                    <span>{{statistics.entry || 0}}</span>人,&nbsp;&nbsp;转正:
+                    <span>{{statistics.positive || 0}}</span>人,&nbsp;&nbsp;&nbsp;&nbsp;离职:
+                    <span>{{statistics.quit || 0}}</span>人,&nbsp;&nbsp;&nbsp;&nbsp;生日:
+                    <span>{{statistics.birthday || 0}}</span>人
+                </div>
+            </ng-template>
+        </nz-header>
+        <nz-layout>
+            <!-- <nz-sider [nzWidth]="380" [ngClass]="{'nz-active':state}">
+                <section nz-row class="sider_title">
+                    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+                    <span>待办事项</span>
+                </section>
+                <section nz-row class="sider_subtitle">共
+                    <span>
+                        <a [routerLink]="['/my/todo']">10</a>
+                    </span>件 生日提醒:
+                    <span>2</span>待办审批:
+                    <span>8</span>
+                </section>
+                <section nz-row class="sider_content">
+                    <section nz-row *ngFor="let newest of newests">
+                        <article>
+                            <header>
+                                <h3>{{newest.message_title}}</h3>
+                            </header>
+                            <ellipsis lines="2" style="width: 310px;">
+                                <div [innerHTML]="newest.message_content"></div>
+                            </ellipsis>
+                            <footer>
+                                <div>{{newest.message_time | dateTrans:'YYYY年MM月dd日 HH:mm'}}</div>
+                                <div>
+                                    <a href="#">查看</a>
+                                </div>
+                            </footer>
+                        </article>
+                    </section>
+                    <section nz-row *ngIf="isemptynew">
+                        <article>
+                            <header></header>
+                            <h3>暂无待办事项</h3>
+                            <img src="./assets/img/backlog-no.png" />
+                            <footer>
+                                <div>喝口茶,享受美好时光</div>
+                            </footer>
+                        </article>
+                    </section>
+                </section>
+            </nz-sider> -->
+            <nz-content>
+                <ul nz-row nzType="flex" nzJustify="start" nzAlign="top">
+                    <li (click)="navigation(shortcutMenu,shortcutMenu.checkFlag)" class="_content_item" [ngStyle]="{'border-color':shortcutMenu.cssColor}" *ngFor="let shortcutMenu of shortcutMenus">
+                        <i [ngStyle]="{'color':shortcutMenu.cssColor}" class="{{shortcutMenu.icon}}"></i>
+                        <div [ngStyle]="{'background-color':shortcutMenu.cssColor}">{{shortcutMenu.title}}</div>
+                    </li>
+                    <li class="_content_item" (click)="updateMenu()" style="border-color:#dbdbdb">
+                        <i style="color:#dbdbdb" class="icon iconfont icon-shezhi"></i>
+                        <div style="background-color:#dbdbdb">编辑工作台</div>
+                    </li>
+                </ul>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+    <!-- 权限弹出框 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="添加快捷菜单"
+        (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <div> 
+            <!-- <div style="border-bottom: 1px solid rgb(233, 233, 233);"> -->
+            <div style="width: 100%"> 
+                <label style="width: 33.333333%;margin-left: 0" nz-checkbox *ngFor="let item of dataList;let no = index" [(ngModel)]="item.checked" (ngModelChange)="updateAllChecked(no)">
+                    {{ item.title }}
+                </label>
+            </div>
+            <br>
+            <!-- <nz-checkbox-group [(ngModel)]="item.subMenus" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group> -->
+        </div>
+    </nz-modal> 
+    <nz-modal nzWrapClassName="modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="yqtsmodal" [nzFooter]='null' nzTitle="友情提示"
+        (nzOnCancel)="yqtsmodalCancel()" (nzOnOk)="yqtsmodalOkMiddle()">
+        <div> 
+            企业还未认证！去认证解锁更多新功能！
+        </div>
+    </nz-modal> 

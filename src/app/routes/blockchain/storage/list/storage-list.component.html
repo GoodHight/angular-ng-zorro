@@ -1,0 +1,76 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <!-- <nz-tabset (nzSelectedIndexChange)="tabIndexChange($event)">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset> -->
+            <ng-template #itemContentTemplate></ng-template>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive]">
+                <ng-template #serachActive>
+                    <!-- <div *ngIf="showSearch === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchKey">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="pageChange(1)" nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i></button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="showSearch === 0" (click)="showSearch = 1;">
+                        <span><i class="icon iconfont icon-sousuo"></i>搜索</span>
+                    </div> -->
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>我的存证</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>培训机构</span>
+                </th>
+                <th>
+                    <span>专业</span>
+                </th>
+                <th>
+                    <span>班级</span>
+                </th>
+                <th>
+                    <span>提交签发时间</span>
+                </th>
+                <th>
+                    <span>存证时间</span>
+                </th>
+                <th>
+                    <span>哈希值</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index" (click)="gotoDetail(item)">
+                <td>{{ no + ((pageIndex - 1) * pageSize) + 1 }}</td>
+                <td>{{item.studentName}}</td>
+                <td>{{item.enterpriseName}}</td>
+                <td>{{item.major }}</td>
+                <td>{{item.className}}</td>
+                <td>{{item.submitTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td>{{item.completeTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td>{{item.dataHash}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

@@ -1,0 +1,146 @@
+.resume-recommend-box .title {
+  color: #0f0f0f;
+  font-size: 16px;
+  font-weight: bold;
+}
+.resume-recommend-box .title::before {
+  content: ' ';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: #1890ff;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.resume-recommend-box span {
+  vertical-align: middle;
+}
+.resume-recommend-box .resume-recommend-title {
+  margin-bottom: 20px;
+}
+:host ::ng-deep .ant-form {
+  margin-top: 86px;
+}
+:host ::ng-deep .content_header,
+:host ::ng-deep .ant-card-head {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  z-index: 10;
+}
+:host ::ng-deep .update-title {
+  font-size: 14px;
+  color: #1890ff;
+  border-bottom: 4px #1890ff solid;
+  margin-bottom: -7px;
+}
+:host ::ng-deep .content_header .ant-card-head-title,
+:host ::ng-deep .ant-card-head .ant-card-head-title {
+  margin-left: 207px;
+}
+:host ::ng-deep .resume-recommend-box[_ngcontent-c3] span[_ngcontent-c3] {
+  padding-top: 4px;
+}
+ul,
+ol,
+li {
+  margin: 0;
+  padding: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+}
+ul,
+ol,
+dl,
+dt,
+dd {
+  list-style: none outside none;
+}
+ul {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+li {
+  font-size: 14px;
+  float: left;
+  color: black;
+  padding: 2px 6px;
+}
+.li-left {
+  margin-right: 8px;
+  padding-left: 0;
+}
+.li-btn button {
+  color: rgba(0, 0, 0, 0.65);
+  border: 1px solid #e2e2e2;
+  /* margin-left: 6px; */
+  font-size: 14px;
+  background: white;
+  border-radius: 6px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 10px;
+}
+.copyItem {
+  padding: 0 10px;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  padding: 3px 15px;
+  margin-right: 3px;
+  color: rgba(0, 0, 0, 0.65);
+}
+.addOuter {
+  margin-left: 10px;
+}
+.paddingBox {
+  padding-right: 10px;
+}
+.removeX {
+  float: right;
+  padding-right: 15px;
+}
+.showPerson {
+  float: left;
+  width: 210px;
+  margin-bottom: 5px;
+  padding: 0 20px 0 0;
+}
+.infoBox {
+  overflow: hidden;
+}
+.arrow {
+  padding: 0 5px;
+}
+.auditorName {
+  border: 1px solid #e2e2e2;
+  display: inline-block;
+}
+.auditorNameBox {
+  padding: 0 10px;
+}
+.remove {
+  padding: 0 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+/* 谷歌 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+/* 火狐 */
+input {
+  -moz-appearance: textfield;
+}
+.selectInput,
+.selectInput:hover {
+  box-shadow: none;
+  border-color: #ccc;
+}
+.selectInput:focus {
+  outline: none;
+}

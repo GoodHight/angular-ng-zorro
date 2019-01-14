@@ -1,0 +1,124 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>员工信息管理</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <button nz-button type="button" [disabled]="!form.valid" (click)="_submitForm()" nzType="primary">保存</button>
+            <button nz-button (click)="cancel()">返 回</button>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+        <div nz-col class="employee-update">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div id="personal-information">
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            首次合同期限
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzFormat]="dateFormat" formControlName="contracttableStartTime" nzPlaceHolder="start"
+                                (ngModelChange)="onStartChange($event)" (nzOnOpenChange)="handleStartOpenChange($event)">
+                            </nz-date-picker>
+                            至
+                            <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzFormat]="dateFormat" formControlName="contracttableEndTime" nzPlaceHolder="End"
+                                [nzOpen]="endOpen" (ngModelChange)="onEndChange($event)" (nzOnOpenChange)="handleEndOpenChange($event)">
+                            </nz-date-picker>
+                            <!-- <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="contracttableStartTime" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div>
+                            <div nz-col [nzSpan]="1">
+                                <p nz-form-split>至</p>
+                            </div>
+                            <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="contracttableEndTime" [nzFormat]="dateFormat"></nz-date-picker>
+                            </div> -->
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            现合同期限
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker [nzDisabledDate]="disabledStartDates" [nzFormat]="dateFormat" formControlName="contracttableNowstartTime"
+                                nzPlaceHolder="start" (ngModelChange)="onStartChanges($event)" (nzOnOpenChange)="handleStartOpenChanges($event)">
+                            </nz-date-picker>
+                            至
+                            <nz-date-picker [nzDisabledDate]="disabledEndDates" [nzFormat]="dateFormat" formControlName="contracttableNowendTime" nzPlaceHolder="End"
+                                [nzOpen]="endOpens" (ngModelChange)="onEndChanges($event)" (nzOnOpenChange)="handleEndOpenChanges($event)">
+                            </nz-date-picker>
+                            <!-- <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="contracttableNowstartTime"></nz-date-picker>
+                            </div>
+                            <div nz-col [nzSpan]="1">
+                                <p nz-form-split>至</p>
+                            </div>
+                            <div nz-col [nzSpan]="5">
+                                <nz-date-picker formControlName="contracttableNowendTime"></nz-date-picker>
+                            </div> -->
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            合同期限
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-select formControlName="contracttableTime">
+                                <nz-option *ngFor="let option of selectData4" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传合同文件
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <div style="overflow: hidden;">
+                                <nz-upload [nzAction]="uploaderUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 3"
+                                    [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                                    <i class="anticon anticon-plus"></i>
+                                    <div class="ant-upload-text">点击上传</div>
+                                </nz-upload>
+                                <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                    <ng-template #modalContent>
+                                        <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                    </ng-template>
+                                </nz-modal>
+                            </div>
+                            <div>文件格式为：DOC/DOCX/XLS/XLSX/PDF/ZIP/RAR，大小在5M内</div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            续签次数
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="renewalNum">
+                                    <label nz-radio [nzValue]="kongkong">
+                                        <span>0 次</span>
+                                    </label>
+                                    <label nz-radio *ngFor="let option of selectData5" [nzValue]="option.guid">
+                                        <span>{{ option.dictName }}</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+    </div>
+</nz-card>

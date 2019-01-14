@@ -1,0 +1,97 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content approval">
+            <nz-table #basicTable [nzPageSize]="20" [nzData]="dataSet" [nzLoading]="loading" nzNoResult="没有数据">
+                <thead>
+                    <tr>
+                        <th>地点名称</th>
+                        <th>精确地址</th>
+                        <th>有效距离(米)</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr *ngFor="let v of basicTable.data">
+                        <td>{{ v.name }}</td>
+                        <td>{{ v.site }}</td>
+                        <td>{{ v.effectiveRange }}</td>
+                        <td>
+                            <a (click)="openModal(2, v)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="deleteGroup(v.guid, v.name)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </section>
+    </div>
+    <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>考勤设置</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="openModal(1)" nzType="primary">新增</button>
+    </ng-template>
+</nz-card>
+
+<nz-modal [(nzVisible)]="isVisible" [(nzTitle)]="modalTitle" nzWidth="720"
+ (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form" nzLayout="vertical">
+
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="name">地点名称</nz-form-label>
+            <nz-form-control nzHasFeedback>
+                <input nz-input formControlName="name" placeholder="请输入地点名称" [(ngModel)]="viewModel.name">
+                <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">
+                    <ng-container *ngIf="form.get('name').hasError('required')">
+                        请输入地点名称
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+            <nz-form-label nzRequired>考勤范围(米)</nz-form-label>
+            <nz-form-control nzHasFeedback>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择考勤范围" (ngModelChange)="effectiveRangeChange($event)"
+                 [(ngModel)]="viewModel.effectiveRange" [ngModelOptions]="{standalone: true}">
+                    <nz-option nzLabel="100" nzValue="100"></nz-option>
+                    <nz-option nzLabel="200" nzValue="200"></nz-option>
+                    <nz-option nzLabel="300" nzValue="300"></nz-option>
+                    <nz-option nzLabel="400" nzValue="400"></nz-option>
+                    <nz-option nzLabel="500" nzValue="500"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired>精确地址<nz-divider class="title_divider" nzType="vertical"></nz-divider>
+                <input readonly [class.clear-input-style-125313]="true" nz-input [(ngModel)]="viewModel.site" [ngModelOptions]="{standalone: true}" >
+                </nz-form-label>
+            <nz-form-control nzHasFeedback>
+                <ng-container>
+                    <div id="pickerBox">
+                        <input id="pickerInput" placeholder="输入关键字选取地点" />
+                        <div id="poiInfo"></div>
+                    </div>
+                    <input type='radio' name='mode' value='dragMarker' style="display:none" />
+                    <div id="container"></div>
+                </ng-container>
+            </nz-form-control>
+        </nz-form-item>
+
+    </form>
+</nz-modal>

@@ -1,0 +1,114 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>资质审核</span>
+    </ng-template>
+    <div nz-row>
+        <section class="tab-content">
+            <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataList" [nzTotal]="respObj.total" [nzPageIndex]="respObj.pageNum" [nzPageSize]="respObj.pageSize" [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+                <thead (nzSortChange)="sort($event)" nzSingleSort>
+                    <tr>
+                        <!-- <th nzShowCheckbox nzShowRowSelection [nzSelections]="listOfSelection" [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th> -->
+                        <th nzShowSort nzSortKey="enterpriseName">企业名</th>
+                        <th nzShowSort nzSortKey="registerAddressName">注册地址</th>
+                        <th nzShowSort nzSortKey="contactNumber">联系号码</th>
+                        <th nzShowSort nzSortKey="applyEnterpriseAuthenticationTime">提交认证时间</th>
+                        <th nzShowSort nzSortKey="enterpriseAuthenticationTime">认证完成时间</th>
+                        <th nzShowSort nzSortKey="isAuthentication">是否认证</th>
+                        <th nzShowSort nzSortKey="state">状态</th>
+                        <!-- <th>企业对公账号是否认证</th> -->
+                        <th nzShowSort nzSortKey="isEnterpriseAuthentication">企业是否认证</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ajaxTable.data,let no = index" (click)="details_router(item)">
+                        <!-- <td nzShowCheckbox [(nzChecked)]="item.checked" (click)="$event.stopPropagation();" (nzCheckedChange)="refreshStatus($event)"></td> -->
+                        <td>{{item.enterpriseName}}</td>
+                        <td>{{item.registerAddressName + item.registerAddressDetail}}</td>
+                        <td>{{item.contactNumber}}</td>
+                        <td>{{item.applyEnterpriseAuthenticationTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+                        <td>{{item.enterpriseAuthenticationTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+                        <td>{{item.isAuthentication}}</td>
+                        <td>{{state[item.state]}}</td>
+                        <!-- <td>{{enterpriseAccountAuthentication[item.isEnterpriseAccountAuthentication]}}</td> -->
+                        <td [ngClass]="{'state': item.isEnterpriseAuthentication == 1, 'state1': item.isEnterpriseAuthentication != 1}">
+                            {{enterpriseAuthentication[item.isEnterpriseAuthentication]}}</td>
+                        <td>
+                            <!-- 设置默认权限 临时功能-->
+                            <a (click)="$event.stopPropagation();setDefaultAuth(item.guid)" >设置默认权限</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <!-- 只有当状态为认证中（0）时，才可以审核-->
+                            <a *ngIf="item.isEnterpriseAuthentication === 2" (click)="$event.stopPropagation();shenhe(item)">审核</a>
+                            <nz-divider *ngIf="item.isEnterpriseAuthentication === 2" nzType="vertical"></nz-divider>
+                            <a (click)="$event.stopPropagation();showConfirmAbleDisable(item.state == 1 ? 0 : 1, item.guid)">{{item.state == 1 ? '停用' : '启用'}}</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="$event.stopPropagation();showConfirmSingle(item)">删 除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+            <nz-modal [(nzVisible)]="isVisible" nzTitle="审核" (nzOnCancel)="handleCancel()" [nzFooter]="modalFooter" [nzOkLoading]="isOkLoading">
+                <form nz-form [formGroup]="shenheForm" class="login-form">
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzRequired>
+                            审核结果
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                            <nz-radio-group formControlName="auditState">
+                                <label nz-radio nzValue="1">通过</label>
+                                <label nz-radio nzValue="0">未通过</label>
+                            </nz-radio-group>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                            理由
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                            <textarea formControlName="describe" row="4" nz-input></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+                <ng-template #modalFooter>
+                    <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+                    <button nz-button [disabled]="!shenheForm.valid" nzType="primary" (click)="handleOk()" [nzLoading]="isOkLoading">确认</button>
+                </ng-template>
+            </nz-modal>
+        </section>
+    </div>
+</nz-card>
+
+<ng-template #tabToolBarTemplate>
+    <label class="search-title">搜索条件</label>
+    <input type="text" style="width: 120px;" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchCondition.queryKey">
+    <label class="search-title">企业状态</label>
+    <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="searchCondition.state">
+        <nz-option nzValue="1" nzLabel="启用"></nz-option>
+        <nz-option nzValue="0" nzLabel="未启用"></nz-option>
+        <nz-option nzValue="-1" nzLabel="锁定"></nz-option>
+        <nz-option nzValue="-2" nzLabel="过期"></nz-option>
+    </nz-select>
+    <label class="search-title">企业认证</label>
+    <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="searchCondition.isEnterpriseAuthentication">
+        <nz-option nzValue="1" nzLabel="已认证"></nz-option>
+        <nz-option nzValue="0" nzLabel="未认证"></nz-option>
+        <nz-option nzValue="2" nzLabel="认证中"></nz-option>
+    </nz-select>
+    <label class="search-title">企业类型</label>
+    <input type="text" style="width: 120px;" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="searchCondition.enterpriseType">
+    <button (click)="getData()" style="margin-left: 5px;" nz-button nzType="primary" nzSearch><i class="anticon anticon-search"></i>搜索</button>
+    <!-- <button (click)="showConfirmDeleteBatch()" nz-button nzType="primary" nzSearch>批量删除</button> -->
+</ng-template>

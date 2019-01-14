@@ -1,0 +1,57 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>版本管理</span>
+    </ng-template>
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[returnAction, addAction]">
+                <ng-template #itemContentTemplate></ng-template>
+                <ng-template #returnAction>
+                    <button nz-button nzType="default" [routerLink]="['/admin/version']">返回</button>
+                </ng-template>
+                <ng-template #addAction>
+                    <button nz-button nzType="primary" [disabled]="!form.valid" (click)="save()">确定</button>
+                </ng-template>
+
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <form nz-form [formGroup]="form">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="3" nzRequired>版本名称</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input placeholder="请输入版本名称" formControlName="versionName">
+                    <nz-form-explain *ngIf="form.get('versionName').dirty && form.get('versionName').errors">版本名称不能为空！</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="3" nzRequired>版本标注</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input placeholder="请输入版本标注" formControlName="versionNameTag">
+                    <nz-form-explain *ngIf="form.get('versionNameTag').dirty && form.get('versionNameTag').errors">版本标注不能为空！</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="3" nzRequired>版本号</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input placeholder="请输入版本号" formControlName="versionNumber">
+                    <nz-form-explain *ngIf="form.get('versionNumber').dirty && form.get('versionNumber').errors">版本号不能为空！</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="3" nzRequired>是否可配置</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                        <nz-select formControlName="isConfig" [nzPlaceHolder]="'请选择是否可配置'">
+                          <nz-option nzValue="1" nzLabel="是"></nz-option>
+                          <nz-option nzValue="0" nzLabel="否"></nz-option>
+                       </nz-select>
+                    <!-- <input nz-input placeholder="请输入版本号" formControlName="versionNumber"> -->
+                    <nz-form-explain *ngIf="form.get('isConfig').dirty && form.get('isConfig').errors">请选择是否可配置！</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>

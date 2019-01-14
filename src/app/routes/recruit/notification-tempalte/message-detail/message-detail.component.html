@@ -1,0 +1,88 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+  <nz-card-tab>
+      <ng-template #tab>
+          <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[cancelAction, saveAction]"  *ngIf="act !== 'watch'">
+              <ng-template #saveAction>
+                  <button nz-button nzType="primary" [nzLoading]="isLoadingOne" (click)="_submitForm()">保存</button>
+              </ng-template>
+              <ng-template #cancelAction>
+                  <button nz-button nzType="default" (click)="cancel()">
+                      取消
+                  </button>
+              </ng-template>
+          </nz-list-item>
+          <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[cancelAction]"  *ngIf="act === 'watch'">
+                <ng-template #cancelAction>
+                    <button nz-button nzType="primary" (click)="cancel()">
+                        返回
+                    </button>
+                </ng-template>
+            </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleValue>
+          <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+          <!-- <span>短信模板-详情</span> -->
+          <span *ngIf="act === 'watch'">查看短信模板</span>
+          <span *ngIf="act === 'edit'">编辑短信模板</span>
+          <span *ngIf="act === 'new'">新增短信模板</span>
+      </ng-template>
+  </nz-card-tab>
+  <ng-template #itemContentTemplate>
+      <span style="color: #0084ff">温馨提示：</span>
+      <span>花括号里的内容对应读取显示信息，一经修改将无法正常显示，请勿修改.例如 &#123;#面试职位&#125;</span>
+  </ng-template>
+
+  <div nz-row [nzGutter]="12" class="email-template-box">
+      <nz-col [nzMd]="24" class="">
+          <form nz-form [formGroup]="form"  (ngSubmit)="_submitForm()">
+              <nz-form-item nz-row>
+                  <nz-form-label nz-col [nzSm]="2" nzRequired>
+                      模板名称
+                  </nz-form-label>
+                  <nz-form-control nz-col [nzSm]="16">
+                         <div nz-row *ngIf="act === 'watch'" class="inp-box">{{templateName}}</div>
+                          <input nz-input  formControlName="templateName" [(ngModel)]="templateName" placeholder="请输入模板名称"  [readonly]="act === 'watch'"  *ngIf="act !== 'watch'">
+                          <nz-form-explain *ngIf="form.get('templateName').dirty && form.get('templateName').errors">
+                              请输入模板名称
+                          </nz-form-explain>
+                  </nz-form-control>
+              </nz-form-item>
+              <nz-form-item nz-row>
+                  <nz-form-label nzRequired nz-col [nzSm]="2">
+                      模板类型
+                  </nz-form-label>
+                  <nz-form-control nz-col [nzSm]="16">
+                      <nz-select formControlName="selectCategory" [(ngModel)]="selectCategory" nzPlaceHolder="请选择模板类型" nzAllowClear   *ngIf="act === 'new'" (ngModelChange)="listTypeChange($event)" >
+                          <nz-option *ngFor="let item of templateTypeList;let i = index;" [nzLabel]="item.categoryDesc" [nzValue]="item.category">
+                          </nz-option>
+                      </nz-select>
+                      <nz-select formControlName="selectCategory" [(ngModel)]="selectCategory" nzPlaceHolder="请选择模板类型" nzAllowClear  *ngIf="act !== 'new'" nzDisabled> 
+                            <nz-option  *ngIf=" category == '1' && templateType == '1' "  nzLabel='offer短信' nzValue="1-1">
+                            </nz-option>
+                             <nz-option  *ngIf=" category == '1' && templateType == '2' "  nzLabel='offer邮件'  nzValue="1-2">
+                            </nz-option>
+                            <nz-option  *ngIf=" category == '2' && templateType == '1' "  nzLabel='面试短信'  nzValue="2-1">
+                            </nz-option>
+                            <nz-option  *ngIf=" category == '2' && templateType == '2' "  nzLabel='面试邮件'  nzValue="2-2">
+                            </nz-option>
+                        </nz-select>
+                  </nz-form-control>
+              </nz-form-item>
+               <nz-form-item nz-row>
+                  <nz-form-label nz-col [nzSm]="2" nzRequired>
+                      短信内容
+                  </nz-form-label>
+                  <nz-form-control nz-col [nzSm]="16">
+                     <div nz-row *ngIf="act === 'watch'" class="inp-box">{{content}}</div>
+                      <textarea *ngIf="act !== 'watch'"  formControlName="content" nz-input   row="4" [(ngModel)]="content" placeholder="请输入短信内容" ></textarea>
+                      <!-- <input nz-input  formControlName="messageContent" [(ngModel)]="messageContent" placeholder="请输入标题"> -->
+                      <nz-form-explain *ngIf="form.get('content').dirty && form.get('content').errors">
+                          请输入短信内容
+                      </nz-form-explain>
+                  </nz-form-control>
+              </nz-form-item>
+          </form>
+      </nz-col>
+  </div>    
+</nz-card>

@@ -1,0 +1,84 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+      <ng-template #tab>
+          <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[selectAction,addEmailTemplate,addMeassageTemplate]">
+              <ng-template #selectAction>
+                  <!-- <nz-select style="width: 120px;" nzAllowClear  nzPlaceHolder="全部"   [(ngModel)]="q.templateType" (ngModelChange)="templateTypeChange($event)"> -->
+                      <!-- <nz-option *ngFor="let option of templateList" [nzLabel]="option.templatetName" [nzValue]="{'category':option.category,'type': option.type}"></nz-option> -->
+                      <nz-select style="width: 120px;" nzAllowClear  nzPlaceHolder="全部"   [(ngModel)]="q.selecttemplateType" (ngModelChange)="templateTypeChange($event)">
+                      <nz-option *ngFor="let option of templateList" [nzLabel]="option.templatetName" [nzValue]="option.ct"></nz-option>
+                  </nz-select>
+              </ng-template>
+              <ng-template #addEmailTemplate>
+                  <button nz-button nzType="primary" (click)="newTemplate(2,'new')">
+                      <!-- type:1是短信，2是邮件 category:1是offer，2是面试-->
+                      新增邮件模板
+                  </button>
+              </ng-template>
+              <ng-template #addMeassageTemplate>
+                <button nz-button nzType="primary" (click)="newTemplate(1,'new')" >
+                    新增短信模板
+                </button>
+            </ng-template>
+          </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+          <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+          <span>招聘通知模板</span>
+      </ng-template>
+  </nz-card-tab>
+  <nz-table #basicTable [nzFrontPagination]="false" [nzData]="dataList" [nzLoading]="loading" [nzTotal]="q.total" [(nzPageIndex)]="q.pi"
+      [(nzPageSize)]="q.ps" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+      <thead>
+          <tr>
+              <th>
+                  <span>模板名称</span>
+              </th>
+              <th>
+                  <span>模板类型</span>
+              </th>
+              <th>
+                  <span>最近修改日期</span>
+              </th>
+              <th>
+                  <span>状态</span>
+              </th>
+              <th colspan="2">
+                  <span>操作</span>
+              </th>
+          </tr>
+      </thead>
+      <tbody nz-tbody>
+          <tr *ngFor="let i of basicTable.data let no = index" >
+              <td>{{i.templateName}}</td>
+              <!-- <td>{{i.templateCategory+"-"+i.templateType}}</td> -->
+              <td *ngIf=" i.templateCategory == '1' && i.templateType == '1' " style="color: #0f0f0f"> offer短信 </td>
+              <td *ngIf=" i.templateCategory == '1' && i.templateType == '2' " style="color:#0f0f0f"> offer邮件 </td>
+              <td *ngIf=" i.templateCategory == '2' && i.templateType == '1' " style="color: #0f0f0f"> 面试短信 </td>
+              <td *ngIf=" i.templateCategory == '2' && i.templateType == '2' " style="color:#0f0f0f"> 面试邮件 </td>
+              <td>{{i.modifyTime | dateTrans:'YYYY年MM月dd日'}}</td>
+              <!-- 0=未审核，1=审核通过，2=审核拒绝 -->
+              <td>
+                <span *ngIf=" i.templateState == '0'">未审核</span>
+                <span *ngIf=" i.templateState == '1'">审核通过</span>
+                <span *ngIf=" i.templateState == '2'">审核拒绝 :
+                    <nz-tooltip [nzTitle]="i.templateOpinion">
+                    <span nz-tooltip>{{ i.templateOpinion.substring(0,20)+"..."}}</span>
+                    </nz-tooltip>
+                </span>
+              </td>
+              <td *ngIf=" i.isSystem == '1'" style='text-align: center'> 
+                  <a (click)="details(i.guid, i.templateCategory, i.templateType, 'watch')">查看</a>
+              </td>
+              <td style='text-align: center' *ngIf=" i.isSystem == '0'">
+                  <a (click)="details(i.guid, i.templateCategory, i.templateType, 'edit')">编辑</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="$event.stopPropagation();del(i.guid,'0')">删除</a>
+              </td>
+          </tr>
+      </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>

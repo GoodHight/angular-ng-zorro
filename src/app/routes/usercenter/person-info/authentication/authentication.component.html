@@ -1,0 +1,112 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>个人资料</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <ng-template #itemContentTemplate></ng-template>
+            <ng-template #tabToolBarTemplate>
+                <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[operationAction]">
+                    <ng-template #operationAction>
+                        <button nz-button nzType="primary" [disabled]="confirmIsDisabled()" (click)="confirm()" *ngIf="step !== 4 && step !== 2">
+                                        确定
+                                    </button>
+                        <button nz-button nzType="primary" (click)="next()" [disabled]="step === 1 && confirmIsDisabled()" *ngIf="step === 1 || step === 2">
+                                        下一步
+                                    </button>
+                        <button nz-button nzType="default" [routerLink]="['/usercenter/personInfo']"> 取消
+                                    </button>
+                    </ng-template>
+                </nz-list-item>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>个人资料</span>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <nz-spin [nzSpinning]="loading">
+            <section nz-col [nzSpan]="14">
+                <div class="extra" *ngIf="step === 0">
+                    <div nz-row class="mb-md">
+                        数据加载中，请稍候。
+                    </div>
+                </div>
+                <div class="extra" *ngIf="step === 1">
+                    <div class="title">
+                        <span class="text">个人身份认证</span>
+                    </div>
+                    <div nz-row class="mb-md">
+                        <form nz-form [formGroup]="step1Form">
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="3" nzRequired>姓名</nz-form-label>
+                                <nz-form-control [nzSpan]="4">
+                                    <input nz-input formControlName="realName" nzHasFeedback>
+                                    <nz-form-explain *ngIf="step1Form.get('realName').dirty && step1Form.get('realName').hasError('required')">
+                                        请输入您的姓名！
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSpan]="3" nzRequired>身份证号</nz-form-label>
+                                <nz-form-control [nzSpan]="4" nzHasFeedback>
+                                    <input nz-input formControlName="idCardNumber">
+                                    <nz-form-explain *ngIf="step1Form.get('idCardNumber').dirty && step1Form.get('idCardNumber').hasError('required')">
+                                        请输入您的身份证号！
+                                    </nz-form-explain>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="extra" *ngIf="step === 2">
+                    <div class="title">
+                        <span class="text">个人身份认证</span>
+                    </div>
+                    <file-template #fileTemplate1 [bizType]="'authenticate'" [bizID]="userGuid" [showFileAttachmentURI]="true"></file-template>
+                </div>
+                <div class="extra" *ngIf="step === 3">
+                    <div class="title">
+                        <span class="text">个人身份认证</span>
+                    </div>
+                    <file-template #fileTemplate2 [bizType]="'authenticate_head'" [bizID]="userGuid" [showFileAttachmentURI]="true"></file-template>
+                </div>
+                <div class="extra" *ngIf="step === 4">
+                    <div nz-row class="mb-md">
+                        <div nz-col [nzOffset]="8" [nzSpan]="8" class="auth-success-tips">
+                            <div>
+                                <i class="anticon anticon-check-circle-o"></i>
+                                <span>
+                                        认证已提交
+                                </span>
+                            </div>
+                            <div>
+                                预计1-2个工作日内完成审核，请耐心等待。
+                            </div>
+                            <div>
+                                <button nz-col [nzOffset]="8" nz-button nzType="primary" [routerLink]="['/usercenter/personInfo']">
+                                    确定
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section nz-col [nzSpan]="5" [nzOffset]="1">
+                <nz-steps [nzCurrent]="step - 1" nzDirection="vertical" [nzProgressDot]="false">
+                    <nz-step [nzTitle]="'填写基本信息'" [nzDescription]="''"></nz-step>
+                    <nz-step [nzTitle]="'上传身份证正、反面照片'" [nzDescription]="''"></nz-step>
+                    <nz-step [nzTitle]="'上传手持身份证照片'" [nzDescription]="''"></nz-step>
+                    <nz-step [nzTitle]="'提交认证'" [nzDescription]="''"></nz-step>
+                </nz-steps>
+            </section>
+        </nz-spin>
+    </div>
+</nz-card>

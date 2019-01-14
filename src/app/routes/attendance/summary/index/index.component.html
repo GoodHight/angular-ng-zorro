@@ -1,0 +1,94 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,datasda,editAction]">
+        <ng-template #serachActive>
+          <div *ngIf="serachType === 1">
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key" (keyup.enter)="enterEvent()">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="refreshNzTable()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div>
+          <div *ngIf="serachType === 0" (click)="showSerach()">
+            <span>
+              <i class="icon iconfont icon-sousuo"></i>搜索</span>
+          </div>
+        </ng-template>
+        <ng-template #datasda>
+          <div>
+            <nz-date-picker [nzAllowClear]="false" [nzShowTime]="false" [(ngModel)]="starttime" [nzFormat]="dateFormat" (ngModelChange)="onChange($event, 'start')"
+              nzShowTime></nz-date-picker>
+            至
+            <nz-date-picker [nzAllowClear]="false" [nzShowTime]="false" [(ngModel)]="endtime" [nzFormat]="dateFormat" (ngModelChange)="onChange($event, 'end')"
+              nzShowTime></nz-date-picker>
+          </div>
+        </ng-template>
+        <ng-template #editAction>
+          <button nz-button nzType="primary" [disabled]="dataSet.length <= 0" (click)="export()">
+            导出报表
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>月度汇总</span>
+    </ng-template>
+  </nz-card-tab>
+  <nz-table #nzTable [nzData]="dataSet" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="queryParams.totals" [(nzPageIndex)]="queryParams.pageIndex"
+    [(nzPageSize)]="queryParams.pageSize" (nzPageIndexChange)="pageChange($event)">
+    <thead>
+      <tr>
+        <th nzWidth="180px" nzLeft="0px" [class.inline-block-4564635]="true">姓名</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">部门</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">工号</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">职位</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">出勤天数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">休息天数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">工作时长</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">迟到次数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">迟到时长</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">早退次数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">早退时长</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">上班缺卡次数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">下班缺卡次数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">旷工天数</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">事假(小时)</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true">婚假(天)</th>
+        <th nzWidth="180px" [class.inline-block-4564635]="true" *ngFor="let m of dateRangeSource">{{ m }}</th>
+      </tr>
+
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data">
+        <td nzLeft="0px">{{ data.userName }}</td>
+        <td>{{data.deptName}}</td>
+        <td>{{data.jobNumber}}</td>
+        <td>{{data.job}}</td>
+        <td>{{data.attendance}}</td>
+        <td>{{data.restFlag}}</td>
+        <td>{{data.workDuration}}</td>
+        <td>{{data.lateFlag}}</td>
+        <td>{{data.lateDuration}}</td>
+        <td>{{data.earlyFlag}}</td>
+        <td>{{data.earlyDuration}}</td>
+        <td>{{data.inworkLackFlag}}</td>
+        <td>{{data.offworkLackFlag}}</td>
+        <td>{{data.absenteeism}}</td>
+        <!-- 旷工天数 -->
+        <td>{{(data.casualLeave / 60).toFixed(0)}}</td>
+        <!-- 事假 -->
+        <td>{{(data.marriageLeave / 60 / 24).toFixed(0)}}</td>
+        <!-- 婚假 -->
+        <td *ngFor="let k of data.daysStatus">{{k.allWorkStatus || ''}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #itemContentTemplate>
+  </ng-template>
+</nz-card>

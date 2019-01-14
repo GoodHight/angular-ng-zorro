@@ -1,0 +1,51 @@
+<nz-table #basicTable [nzData]="dataList" nzNoResult="没有数据">
+    <thead>
+    <tr>
+
+        <th>
+            <span>姓名</span>
+        </th>
+        <th>
+            <span>手机号</span>
+        </th>
+        <th>
+            <span>学历</span>
+        </th>
+        <th>
+            <span>工作年限</span>
+        </th>
+        <th>
+            <span>毕业院校</span>
+        </th>
+        <th>
+            <span>上家公司</span>
+        </th>
+        <th>
+            <span>应聘职位</span>
+        </th>
+        <th>
+            <span>操作</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <tr  *ngFor="let i of basicTable.data let no = index" (click)="details(i.guid)">
+        <td>{{i.realName}}</td>
+        <td>{{i.workPhone}}</td>
+        <td>{{ i.guid }}</td>
+        <td>{{i.departmentName}}</td>
+        <td>
+            {{ i.postion }}
+        </td>
+        <td>{{i.entryTime}}</td>
+        <td  *ngIf=" i.boundState === 0 " style="color: #1890ff"> 未绑定 </td>
+        <td  *ngIf=" i.boundState === 1" style="color:#0f0f0f"> 已绑定 </td>
+        <td  *ngIf=" i.boundState === -1" style="color:#ff4c4c"> 已停用 </td>
+        <td>
+            <a (click)="$event.stopPropagation();">删除</a>
+            <a *ngIf=" i.boundState === 1 "(click)="$event.stopPropagation();">停用</a>
+            <a *ngIf=" i.boundState === -1 "(click)="$event.stopPropagation();">启用</a>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>

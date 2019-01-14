@@ -1,0 +1,56 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>我的签章</span>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <nz-spin [nzSpinning]="loading">
+            <section>
+                <nz-card class="signature" nzHoverable [nzCover]="coverTemplate" routerLink="/usercenter/signature/index/add">
+                    <nz-card-meta nzTitle="添加新签章"></nz-card-meta>
+                </nz-card>
+                <ng-template #coverTemplate>
+                    <div class="signature-content">
+                        <img src="./assets/img/uploader_img_bg.png" />
+                    </div>
+                </ng-template>
+                <nz-card *ngFor="let item of signatureList; let i = index" class="signature" nzHoverable [nzCover]="coverTemplatei" [nzActions]="[editi,deletei]">
+                    <nz-card-meta nzTitle="{{item.signatureName}}"></nz-card-meta>
+                    <ng-template #coverTemplatei>
+                        <div class="signature-content">
+                            <label *ngIf="item.isDefault !== 1" class="position" (click)="setDefaultSignature(item)" nz-radio>设为默认</label>
+                            <label *ngIf="item.isDefault === 1" class="position default">
+                                    <span>
+                                        默认
+                                    </span>
+                                </label>
+                            <div class="div-box">
+                                <div [ngStyle]="{'color': item.cssColor, 'height': item.cssHeight + 'px', 'width': item.cssWidth + 'px', 'border-width':
+                                    item.cssBorderWidth + 'px', 'font-family': item.cssFont, 'font-size': item.cssFontSize + 'px'}"> {{item.signatureContent}}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template #editi>
+                        <i class="anticon anticon-edit" (click)="gotoEdit(item)"></i>
+                    </ng-template>
+                    <ng-template #deletei>
+                        <i class="anticon anticon-delete" (click)="deleteSignature(item)"></i>
+                    </ng-template>
+                </nz-card>
+            </section>
+        </nz-spin>
+    </div>
+</nz-card>

@@ -1,0 +1,211 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,exportAction,editAction2]">
+                <!-- <ng-template #selectAction>
+                    <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="q.employeeState" (ngModelChange)="employeeStateChange($event)">
+                        <nz-option *ngFor="let option of employeeStateList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+                    </nz-select>
+                </ng-template> -->
+                <ng-template #serachActive>
+                    <div *ngIf="serachType === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key" (keydown)="enterSearch($event)">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="serachAction()" nz-button nzType="primary" nzSearch>
+                                <i class="anticon anticon-search"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="serachType === 0" (click)="showSerach()">
+                        <span>
+                            <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                    </div>
+                </ng-template>
+                <ng-template #editAction>
+                    <button nz-button nzType="primary" routerLink="/personnel-admin/entry-management/list/add">
+                        新增待入职
+                    </button>
+                </ng-template>
+                <ng-template #editAction2>
+                    <button nz-button nzType="primary" routerLink="/personnel-admin/employee-info/add">
+                        新增员工
+                    </button>
+                </ng-template>
+                <ng-template #exportAction>
+                    <button nz-button nzType="primary" (click)="exportList()">
+                        导出列表
+                    </button>
+                </ng-template>
+                <!-- <ng-template #moreAction>
+                    <button nz-button nzType="primary">
+                        3月报表
+                    </button>
+                </ng-template> -->
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>人员管理</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #basicTable [nzFrontPagination]="false" [nzData]="dataList" [nzLoading]="loading" [nzTotal]="q.total" [(nzPageIndex)]="q.pi"
+        [(nzPageSize)]="q.ps" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>姓名</span>
+                </th>
+                <th>
+                    <span>手机号</span>
+                </th>
+                <th>
+                    <span>工号</span>
+                </th>
+                <th>
+                    <span>部门</span>
+                </th>
+                <th>
+                    <span>职位</span>
+                </th>
+                <th>
+                    <span>入职日期</span>
+                </th>
+                <th>
+                    <span>状态</span>
+                </th>
+                <th colspan="2">
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let i of basicTable.data let no = index">
+                <td>{{ code + no }}</td>
+                <td>{{i.name}}</td>
+                <td>{{i.phone}}</td>
+                <td>{{ i.jobNumber }}</td>
+                <td>{{i.deptName}}</td>
+                <td>
+                    {{ i.position }}
+                </td>
+                <td>{{i.entryTime | dateTrans:'YYYY年MM月dd日'}}</td>
+                <td *ngIf=" i.boundStatus === '' || i.boundStatus === '0' " style="color: #1890ff"> 未绑定 </td>
+                <td *ngIf=" i.boundStatus === '1'" style="color:#0f0f0f"> 已绑定 </td>
+                <td *ngIf=" i.boundStatus === '-1'" style="color:#ff4c4c"> 未注册 </td>
+                <td *ngIf=" i.boundStatus === '2'" style="color:#ff4c4c"> 已停用 </td>
+                <td style='text-align: right;width: 260px;'>
+                    <nz-divider *ngIf=" i.boundStatus === '1' " nzType="vertical"></nz-divider>
+                    <a *ngIf=" i.boundStatus === '1' " (click)="$event.stopPropagation();patch(i.guid,'1','flase')">停用</a>
+                    <nz-divider *ngIf=" i.boundStatus === '2' " nzType="vertical"></nz-divider>
+                    <a *ngIf=" i.boundStatus === '2' || i.boundStatus === '' " (click)="$event.stopPropagation();patch(i.guid,'1','true' )">启用</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="leaveBtn(i.guid,i.name,i.phone,i.jobNumber,i.deptName,i.position,i.entryTime)" *ngIf=" i.boundStatus === '2' || i.boundStatus === '1'">办理离职</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="delete(i.guid)">删除</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="details(i.guid)">详情</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate>
+        <div>本月：
+            <a>{{statistics.date || 0}}</a>在职：
+            <a>{{ statistics.onJob || 0 }}</a> 人 ， 入职：
+            <a>{{ statistics.entry || 0}}</a> 人，
+            <!-- 转正：<a>{{ statistics.positive || 0}}</a>人  -->
+            离职：
+            <a>{{ statistics.quit || 0}}</a> 人
+        </div>
+    </ng-template>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="删除该员工信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <p>删除后不可恢复</p>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisibles" nzTitle="办理离职" (nzOnCancel)="leaveCancel()" (nzOnOk)="leaveOk()">
+    <p>
+        <span>{{name}}</span>
+        <nz-divider nzType="vertical"></nz-divider>
+        <span>{{deptName}} - {{position}}</span>
+        <nz-divider nzType="vertical"></nz-divider>
+        <span>{{entryTime | dateTrans:'YYYY年MM月dd日'}}</span>
+    </p>
+    <form nz-form [formGroup]="form" (ngSubmit)="leaveOk()">
+        <div id="personal-information">
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+                    离职类别
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="24">
+                    <nz-select nzAllowClear nzPlaceHolder="选择" formControlName="dimissionType">
+                        <nz-option *ngFor="let option of turnoverList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+                    </nz-select>
+                    <nz-form-explain *ngIf="form.get('dimissionType').dirty && form.get('dimissionType').hasError('required')">请选择离职类别</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+                    离职证明
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="24">
+                    <nz-select nzAllowClear nzPlaceHolder="选择" formControlName="needDimission">
+                        <nz-option *ngFor="let option of categoryList" [nzLabel]="option.dictName" [nzValue]="option.guid"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+                    离职日期
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="24">
+                    <nz-date-picker formControlName="dimissionaTime" [nzFormat]="dateFormat"></nz-date-picker>
+                    <nz-form-explain *ngIf="form.get('dimissionaTime').dirty && form.get('dimissionaTime').hasError('required')">请填写批次名称</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+                    离职原因
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="24">
+                    <input nz-input formControlName="reason" placeholder="输入离职原因">
+                    <nz-form-explain *ngIf="form.get('reason').dirty && form.get('reason').hasError('required')">请填写批次名称</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nzRequired nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+                    交接人员
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="24">
+                    <input nz-input formControlName="handoverName" placeholder="输入交接人员">
+                    <nz-form-explain *ngIf="form.get('handoverName').dirty && form.get('handoverName').hasError('required')">请填写批次名称</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row style=" margin-bottom: 0">
+                <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 30px">
+                    上传附件
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <div style="overflow: hidden;">
+                        <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+                            [nzPreview]="handlePreview" (nzChange)="handleChange($event,1)">
+                            <i class="anticon anticon-plus"></i>
+                            <div class="ant-upload-text">点击上传</div>
+                        </nz-upload>
+                        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                            <ng-template #modalContent>
+                                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                            </ng-template>
+                        </nz-modal>
+                    </div>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </form>
+    <p>文件格式为：DOC/DOCX/XLS/XLSX/PDF/ZIP/RAR，大小在5M内。</p>
+</nz-modal>

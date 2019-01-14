@@ -1,0 +1,288 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[editAction]">
+                <ng-template #editAction>
+                    <button *ngIf="updateState === 0" nz-button nzType="primary" (click)="_submitForm()">
+                        保存
+                    </button>
+                    <button *ngIf="updateState === 1" nz-button nzType="primary" (click)="edit()">
+                        编辑
+                    </button>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>企业信息</span>
+    </ng-template>
+    <div class="logo-title">
+        <div class="logo-imgs">
+            <nz-upload class="avatar-uploader" [nzAction]="uploaderUrl" nzName="file" nzListType="picture-card" [nzShowUploadList]="false"
+                [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
+                <ng-container *ngIf="!avatarUrl">
+                    <i class="anticon anticon-plus"></i>
+                    <div class="ant-upload-text">上传logo</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            <!-- <img src="./assets/img/company_logo.png" width="81" /> -->
+        </div>
+        <div class="logo-conters">
+            <p class="namegs">{{ dataList.name }}
+                <span *ngIf=" dataList.checkFlag === 0 " class="state-error">未认证</span>
+                <span *ngIf=" dataList.checkFlag === 1 " [ngClass]="{'state-success': true}">已认证</span>
+                <span *ngIf=" dataList.checkFlag === 2 " [ngClass]="{'state-error': true}">认证失败</span>
+                <span *ngIf=" dataList.checkFlag === 3 " style="background: #ffc53d" [ngClass]="{'state-success': true}">二次审核中</span>
+                <span *ngIf=" dataList.checkFlag === 4 " style="background: #ffc53d" [ngClass]="{'state-success': true}">审核中</span>
+                <a *ngIf=" dataList.checkFlag === 0 " (click)='reznheng()' >去认证>></a>
+                <a *ngIf=" dataList.checkFlag === 2 " routerLink="/my/authenticate">修改认证>></a> 
+
+                <span *ngIf="dataList.checkFlag === 2" class="refusalCause">{{ dataList.refusalCause }}</span>
+            </p>
+            <p class="email">{{ dataList.account }}</p>
+        </div>
+        <p style="float: right;margin-top: 75px;margin-bottom: 0">点击图片上传LOGO | 建议上传图片尺寸为640*640，大小不超过1M</p>
+    </div>
+    <div>
+        <p class="account-name">账户信息</p>
+    </div>
+    <div style="padding: 18px 24px">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+            <div nz-row>
+                <div nz-col nzSpan="12"> 
+                    <p class="item-name">企业名称：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.name }}</p>
+                    <input *ngIf="updateState === 0" [readOnly]='disableds' formControlName="name" [(ngModel)]="datas.name" placeholder="请输入企业名称"/>
+                </div>
+                <div nz-col nzSpan="12"> 
+                    <p class="item-name">企业官网：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.website }}</p>
+                    <input *ngIf="updateState === 0" formControlName="website" [(ngModel)]="datas.website" placeholder="请输入企业官网" />
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">企业账户：</p>
+                    <p class="item-box">{{ dataList.account }}</p>
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">办公地址：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{dataList.officeProvinceName}}{{dataList.officeCityName}}{{dataList.officeAreasName}}</p>
+                    <div *ngIf="updateState === 0" nz-row [nzGutter]="{ xs: 10, sm: 10, md: 10, lg: 10, xl: 10, xxl: 10 }">
+                        <nz-select nz-col nzSpan="6" [nzPlaceHolder]="'请选择省'" formControlName="officeProvinceId" [(ngModel)]="datas.officeProvinceId"
+                            nzId="status2" nzShowSearch nzAllowClear (ngModelChange)="getNextCity()">
+                            <nz-option *ngFor="let i of provinceData; let idx = index" [nzLabel]="i.name" [nzValue]="i.code"></nz-option>
+                        </nz-select>
+                        <nz-select nz-col nzSpan="6" [nzPlaceHolder]="'请选择市'" formControlName="officeCityId" nzId="status2" [(ngModel)]="datas.officeCityId"
+                            nzShowSearch nzAllowClear (ngModelChange)="getNextArea()">
+                            <nz-option *ngFor="let i of cityData; let idx = index" [nzLabel]="i.name" [nzValue]="i.code"></nz-option>
+                        </nz-select>
+                        <nz-select nz-col nzSpan="6" [nzPlaceHolder]="'请选择区'" formControlName="officeAreasId" nzId="status2" [(ngModel)]="datas.officeAreasId"
+                            (ngModelChange)="setArea()" nzShowSearch nzAllowClear>
+                            <nz-option *ngFor="let i of areasData; let idx = index" [nzLabel]="i.name" [nzValue]="i.code"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">企业注册地址：</p>
+                    <p class="item-box">{{dataList.provinceName}}{{dataList.cityName}}{{dataList.areasName}}</p>
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">办公详细地址：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.officeAddress }}</p>
+                    <input *ngIf="updateState === 0" formControlName="officeAddress" [(ngModel)]="datas.officeAddress" placeholder="请输入办公详细地址"
+                    />
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">企业注册详细地址：</p>
+                    <p class="item-box">{{ dataList.address }}</p>
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">公司规模：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.scale }}</p>
+                    <div nz-row [nzGutter]="{ xs: 10, sm: 10, md: 10, lg: 10, xl: 10, xxl: 10 }" *ngIf="updateState === 0">
+                        <nz-select nz-col [nzSm]="18" nzPlaceHolder="企业规模" formControlName="scale" [(ngModel)]="datas.scale" (ngModelChange)="changeIndustry('2')"
+                            nzAllowClear>
+                            <nz-option *ngFor="let option of scaleId" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">联系电话：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.phone }}</p>
+                    <input *ngIf="updateState === 0"  nz-input [maxLength]='11' formControlName="phone" placeholder="请输入联系电话" />
+                    <!-- <div *ngIf="updateState === 0">
+                        <ng-container *ngIf="validateForm.get('phone').hasError('mobile') && !validateForm.get('phone').hasError('required')">
+                            <span style="color: red"> 手机号格式错误！</span>
+                        </ng-container>
+                    </div> -->
+                </div>
+                <div nz-col nzSpan="12">
+                    <p class="item-name">所属行业：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.industryName }}{{ dataList.industryNextName }}</p>
+                    <div nz-row [nzGutter]="{ xs: 10, sm: 10, md: 10, lg: 10, xl: 10, xxl: 10 }" *ngIf="updateState === 0">
+                        <nz-select nz-col [nzSm]="6" nzPlaceHolder="所属行业" formControlName="industryId" [(ngModel)]="datas.industryId" (ngModelChange)="changeIndustry('0')"
+                            nzAllowClear>
+                            <nz-option *ngFor="let option of selectData" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                        <nz-select nz-col [nzSm]="6" nzPlaceHolder="所属行业" formControlName="industryNextId" [(ngModel)]="datas.industryNextId" (ngModelChange)="changeIndustry('1')"
+                            nzAllowClear>
+                            <nz-option *ngFor="let option of selectDataChild" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div nz-col nzSpan="24">
+                    <p class="item-name">企业简介：</p>
+                    <p *ngIf="updateState === 1" class="item-box">{{ dataList.introduce }}</p>
+                    <input *ngIf="updateState === 0" formControlName="introduce" [(ngModel)]="datas.introduce" placeholder="请输入企业简介" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- <div nz-row [nzGutter]="26" class="business-info-box">
+        <div nz-col>
+            <div nz-row>
+                <nz-form-item nz-row>
+                    <div nz-col [nzSm]="24">
+                        <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                            <div class="extra">
+                                <div class="title">
+                                    <span class="text">账户信息</span>
+                                </div>
+                                <div nz-row class="mb-md">
+                                    <div nz-col [nzSm]="2">
+                                        <span *ngIf=" dataList.checkFlag === 0 " class="state state1">未认证</span>
+                                        <span *ngIf=" dataList.checkFlag === 1 " class="state">已认证</span>
+                                        <span *ngIf=" dataList.checkFlag === 2 " class="state">认证失败</span>
+                                    </div>
+                                    <div nz-col [nzSm]="2" class="text-right">企业名称：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="Authentication === 0 ">{{ dataList.name }}
+                                    </div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                                        <input nz-input formControlName="enterpriseName" [(ngModel)]="dataList.name ">
+                                    </div>
+                                </div>
+
+                                <div nz-row class="mb-md">
+                                    <div nz-col [nzSm]="2">
+                                        <a *ngIf=" dataList.checkFlag === 0 " routerLink="/my/authenticate">去认证>></a>
+                                        <a *ngIf=" dataList.checkFlag === 2 " routerLink="/my/authenticate">修改认证>></a>
+                                    </div>
+                                    <div nz-col [nzSm]="2" class="text-right">企业账户：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="Authentication === 0 ">{{ dataList.account }}
+                                    </div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                                        <input nz-input formControlName="enterpriseName" [(ngModel)]="dataList.account
+">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">企业地址：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="Authentication === 0 ">{{dataList.registerAddressName}} {{dataList.registerAddressDetail}}
+                                    </div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                                        <input nz-input formControlName="registerAddress" [(ngModel)]="registerAddress">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">详细地址：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="Authentication === 0 ">{{dataList.registerAddressName}} {{dataList.registerAddressDetail}}
+                                    </div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                                        <input nz-input formControlName="registerAddress" [(ngModel)]="registerAddress">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md nz-form-item">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">联系电话：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="updateState === 0 ">{{dataList.phone}}</div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                                        <input nz-input formControlName="moble" [(ngModel)]="dataList.phone">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md nz-form-item">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">企业官网：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="updateState === 0 ">{{dataList.website}}</div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                                        <input nz-input formControlName="link" [(ngModel)]="dataList.website">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md nz-form-item">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">公司规模：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="updateState === 0 ">{{dataList.scale}}</div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                                        <input nz-input formControlName="link" [(ngModel)]="dataList.scale">
+                                    </div>
+                                </div>
+                                <div nz-row class="mb-md nz-form-item">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right">所属行业：</div>
+                                    <div nz-col [nzSm]="14" *ngIf="updateState === 0 ">{{dataList.industry}}</div>
+                                    <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                                        <nz-select formControlName="departmentParentGuid" style="width: 100%;" placeholder="请选择" [(ngModel)]="dataList" (ngModelChange)="getTradeName()">
+                                            <nz-option *ngFor="let item of dataList" [nzLabel]="item.title" [nzValue]="item.key"></nz-option>
+                                        </nz-select>
+                                        <nz-select formControlName="departmentParentGuid" style="width: 100%;" placeholder="请选择" [(ngModel)]="departmentParentGuid"
+                                            (ngModelChange)="getTradeName()">
+                                            <nz-option *ngFor="let item of employeeInfo" [nzLabel]="item.title" [nzValue]="item.key"></nz-option>
+                                        </nz-select>
+                                    </div>
+                                </div>
+                                <div nz-form-item nz-row *ngIf=" updateState === 1  ">
+                                    <div nz-col [nzSm]="2"></div>
+                                    <div nz-col [nzSm]="2" class="text-right"></div>
+                                    <div nz-form-control nz-col [nzSpan]="16">
+                                        <button nz-button [nzType]="'primary'" nzSize="large">确认修改</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="extra" style="display: none">
+                            <div class="title">
+                                <span class="text">企业对公账户认证</span>
+                            </div>
+                            <div nz-row class="mb-md">
+                                <div nz-col [nzSm]="2">
+                                    <span *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 0" class="state state1">未认证</span>
+                                    <span *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 1" class="state">已认证</span>
+                                    <span *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 2" class="state state1">认证中</span>
+                                </div>
+                                <div nz-col [nzSm]="2" class="text-right">开户银行：</div>
+                                <div nz-col [nzSm]="14">{{ enterpriseAccount.openingBank || '--' }}</div>
+                            </div>
+                            <div nz-row class="mb-md">
+                                <div nz-col [nzSm]="2">
+                                    <a *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 0" class="state1" (click)="enterpriseState()">马上认证>>>></a>
+                                    <a *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 1" class="state1" (click)="enterpriseState()">修改认证>>>></a>
+                                    <a *ngIf="enterpriseAccount.isEnterpriseAccountAuthentication === 2" class="state1" (click)="enterpriseState()">修改认证>>>></a>
+                                </div>
+                                <div nz-col [nzSm]="2" class="text-right">开户地址：</div>
+                                <div nz-col [nzSm]="14">{{enterpriseAccount.openingBankAddress || '--' }}
+                                </div>
+                            </div>
+                            <div nz-row class="mb-md">
+                                <div nz-col [nzSm]="2"></div>
+                                <div nz-col [nzSm]="2" class="text-right">对公账号：</div>
+                                <div nz-col [nzSm]="14">{{ enterpriseAccount.publicAccount || '--' }}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </nz-form-item>
+            </div>
+        </div>
+    </div> -->
+    <ng-template #itemContentTemplate>
+        <div class="extra" style="margin-top: 0">
+        </div>
+    </ng-template>
+</nz-card>

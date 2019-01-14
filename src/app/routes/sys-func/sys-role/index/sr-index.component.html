@@ -1,0 +1,78 @@
+<!-- 系统权限 -->
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>权限列表</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <ng-template #tabToolBarTemplate>
+                <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[searchAction, addAction]">
+                    <ng-template #itemContentTemplate></ng-template>
+                    <ng-template #searchAction>
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入搜索条件" [(ngModel)]="searchStr">
+                            <ng-template #suffixIconButton>
+                                <button nz-button nzType="primary" nzSearch (click)="pageNum = 1;getSysRoleList();" style="margin-right: 0px;">
+                                    <i class="anticon anticon-search"></i>
+                                </button>
+                            </ng-template>
+                        </nz-input-group>
+                    </ng-template>
+                    <ng-template #addAction>
+                        <button nz-button nzType="primary" [routerLink]="['/sysfunc/sysrole/add']">新增</button>
+                    </ng-template>
+                </nz-list-item>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>权限管理</span>
+    </ng-template>
+    <section nz-row>
+        <nz-table #tableId [nzData]="sysRoleList" nzShowPagination [nzFrontPagination]="false" [nzPageIndex]="pageNum" [nzPageSize]="pageSize"
+            [nzTotal]="pageTotal">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>权限中文名</th>
+                    <th>权限描述</th>
+                    <th>状态</th>
+                    <th>是否模板</th>
+                    <th>是否可配置</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of tableId.data;let index = index">
+                    <td>
+                        {{index + (pageNum - 1) * pageSize + 1}}
+                    </td>
+                    <td>
+                        {{item.roleName}}
+                    </td>
+                    <td>
+                        {{item.roleScope}}
+                    </td>
+                    <td>{{item.roleState == 1 ? '开启' : '停用'}}</td>
+                    <td>{{item.isTemplate == 1 ? '是' : '否'}}</td>
+                    <td>{{item.isConfig == 1 ? '是' : '否'}}</td>
+                    <td>
+                        <a (click)="confirmModal(item.roleState == 0 ? 2 : 1, item.guid)">{{item.roleState == 0 ? '开启' : '停用'}}</a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a [routerLink]="['/sysfunc/sysrole/authorization', item.guid]">配置授权</a>
+                        <nz-divider nzType="vertical" *ngIf="item.isConfig != 0"></nz-divider>
+                        <a *ngIf="item.isConfig != 0" [routerLink]="['/sysfunc/sysrole/edit/', item.guid]">编辑</a>
+                        <nz-divider nzType="vertical" *ngIf="item.isConfig != 0"></nz-divider>
+                        <a (click)="confirmModal(0, item.guid)" *ngIf="item.isConfig != 0">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </section>
+</nz-card>

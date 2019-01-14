@@ -1,0 +1,218 @@
+<nz-layout>
+    <nz-header class="content_header">
+        <section nz-row>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span class="_subtitle">{{dataDetail?.enterpriseName}}</span>
+        </section>
+        <section nz-row>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[backAction]"></nz-list-item>
+        </section>
+        <ng-template #itemContentTemplate>
+            <div class="subtitle">
+                <label></label>
+            </div>
+        </ng-template>
+    </nz-header>
+    <nz-layout>
+        <nz-content>
+            <div class="extra">
+                <div class="title"><span class="text">企业信息</span>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2">
+
+                        <!-- <span *ngIf=" dataDetail?.isEnterpriseAuthentication === 0 " class="state state1">未认证</span>
+                        <span *ngIf=" dataDetail?.isEnterpriseAuthentication === 1 " class="state">已认证</span>
+                        <span *ngIf=" dataDetail?.isEnterpriseAuthentication === 2 " class="state">认证中</span> -->
+                    </div>
+                    <div nz-col [nzSm]="2" class="text-right">企业名称：</div>
+                    <div nz-col [nzSm]="14">{{ dataDetail?.enterpriseName }}
+                    </div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                        <input nz-input formControlName="enterpriseName" [(ngModel)]="dataDetail?.enterpriseName ">
+                    </div> -->
+                </div>
+
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2">
+                        <!-- <a *ngIf=" dataDetail?.isEnterpriseAuthentication === 0 " routerLink="/my/authenticate">立即认证>></a>
+                        <a *ngIf=" dataDetail?.isEnterpriseAuthentication === 1 " routerLink="/my/authenticate">修改认证>></a>
+                        <a *ngIf=" dataDetail?.isEnterpriseAuthentication === 2 " routerLink="/my/authenticate">修改认证>></a> -->
+                    </div>
+                    <div nz-col [nzSm]="2" class="text-right">企业账户：</div>
+                    <div nz-col [nzSm]="14">{{ dataDetail?.isEnterpriseAuthentication }}
+                    </div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                        <input nz-input formControlName="enterpriseName" [(ngModel)]="userName">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">开始时间：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.businessBeginTime | date: 'yyyy-MM-dd'}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">结束时间：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.businessEndTime | date: 'yyyy-MM-dd'}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">企业地址：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.registerAddressName}} {{dataDetail?.registerAddressDetail}}
+                    </div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="Authentication === 1 ">
+                        <input nz-input formControlName="registerAddress" [(ngModel)]="registerAddress">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">联系电话：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.contactNumber}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="moble" [(ngModel)]="dataDetail?.contactNumber">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">企业官网：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.officialWebsite}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">公司规模：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.enterpriseScale}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">行业：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.industry}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 "> -->
+                    <!-- <nz-select formControlName="departmentParentGuid" style="width: 100%;" placeholder="请选择" [(ngModel)]="dataList" (ngModelChange)="getTradeName()">
+                            <nz-option *ngFor="let item of dataList" [nzLabel]="item.title" [nzValue]="item.key"></nz-option>
+                        </nz-select>
+                        <nz-select formControlName="departmentParentGuid" style="width: 100%;" placeholder="请选择" [(ngModel)]="departmentParentGuid" (ngModelChange)="getTradeName()">
+                            <nz-option *ngFor="let item of employeeInfo" [nzLabel]="item.title" [nzValue]="item.key"></nz-option>
+                        </nz-select> -->
+                    <!--<input nz-input formControlName="link" [(ngModel)]="dataList.officialWebsite">-->
+                    <!-- </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">所属行业：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.parentIndustry}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <div nz-row class="mb-md nz-form-item">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">法人姓名：</div>
+                    <div nz-col [nzSm]="14">{{dataDetail?.corporationName}}</div>
+                    <!-- <div nz-col nz-form-control [nzSm]="14" *ngIf="updateState === 1 ">
+                        <input nz-input formControlName="link" [(ngModel)]="dataDetail?.officialWebsite">
+                    </div> -->
+                </div>
+                <!-- <div nz-form-item nz-row *ngIf=" updateState === 1  ">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right"></div>
+                    <div nz-form-control nz-col [nzSpan]="16">
+                        <button nz-button [nzType]="'primary'" nzSize="large">确认修改</button>
+                    </div>
+                </div> -->
+            </div>
+            <!-- <div class="extra">
+                <div class="title">
+                    <span class="text">企业对公账户认证</span>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2">
+                        <span *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 0" class="state state1">未认证</span>
+                        <span *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 1" class="state">已认证</span>
+                        <span *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 2" class="state state1">认证中</span>
+                    </div>
+                    <div nz-col [nzSm]="2" class="text-right">开户银行：</div>
+                    <div nz-col [nzSm]="14">{{ dataAccountDetail?.openingBank || '--' }}</div>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2">
+                        <a *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 0" class="state1" (click)="enterpriseState()">马上认证>>>></a>
+                        <a *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 1" class="state1" (click)="enterpriseState()">修改认证>>>></a>
+                        <a *ngIf="dataAccountDetail?.isEnterpriseAccountAuthentication === 2" class="state1" (click)="enterpriseState()">修改认证>>>></a>
+                    </div>
+                    <div nz-col [nzSm]="2" class="text-right">开户地址：</div>
+                    <div nz-col [nzSm]="14">{{dataAccountDetail?.openingBankAddress || '--' }}
+                    </div>
+                </div>
+                <div nz-row class="mb-md">
+                    <div nz-col [nzSm]="2"></div>
+                    <div nz-col [nzSm]="2" class="text-right">对公账号：</div>
+                    <div nz-col [nzSm]="14">{{ dataAccountDetail?.publicAccount || '--' }}
+                    </div>
+
+                </div>
+            </div> -->
+        </nz-content>
+    </nz-layout>
+
+</nz-layout>
+<ng-template #backAction>
+    <button nz-button style="margin-right:5px;" (click)="changePsw()" type="button" nzType="primary">修改密码</button>
+    <button nz-button (click)="back()" type="button" nzType="primary">返 回</button>
+</ng-template>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="修改密码" (nzOnCancel)="handleCancel()" [nzFooter]="modalFooter" [nzOkLoading]="isOkLoading">
+    <form nz-form [formGroup]="changeForm" class="login-form">
+        <nz-form-item nz-row>
+            <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzRequired>
+                原密码
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <input type="password" nz-input [nzSize]="'large'" formControlName="oldPassword">
+                <nz-form-explain *ngIf="changeForm.get('oldPassword').dirty && changeForm.get('oldPassword').errors">
+                    请输入您的旧密码！
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nz-col [nzSm]="6" [nzXs]="24" nzRequired>
+                新密码
+            </nz-form-label>
+            <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <input type="password" nz-input [nzSize]="'large'" formControlName="newPassword">
+                <nz-form-explain *ngIf="changeForm.get('newPassword').dirty && changeForm.get('newPassword').errors">
+                    请输入您的新密码！
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>确认密码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input type="password" nz-input type="password" formControlName="checkPassword" id="checkPassword">
+                <nz-form-explain *ngIf="changeForm.get('checkPassword').dirty && changeForm.get('checkPassword').errors">
+                    <ng-container *ngIf="changeForm.get('checkPassword').hasError('required')">
+                        请确认您的密码！
+                    </ng-container>
+                    <ng-container *ngIf="changeForm.get('checkPassword').hasError('confirm')">
+                        两次密码输入不一致！
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+        <button nz-button [disabled]="!changeForm.valid" nzType="primary" (click)="handleOk()" [nzLoading]="isOkLoading">确认</button>
+    </ng-template>
+</nz-modal>

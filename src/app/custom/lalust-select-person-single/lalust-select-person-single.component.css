@@ -1,0 +1,63 @@
+.lalust-card-title {
+    white-space: nowrap;
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+}
+.lalust-card-content {
+    min-height: 400px;
+    max-height: 420px;
+    overflow: auto;
+    background: rgba(239, 239, 239, 0.85);
+}
+.lalust-content-ul-256416{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: rgba(239, 239, 239, 0.85);
+}
+.lalust-content-ul-256416 li{
+    list-style: none;
+    width: 100%;
+    height: 30px;
+    margin: 5px 0;
+    background: #ffffff;
+    line-height: 30px;
+}
+.lalust-content-ul-256416 li.li-select-all-5552522{
+    text-align: right;
+}
+.lalust-content-ul-256416 li.li-error-5552522{
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+}
+
+:host ::ng-deep .ng-star-inserted {
+    width: 100%;
+}
+:host ::ng-deep .ng-star-inserted li div{
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+}
+:host ::ng-deep .ng-star-inserted li label{
+    /* position: absolute; */
+    /* right: 30px; */
+    margin-top: 3px;
+    float: right
+}
+.lalust-content-ul-256416 .lalust-li-name-2861256{
+    margin-left: 15px;
+}
+.lalust-content-ul-256416 .lalust-li-position-2861256{
+    /* position: absolute; */
+    right: 70px;
+}
+.lalust-content-ul-256416 .lalust-li-status-2861256{
+    /* position: absolute; */
+    right: -5px;
+}
+.lalust-content-ul-256416 .lalust-li-status-2861256 > img{
+    width: 40px;
+    height: 13px;
+}

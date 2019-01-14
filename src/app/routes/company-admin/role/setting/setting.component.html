@@ -1,0 +1,62 @@
+<nz-card [nzBordered]="false"  [nzTitle]="title">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div (click)="to(i.key)">{{i.tab}}</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <div nz-row>
+    <section class="tab-content">
+      <!--<div nz-col class="recruit-tab">-->
+      <!--<ul>-->
+      <!--<li   [ngClass]="{'active':hrefValue === 1}" (click)="serachResume(1)" >角色（{{ count.newCount || 0 }}）</li>-->
+      <!--<li   [ngClass]="{'active':hrefValue === 2}" (click)="serachResume(2)" >角色（{{ count.alterCount || 0 }}）</li>-->
+      <!--<li   [ngClass]="{'active':hrefValue === 3}" (click)="serachResume(3)" >角色（{{ count.isRecCount || 0 }}）</li>-->
+      <!--<li   [ngClass]="{'active':hrefValue === 4}" (click)="serachResume(4)" >角色（{{ count.passRecCount || 0 }}）-->
+      <!--</li>-->
+      <!--<li   [ngClass]="{'active':hrefValue === 5}" (click)="serachResume(5)" >角色（{{ count.notPassRecCount || 0 }}）</li>-->
+      <!--</ul>-->
+      <!--</div>-->
+      <nz-table #basicTable nzBordered nzShowPagination="false"  [nzData]="dataLists"  nzNoResult="没有数据">
+        <thead>
+        <tr>
+          <th>
+            <span>选择</span>
+          </th>
+          <th>
+            <span>序号</span>
+          </th>
+          <th>
+            <span>权限名</span>
+          </th>
+          <!--<th>-->
+            <!--<span>功能</span>-->
+          <!--</th>-->
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr  *ngFor="let i of dataLists let no = index">
+          <td><label nz-checkbox (nzCheckedChange)="checkAll(no,i.guid,$event)" [(ngModel)]="dataLists[no].isDefault " [nzIndeterminate]="indeterminate" ></label></td>
+          <td>{{ no+1 }}</td>
+          <td>{{i.roleName}}</td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+    </section>
+  </div>
+  <ng-template #title>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>权限管理</span>
+  </ng-template>
+  <ng-template #tabToolBarTemplate>
+    <button nz-button type="button" [routerLink]="['/companyadmin/user']" nzType="primary">返回</button>
+    <button nz-button type="button" (click)="submit()" nzType="primary">确定</button>
+  </ng-template>
+</nz-card>

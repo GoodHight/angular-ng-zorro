@@ -1,0 +1,93 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div>通讯信息</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>通讯信息</span>
+    </ng-template>
+    <div id="message-information">
+        <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    联系地址
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-select [nzPlaceHolder]="'请选择省'" formControlName="provinceId" nzId="status2" nzShowSearch
+                               (ngModelChange)="getNextCity()">
+                        <nz-option *ngFor="let i of provinceData; let idx = index" [nzLabel]="i.name"
+                                   [nzValue]="i.code"></nz-option>
+                    </nz-select>
+                    <nz-select [nzPlaceHolder]="'请选择市'" formControlName="cityId" nzId="status2" nzShowSearch
+                               (ngModelChange)="getNextArea()">
+                        <nz-option *ngFor="let i of cityData; let idx = index" [nzLabel]="i.name"
+                                   [nzValue]="i.code"></nz-option>
+                    </nz-select>
+                    <nz-select [nzPlaceHolder]="'请选择区'" formControlName="areasId" nzId="status2" nzShowSearch
+                    >
+                        <nz-option *ngFor="let i of areasData; let idx = index" [nzLabel]="i.name"
+                                   [nzValue]="i.code"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    详细地址
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <nz-form-control>
+                        <input nz-input formControlName="address" placeholder="输入员工现居住地址">
+                    </nz-form-control>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    个人邮箱
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <input nz-input formControlName="email" placeholder="输入个人邮箱">
+                    <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors">
+                        请输入个人邮箱
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    紧急联系人姓名
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <input nz-input formControlName="emergencyContact" placeholder="输入紧急联系人姓名">
+                    <nz-form-explain
+                            *ngIf="validateForm.get('emergencyContact').dirty && validateForm.get('emergencyContact').errors">
+                        请输入紧急联系人姓名
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="4">
+                    紧急联系人手机
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="16">
+                    <input nz-input formControlName="emergencyPhone" placeholder="输入紧急联系人手机">
+                    <nz-form-explain
+                            *ngIf="validateForm.get('emergencyPhone').dirty && validateForm.get('emergencyPhone').errors">
+                        请输入紧急联系人手机
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button [disabled]="!validateForm.valid" nzType="primary" (click)="submitForm()">保存</button>
+</ng-template>

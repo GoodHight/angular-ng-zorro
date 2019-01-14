@@ -1,0 +1,104 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectedIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab [nzTitle]="nzTitle0" [nzDisabled]="true">
+                    <ng-template #nzTitle0>
+                        <div>选择培训机构</div>
+                    </ng-template>
+                </nz-tab>
+                <nz-tab [nzTitle]="nzTitle1" [nzDisabled]="true">
+                    <ng-template #nzTitle1>
+                        <div>{{'>'}}</div>
+                    </ng-template>
+                </nz-tab>
+                <nz-tab [nzTitle]="nzTitle2" [nzDisabled]="true">
+                    <ng-template #nzTitle2>
+                        <div>选择班级</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <ng-template #itemContentTemplate></ng-template>
+            <ng-template #tabToolBarTemplate>
+                <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[operationAction]">
+                    <ng-template #operationAction>
+                        <button nz-button nzType="default" (click)="back()">
+                                    返回
+                                </button>
+                    </ng-template>
+                </nz-list-item>
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>加入班级</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table *ngIf="nowStep === 1" #basicTable [nzData]="dataList" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>名称</span>
+                </th>
+                <th>
+                    <span>联系电话</span>
+                </th>
+                <th>
+                    <span>地址</span>
+                </th>
+                <th>
+                    <span>简介</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of basicTable.data; let no = index" (click)="gotoClass(item)">
+                <td>{{ no+1 }}</td>
+                <td>{{item.enterpriseName}}</td>
+                <td>{{item.contact}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.introduction}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <nz-table *ngIf="nowStep === 2" #basicTable [nzData]="classList" [(nzPageIndex)]="studentPageIndex" [nzPageSize]="studentPageSize" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>班级名称</span>
+                </th>
+                <th>
+                    <span>专业名称</span>
+                </th>
+                <th>
+                    <span>导师</span>
+                </th>
+                <th>
+                    <span>培训有效期</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of basicTable.data; let no = index">
+                <td>{{ no + (studentPageIndex -1) * studentPageSize + 1 }}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.major}}</td>
+                <td>{{item.tutorName}}</td>
+                <td>{{item.startTime | dateTrans:'YYYY年MM月dd日 HH:mm'}} -- {{item.endTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td>
+                    <a (click)="applyJoin(item)">申请加入</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>

@@ -1,0 +1,76 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,tabToolBarTemplate]">
+            </nz-list-item>
+            <ng-template #itemContentTemplate>
+                <!-- <nz-tabset [nzSelectedIndex]="1">
+                    <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                        <ng-template #nzTitle>
+                            <div (click)="to(i)">{{i.tab}}</div>
+                        </ng-template>
+                    </nz-tab>
+                </nz-tabset> -->
+            </ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>制度信息</span>
+    </ng-template>
+    <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="dataSet" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+        [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+            <tr>
+                <th>编号</th>
+                <th>标题 </th>
+                <th>最新操作时间</th>
+                <th>发布状态</th>
+                <th>置顶状态</th>
+                <th>查看情况</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ajaxTable.data,let no = index">
+                <td>{{no+1}}</td>
+                <td>{{item['title']||'----'}}</td>
+                <td>{{(item['modifyTime'] | dateTrans:'YYYY年MM月dd日 HH:mm:ss')||(item['createTime'] | dateTrans:'YYYY年MM月dd日 HH:mm:ss')}}</td>
+                <td>{{item.publishState === 1?'已发布':'未发布'}}</td>
+                <td>{{item.isTop === 0?'否':'是'}}</td>
+                <td>
+                    <a>未读：{{item['notReadCount']}}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a>已读：{{item['readCount']}}</a>
+                </td>
+                <td>
+                    <a (click)="$event.stopPropagation();details_router(item)">详情</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a *ngIf="item.publishState != 1" (click)="$event.stopPropagation();edit_router(item)">修 改</a>
+                    <nz-divider *ngIf="item.publishState != 1" nzType="vertical"></nz-divider>
+                    <a *ngIf="item.publishState != 1" (click)="$event.stopPropagation();public_router(item.guid)">发布</a>
+                    <nz-divider *ngIf="item.publishState != 1" nzType="vertical"></nz-divider>
+                    <a *ngIf="item.isTop === 1" (click)="$event.stopPropagation();public_top(item.guid,1)">取消置顶</a>
+                    <a *ngIf="item.isTop !== 1" (click)="$event.stopPropagation();public_top(item.guid,0)">置顶</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="$event.stopPropagation();showConfirm(item, $event)">删 除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+    <button nz-button (click)="add_router()" nzType="primary">新增</button>
+</ng-template>
+<ng-template #serachActive>
+    <div>
+        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+            <input type="text" nz-input placeholder="请输入需要搜索的标题" [(ngModel)]="q.searchStr" (keydown)="enterSearch($event)">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+            <button (click)="refreshData(true)" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+            </button>
+        </ng-template>
+    </div>
+</ng-template>

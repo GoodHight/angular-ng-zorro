@@ -1,0 +1,81 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[cancelAction,SubAction]">
+        <ng-template #SubAction>
+          <button nz-button (click)="_submitForm()" [disabled]="!form.valid" nzType="primary">
+            提交订单
+          </button>
+        </ng-template>
+        <ng-template #cancelAction>
+          <button nz-button (click)="cancel()" nzType="default">
+            返回
+          </button>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #titleView>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span>订单详情</span>
+    </ng-template>
+  </nz-card-tab>
+  <ng-template #itemContentTemplate></ng-template>
+  <div nz-row class="ordercreate">
+    <div nz-col [nzSpan]="12">
+      <div class="t">开启你的才链云{{dataList.versionName}}</div>
+      <div class="list">
+        <div class="">商品名称：{{dataList.versionName}}</div>
+        <div class="">绑定账号：{{limit}}</div>
+        <div *ngIf='code === "4"'>开启功能：开启基础功能 + 合同管理</div>
+        <div *ngIf='code === "3"'>开启功能：全部平台功能</div>
+        <div class="">价 格：￥{{dataList.versionPrice}}/年</div>
+        <div class="">
+          <span>年限时长：</span>
+          <span class="math">
+            <i class="anticon anticon-minus" (click)="jian()"></i>
+            <input class="text" type="text" id="txt" value="{{num}}" />
+            <i class="anticon anticon-plus" (click)="add()"></i>
+          </span>
+        </div>
+        <div class="money">总 金 额：<span>￥{{totalnum.toFixed(2)}}</span></div>
+      </div>
+      <div class="form">
+        <div class="c">
+          <div class="h">公司名称</div>
+          <div class="em">{{enterpriseName}}</div>
+        </div>
+        <form nz-form [nzLayout]="'vertical'" [formGroup]="form" (ngSubmit)="_submitForm()">
+          <nz-form-item nz-row>
+            <nz-form-label>
+              联系人
+            </nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="contact" placeholder="请输入用户姓名">
+              <div nz-form-explain *ngIf="(form.get('contact').dirty ||form.get('contact').touched) && form.get('contact').errors">
+                请输入联系人姓名
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item nz-row>
+            <nz-form-label>
+              联系人电话
+            </nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="phone" placeholder="请输入联系人电话" maxlength="11">
+              <div nz-form-explain *ngIf="(form.get('phone').dirty ||form.get('phone').touched) && form.get('phone').errors">
+                请输入联系人电话
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <div class="right">
+        <img src="../../../../assets/img/pic_indent.png" alt="">
+        <div class="text">如需合同请点击下载<span (click)="download()">《才链云软件服务协议》</span></div>
+      </div>
+    </div>
+  </div>
+</nz-card>

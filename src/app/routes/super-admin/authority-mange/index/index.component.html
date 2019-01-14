@@ -1,0 +1,94 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>权限管理</span>
+    </ng-template>
+    <div nz-row>
+        <nz-table #basicTable [nzData]="roleList" [nzFrontPagination]="true" [nzTotal]="q.total" [nzPageSize]="q.pageSize" (nzPageIndexChange)="pageChange($event, 1)"
+            nzNoResult="没有数据">
+            <thead>
+                <tr>
+
+                    <th>
+                        <span>角色名称</span>
+                    </th>
+                    <th>
+                        <span>角色状态</span>
+                    </th>
+                    <th>
+                        <span>角色用户</span>
+                    </th>
+                    <th>
+                        <span>操作</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody nz-tbody>
+                <tr *ngFor="let i of basicTable.data let no = index">
+                    <td>{{i.name}}</td>
+                    <!-- <td>{{ i.roleState == 1 ? '开启' : '停用' }}</td> -->
+                    <td>开启</td>
+                    <td>{{i.hrmEmployeesList}}</td>
+                    <td>
+                        <a (click)="$event.stopPropagation();maintainFun(i.guid,no,i.hrmEmployees)" *ngIf="i.isConfig != 0">人员配置</a>
+                        <nz-divider nzType="vertical" *ngIf="i.isTemplate != 1"></nz-divider>
+                        <!-- <a (click)="$event.stopPropagation();deleteRole(i)" *ngIf="i.isTemplate != 1">删除</a> -->
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除权限"
+        (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <p>确定删除嘛？</p>
+    </nz-modal>
+</nz-card>
+
+<!-- 用户弹出框 -->
+<nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisible" nzTitle="添加人员"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <div>
+        <nz-divider nzDashed [nzText]="text2">
+            <ng-template #text2> 部门 </ng-template>
+        </nz-divider>
+        <nz-tree [(ngModel)]="dataList" [nzCheckable]="false" [nzMultiple]="false" [nzDefaultExpandedKeys]="expandKeys" [nzDefaultCheckedKeys]="checkedKeys"
+            [nzDefaultSelectedKeys]="selectedKeys" [nzDefaultExpandAll]="expandDefault" (nzClick)="mouseAction('click',$event)"
+            (nzDblClick)="mouseAction('dblclick', $event)" (nzCheckBoxChange)="mouseAction('checkout', $event)">
+        </nz-tree>
+    </div>
+    <div>
+        <nz-divider nzDashed [nzText]="text1">
+            <ng-template #text1> 用户列表 </ng-template>
+        </nz-divider>
+        <span *ngFor="let item of peopleData;let no = index">
+            <label style="width: 20%;margin: 5px 0" *ngIf="item.boundStatus !== '1'" nz-checkbox [nzValue]="item.guid" (ngModelChange)="getChecked(no)" nzDisabled [(ngModel)]="item.checked">{{ item.name }}(该用户未绑定公司)</label>
+        </span>
+        <span *ngFor="let item of peopleData;let no = index">
+            <label style="width: 20%;margin: 5px 0" *ngIf="item.boundStatus === '1'" nz-checkbox [nzValue]="item.guid" (ngModelChange)="getChecked(no)" [(ngModel)]="item.checked">{{ item.name }}</label>
+        </span>
+    </div>
+    <div>
+        <nz-divider nzDashed [nzText]="text">
+            <ng-template #text> 已选用户 </ng-template>
+        </nz-divider>
+        <div style="overflow: hidden;" row>
+            <span style="margin-bottom: 6px" nz-col nzSpan="4" *ngFor="let item of selectPeopleData">{{ item.name }}</span>
+        </div>
+        <!-- <p>
+            <label style="width: 20%;margin: 5px 0" *ngFor="let item of selectPeopleData" nz-checkbox [nzValue]="item.userGuid" (ngModelChange)="updateAllChecked(item.userGuid)"
+                [(ngModel)]="item.checked">{{ item.name }}</label>
+        </p> -->
+    </div>
+</nz-modal>

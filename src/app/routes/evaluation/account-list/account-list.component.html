@@ -1,0 +1,174 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[selectAction,serachActive, tabToolBarTemplate]">
+        <ng-template #selectAction>
+          <span>测评类型：</span>
+          <nz-select style="width: 200px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="assementTypeSearch" (ngModelChange)="typeChange($event, 1)">
+            <nz-option nzLabel='全部' nzValue=""></nz-option>
+            <nz-option *ngFor="let i of assementTypeList" [nzValue]="i.gaugeId" [nzLabel]="i.text"></nz-option>
+          </nz-select>
+          <span style="margin-left: 18px">分配：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="selectDistributeSearch" (ngModelChange)="typeChange($event, 3)">
+            <nz-option nzLabel='全部' nzValue=""></nz-option>
+            <nz-option *ngFor="let option of distribute" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+          </nz-select>
+          <span style="margin-left: 18px">状态：</span>
+          <nz-select style="width: 120px;" nzAllowClear nzPlaceHolder="选择" [(ngModel)]="selectSatusSearch" (ngModelChange)="typeChange($event, 2)">
+            <nz-option nzLabel='全部' nzValue=""></nz-option>
+            <nz-option *ngFor="let option of state" [nzLabel]="option.text" [nzValue]="option.value"></nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #serachActive>
+          <div>
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+              <input type="text" nz-input placeholder="请输入手机号" [(ngModel)]="searchPhone" (keydown)="enterSearch($event)">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="clickBtn()" nz-button nzType="primary" nzSearch>
+                <i class="anticon anticon-search"></i>
+              </button>
+            </ng-template>
+          </div>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    <ng-template #itemContentTemplate></ng-template>
+  </nz-card-tab>
+  <ng-template #tabToolBarTemplate>
+    <button nz-button nzType="primary" (click)='resetSearch()'>
+      重置
+    </button>
+  </ng-template>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>cdKey管理</span>
+  </ng-template>
+  <div nz-row>
+    <nz-table #basicTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="total" [nzPageSize]="q.pageSize" [(nzPageIndex)]="q.pageNum"
+      [nzLoading]="loading" (nzPageIndexChange)="pageChange($event, 1)" nzNoResult="没有数据" [nzShowTotal]="rangeTemplate">
+      <thead>
+        <tr>
+          <th>
+            <span>序号</span>
+          </th>
+          <th>
+            <span>cdKey卡密</span>
+          </th>
+          <th>
+            <span>cdKey有效期</span>
+          </th>
+          <th>
+            <span>测评类型</span>
+          </th>
+          <th>
+            <span>分配</span>
+          </th>
+          <th>
+            <span>测评人</span>
+          </th>
+          <th>
+            <span>状态</span>
+          </th>
+          <th>
+            <span>测评有效期</span>
+          </th>
+          <th>
+            <span>测评完成时间</span>
+          </th>
+          <th>
+            <span>操作</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody nz-tbody>
+        <tr *ngFor="let i of basicTable.data let no = index">
+          <td>{{currentPageStarNo + (no+1)}}</td>
+          <td>{{i.cdKey}}</td>
+          <td>{{i.delayDate | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+          <td>{{i.gaugeTitle}}</td>
+          <td>
+            <span *ngIf="i.isActivated === 0">未分配</span>
+            <span *ngIf="i.isActivated === 1">已分配</span>
+            <span *ngIf="i.isActivated === -1">未分配过期</span>
+            <span *ngIf="i.isActivated === -2">已分配过期</span>
+          </td>
+          <td>{{i.userName}}</td>
+          <td>
+            <span *ngIf="i.isActivated === 1 && i.state === 0">未使用</span>
+            <span class="yellow" *ngIf="i.isActivated === 1 && i.state === 1">已使用</span>
+            <span class="green" *ngIf="i.isActivated === 1 && i.state === 2">已完成</span>
+          </td>
+          <td>{{i.useDelayDate | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</td>
+          <td>
+            <span *ngIf="i.state === 2">{{i.modifyTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</span>
+          </td>
+          <td>
+            <button *ngIf="i.isActivated === 0" nz-button nzType="primary" (click)="showModal(i.guid)">
+              <span>分配</span>
+            </button>
+            <span *ngIf="i.isActivated === 1 && i.state !== 2">--</span>
+            <button *ngIf="i.state === 2 && i.resultCategory !== 'INVALID_RESULT'" nz-button nzType="primary" (click)="downLoad(i.guid)">
+              <span>下载结果</span>
+            </button>
+            <span *ngIf="i.state === 2 && i.resultCategory === 'INVALID_RESULT'">无效结果</span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-card>
+<ng-template #rangeTemplate let-range="range" let-total>
+  总共{{total}}条，{{totalPage}}页
+</ng-template>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="分配CDK" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+  <form nz-form [formGroup]="form" (ngSubmit)="handleOk()">
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+        量表类型
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="24">
+        <nz-select class="list-select" style="width: 100%;" formControlName="selectedAssementId" nzAllowClear nzPlaceHolder="请选择量表类型">
+          <nz-option *ngFor="let i of assementTypeList" [nzValue]="i.gaugeId" [nzLabel]="i.text"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="form.get('selectedAssementId').dirty && form.get('selectedAssementId').hasError('required')">
+          请选择量表类型
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+        测评有效期(天)
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="24">
+        <input nz-input type="number" formControlName="assementDay" placeholder="输入测评有效期天数">
+        <nz-form-explain *ngIf="form.get('assementDay').dirty && form.get('assementDay').hasError('required')">
+          请输入有效天数
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+        测评人姓名
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="24">
+        <input nz-input formControlName="assementerName" placeholder="输入测评人">
+        <nz-form-explain *ngIf="form.get('assementerName').dirty && form.get('assementerName').hasError('required')">
+          请输入测评人姓名
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+        测评人手机号
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="24">
+        <input nz-input formControlName="assementerPhone" placeholder="输入手机号">
+        <nz-form-explain *ngIf="form.get('assementerPhone').dirty && form.get('assementerPhone').hasError('required')">
+          请输入正确的手机号码
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

@@ -1,0 +1,59 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div>工作流程</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>工作流程管理</span>
+  </ng-template>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>工作流程管理</span>
+  </ng-template>
+  <div nz-row>
+    <nz-table #editRowTable
+              nzBordered
+              [nzData]="datas">
+      <thead>
+      <tr>
+        <th>编号</th>
+        <th>标题 </th>
+        <th>简介</th>
+        <th>分类</th>
+        <th>更新时间</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of datas,let no = index">
+        <td>{{no+1}}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.updateTime }}</td>
+        <td>
+          <a routerLink="/workflow/design/details/{{ item.id }}">查看</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a routerLink="/workflow/design/update/{{ item.id }}">发起</a>
+          <!--<nz-divider nzType="vertical"></nz-divider>-->
+          <!--<a (click)="$event.stopPropagation();">停用</a>-->
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <ng-template #tabToolBarTemplate>
+    <!--<button nz-button nzType="primary" (click)="submit()" type="submit" [nzLoading]="submitting">提 交</button>-->
+    <!--<button nz-button [routerLink]="['/admin/role']" nzType="primary">返回</button>-->
+  </ng-template>
+</nz-card>
+

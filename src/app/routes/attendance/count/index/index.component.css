@@ -1,0 +1,6 @@
+:host ::ng-deep .ant-table-thead > tr > th {
+  white-space: nowrap;
+}
+:host ::ng-deep .ant-table-body {
+  overflow-x: scroll;
+}

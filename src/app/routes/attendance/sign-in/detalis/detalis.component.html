@@ -1,0 +1,71 @@
+<nz-layout>
+  <nz-header class="content_header">
+    <section nz-row>
+      <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+      <span class="_subtitle">{{ dataDetalis.employName }}的签到详情</span>
+    </section>
+    <section nz-row>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[backAction]"></nz-list-item>
+    </section>
+    <ng-template #itemContentTemplate>
+      <div class="subtitle">
+        签到时间：
+        <label>{{ signTime | dateTrans:'YYYY-MM-dd HH:mm'}}</label>
+      </div>
+    </ng-template>
+  </nz-header>
+  <nz-layout>
+    <div style="padding:24px;width: 100%;margin: 0 auto;">
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <p class="item-name">员工姓名：</p>
+          <p class="item-box">{{ dataDetalis.employName }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">部门：</p>
+          <p class="item-box">{{ dataDetalis.departmentName }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">职位:</p>
+          <p class="item-box">{{ dataDetalis.position }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">工号:</p>
+          <p class="item-box">{{ dataDetalis.jobNumber }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">签到时间:</p>
+          <p class="item-box">{{ signTime | dateTrans:'YYYY-MM-dd HH:mm'}}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">签到地点:</p>
+          <p class="item-box">{{ dataDetalis.signLocation }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">拜访对象:</p>
+          <p class="item-box">{{ dataDetalis.signObject }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-name">签到备注:</p>
+          <p class="item-box">{{ dataDetalis.signRemark }}</p>
+        </div>
+        <div nz-col nzSpan="12">
+          <p class="item-box"></p>
+        </div>
+        <div nz-col nzSpan="24">
+          <div *ngFor="let i of imgUrl" class="item-img">
+            <img  (click)='showModal(i)' src="{{i}}" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-layout>
+
+</nz-layout>
+<ng-template #backAction>
+  <button nz-button (click)="back()" type="button">返 回</button>
+</ng-template>
+<nz-modal [(nzVisible)]="isVisible"  nzTitle="" [nzFooter]='null' nzClosable="false" (nzOnCancel)="Cancel()"
+  (nzOnOk)="Ok()">
+  <img (click)="handleOk()" width="100%"  style="margin: 0 auto" src="{{ imgurldetalis }}" alt="">
+</nz-modal>

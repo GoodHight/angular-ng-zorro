@@ -1,0 +1,147 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[editAction]">
+        <ng-template #editAction>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>账户中心</span>
+  </ng-template>
+  <div class="container">
+    <div class="enterprise-box">
+      <div class="enterprise-top">
+        <div class="enterprise-logo">
+          <img *ngIf="enterpriseLogo === ''" src="../../../../assets/img/people-head.png" alt="">
+          <img *ngIf="enterpriseLogo !== ''" src="{{enterpriseLogo}}" alt="">
+        </div>
+        <p class="enterprise-name">{{enterpriseData.enterpriseName}}</p>
+        <span class="enterprise-edition">{{enterpriseData.versionName}}</span>
+      </div>
+      <div class="enterprise-bottom">
+        <span>尊享版享有所有功能</span>
+        <a class="purchase" routerLink="/hrservice/order">去购买</a>
+      </div>
+    </div>
+    <div class="assets-box" style="width:calc(100% - 284px)">
+      <div class="assets-top">
+        我的资产
+      </div>
+      <div class="assets-bottom" nz-row>
+        <div nz-col class='assets-item' nzSpan="8">
+          <p class="assets-title">账户余额（元）</p>
+          <p *ngIf="enterpriseData.balance !== ''" class="assets-number">{{enterpriseData.balance}}</p>
+          <p *ngIf="enterpriseData.balance === ''" class="assets-number">0</p>
+          <div class="assets-btn">
+            <button nz-button (click)='showModal("balance_recharge")'>充值</button>
+            <a routerLink="/hrservice/version">查看充值订单</a>
+          </div>
+        </div>
+        <div nz-col class='assets-item bor-left' nzSpan="8">
+          <p class="assets-title">账户可使用的测评个数</p>
+          <p *ngIf="enterpriseData.cdKey !== ''" class="assets-number">{{enterpriseData.cdKey}}</p>
+          <p *ngIf="enterpriseData.cdKey === ''" class="assets-number">0</p>
+          <div class="assets-btn">
+            <button nz-button (click)='showModal("assessment_cdkey_recharge")'>购买测评</button>
+            <a routerLink="/hrservice/version">查看使用情况</a>
+          </div>
+        </div>
+        <div nz-col class='assets-item bor-left' nzSpan="8">
+          <p class="assets-title">账户可签订合同份数</p>
+          <p *ngIf="enterpriseData.contract !== ''" class="assets-number">{{enterpriseData.contract}}</p>
+          <p *ngIf="enterpriseData.contract === ''" class="assets-number">0</p>
+          <div class="assets-btn">
+            <button nz-button (click)='showModal("contract_sign_buy")'>购买合同</button>
+            <a routerLink="/hrservice/version">查看购买情况</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list">
+    <div class="order-list">
+      <div class="order-top">
+        我的订单
+        <a class='FR' routerLink="/hrservice/version">更多</a>
+      </div>
+      <div class="version-box">
+        <div class="version-order" *ngFor="let i of orderList" nz-row>
+          <div nz-col class='' nzSpan="8">
+            {{i.itemName}}
+          </div>
+          <div nz-col class='bor-left' nzSpan="8">
+            ￥{{i.orderPrice / 100}}元
+          </div>
+          <div nz-col class='bor-left' nzSpan="8">
+            <span *ngIf='i.orderStatus === 0'>关闭</span>
+            <span *ngIf='i.orderStatus === 1'>未付款</span>
+            <span *ngIf='i.orderStatus === 2'>处理中</span>
+            <span *ngIf='i.orderStatus === 3'>已支付</span>
+            <span *ngIf='i.orderStatus === 4'>交易成功</span>
+            <span class="FR">{{i.orderTime | dateTrans:'YYYY年MM月dd日'}}</span>
+          </div>
+        </div>
+        <div style="text-align: center;padding: 15px 0" *ngIf='orderList.length === 0'>
+          暂无数据
+        </div>
+      </div>
+    </div>
+    <div class="contract-list">
+      <div class="contract-top">
+        电子合同签订
+        <a class='FR' routerLink="/contract/list">更多</a>
+      </div>
+      <div class="contract-box">
+        <div class='contract-item' *ngFor='let i of contractList'>
+          <span>{{i.typeName}}-{{i.signUserName}}</span>
+          <span class="FR">{{i.signStartDate | dateTrans:'YYYY年MM月dd日'}}</span>
+        </div>
+        <div style="text-align: center;padding: 15px 0" *ngIf='contractList.length === 0'>
+          暂无数据
+        </div>
+      </div>
+    </div>
+    <div class="cdk-list">
+      <div class="contract-top">
+        CDK使用
+        <a class='FR' routerLink="/evaluation/account/list">更多</a>
+      </div>
+      <div class="ckd-box">
+        <div class='contract-item' *ngFor='let i of accountList'>
+          <span>{{i.gaugeTitle}}-{{i.userName}}</span>
+          <span class="FR" *ngIf="i.isActivated === 1 && i.state === 0">未使用</span>
+          <span class="yellow FR" *ngIf="i.isActivated === 1 && i.state === 1">已使用</span>
+          <span class="green FR" *ngIf="i.isActivated === 1 && i.state === 2">已完成</span>
+        </div>
+        <div style="text-align: center;padding: 15px 0" *ngIf='accountList.length === 0'>
+          暂无数据
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #itemContentTemplate>
+    <div class="extra" style="margin-top: 0">
+    </div>
+  </ng-template>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="titleTC" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <form nz-form [formGroup]="form" (ngSubmit)="handleOk()">
+    <nz-form-item nz-row>
+      <nz-form-label nz-col [nzSm]="24" style="text-align: left;line-height: 22px">
+        {{tipsText}}
+      </nz-form-label>
+      <nz-form-control nz-col [nzSm]="24">
+        <nz-input-group style="margin-top: 4px">
+          <input nz-input type="text" formControlName="assementDay" maxlength='8' oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入有效数字（大于0的正整数）">
+        </nz-input-group>
+        <nz-form-explain *ngIf="form.get('assementDay').dirty && form.get('assementDay').errors">
+          请输入有效数量（大于0的正整数）
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

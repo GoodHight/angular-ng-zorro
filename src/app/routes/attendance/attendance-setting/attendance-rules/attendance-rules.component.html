@@ -1,0 +1,63 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content approval">
+            <div nz-row>
+                <div nz-col nzSpan="24"><p class="toptitle">配置后，以下通用考勤规则适用所有班次</p></div>
+            </div>
+            <div nz-row>
+                <div nz-col nzSpan="2">免考勤人员：</div>
+                <div nz-col nzSpan="22">
+                    <ul>
+                        <ng-container *ngIf="sourceSelectPeopleDispley.length>0; else elseTemplateNotPeople">
+                            <li *ngFor="let item of sourceSelectPeopleDispley">
+                                {{ item.name }}
+                                <img (click)="removeSelectPeople(item.guid)" src="../../../assets/img/close/close-s.png"/>
+                            </li>
+                        </ng-container>
+                        <ng-template #elseTemplateNotPeople>
+                            <!-- <li class="li-content">
+                                没有数据,请添加人员.
+                            </li> -->
+                        </ng-template>
+                        <li class="li-btn" style="cursor: pointer;">
+                            <button (click)="showModal()">+添加人员</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div nz-row>
+                <div nz-col nzSpan="2">免考勤部门：</div>
+                <div nz-col nzSpan="22">
+                    <app-lalust-select-dept (changeSelectDept)="changeSelectDept($event)"
+                    [LSDselectRaw]="sourceSelectRaw"
+                    ></app-lalust-select-dept>
+                </div>
+            </div>
+        </section>
+    </div>
+    <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>考勤设置</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="refreshRule()">取消</button>
+        <button nz-button type="button" (click)="saveRule()"  nzType="primary">保存</button>
+    </ng-template>
+</nz-card>
+<nz-modal [(nzVisible)]="isVisible" nzWidth="720" nzTitle="添加免考勤人员" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <app-lalust-select-person
+    [excludeData]="clockinPeople"
+  [disabledData]="joinAttendance"  (changeSelectPeople)="changeSelectPoeple($event)"></app-lalust-select-person>
+</nz-modal>

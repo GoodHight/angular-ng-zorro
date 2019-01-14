@@ -1,0 +1,57 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[saveAction, cancelAction]">
+          <ng-template #saveAction>
+            <button nz-button (click)="dow()" nzType="primary">
+              下载附件
+            </button>
+          </ng-template>
+          <ng-template #cancelAction>
+            <button nz-button (click)="cancel()" nzType="default">
+              返回
+            </button>
+          </ng-template>
+        </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>存证详情</span>
+      </ng-template>
+    </nz-card-tab>
+    <ng-template #itemContentTemplate>
+    </ng-template>
+    <nz-row nzAlign="bottom">
+      <nz-col class="detailsss" nz-row>
+        <li nz-col nzSpan="12">
+          <p>存证名称：</p>
+          <div>{{dataList.storageName}}</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>存证类型：</p>
+          <div>{{dataList.storageType}}</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>存证时间：</p>
+          <div>{{dataList.createTime | dateTrans:'YYYY-MM-dd HH:mm:ss'}}</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>文件名：</p>
+          <div>{{dataList.fileName}}</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>文件大小：</p>
+          <div>{{(dataList.fileSize / 1024 /1024 ).toFixed(2)}}M</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>哈希值：</p>
+          <div>{{dataList.storageHash}}</div>
+        </li>
+        <li nz-col nzSpan="12">
+          <p>存证备注：</p>
+          <div>{{dataList.storageRemark}}</div>
+        </li>
+      </nz-col>
+    </nz-row>
+  </nz-card>

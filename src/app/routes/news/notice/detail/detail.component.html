@@ -1,0 +1,49 @@
+<nz-layout>
+    <nz-header class="content_header">
+        <section nz-row>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span class="_subtitle">{{title}}</span>
+        </section>
+        <section nz-row>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[backAction]"></nz-list-item>
+        </section>
+        <ng-template #itemContentTemplate>
+            <div class="subtitle">
+                <!--  <a>未读：{{item['notReadCount']}}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a>已读：{{item['readCount']}}</a> -->
+                <label>{{messageTime| dateTrans:'YYYY年MM月dd日 HH:mm:ss'}}</label>已读人数：
+                <span>{{readCount}}</span>
+                <nz-tag style="margin-left: 16px">未读人数：{{ notReadCount }}</nz-tag>
+            </div>
+        </ng-template>
+    </nz-header>
+    <nz-layout>
+        <div style="padding-top: 40px;width: 50%;margin: 0 auto;">
+            <div *ngIf="imgSrc!==''">
+                <img src="{{ imgSrc }}" width="100%" />
+            </div>
+            <nz-content>
+                <div [innerHTML]="content">无内容信息</div>
+                <div class="uploader-file" *ngIf="noticeFiles.length > 0 ">
+                        <div class="title">
+                            <i class="icon iconfont "></i>附件下载
+                        </div>
+                        <div class="file-list" >
+                            <div class="clearfix" *ngFor="let item of noticeFiles" (click)="down(item.fileId)">
+                                <div class="icon-img">
+                                    <img src="/assets/img/template/other.png" />
+                                </div>
+                                <div class="name">{{ item.fileName }}</div>
+                                <div class="size" *ngIf="item.size < 1024">{{ item.size }}KB</div>
+                                <div class="size" *ngIf="item.size > 1024">{{ (item.size/1024) }}MB</div>
+                            </div>
+                        </div>
+                    </div>
+            </nz-content>
+            
+        </div>
+    </nz-layout>
+
+</nz-layout>
+<ng-template #backAction>
+    <button nz-button (click)="back()" type="button" >返 回</button>
+</ng-template>

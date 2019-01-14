@@ -1,0 +1,116 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzTabBarExtraContent]="editAction">
+        <nz-tab [nzTitle]="'合同签订进度'">
+          <ng-template #nzTitle>
+            <div routerLinkActive="active">合同签订进度</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+      <ng-template #editAction>
+        <button nz-button routerLink='/contract/list'>返回</button>
+      </ng-template>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <div nz-row class="record-details">
+    <div class="left">
+      <div class="title">
+        <span class="head" *ngIf="dataList.userName">{{dataList.userName.slice(dataList.userName.length-2)}}</span>
+        <span class="name" *ngIf="dataList.userName">{{dataList.userName}}</span>
+        <span class="text">发起合同签订</span>
+      </div>
+      <div class="list">
+        <div class="clearfix">
+          <span>合同编号：</span>
+          <span>{{ guid }}</span>
+        </div>
+        <div class="clearfix">
+          <span>合同类型：</span>
+          <span *ngIf="dataList.businessObject">{{ dataList.businessObject.typeName }}</span>
+        </div>
+        <div class="clearfix" *ngIf="dataList.contractLifeStart !== ''">
+          <span>合同开始：</span>
+          <span>{{ dataList.businessObject.contractLifeStart | dateTrans:'YYYY年MM月dd日' }}</span>
+        </div>
+        <div class="clearfix" *ngIf="dataList.contractLifeEnd !== ''">
+          <span>合同截止：</span>
+          <span >{{ dataList.businessObject.contractLifeEnd | dateTrans:'YYYY年MM月dd日'}}</span>
+        </div>
+        <div class="clearfix">
+          <span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>
+          <span *ngIf="dataList.businessObject">{{ dataList.businessObject.remark }}</span>
+        </div>
+      </div>
+      <div class="copy-to">
+        <div class="clearfix">
+          <span class="h1">抄送</span>(合同完成后，将通知抄送人)
+        </div>
+        <div *ngIf="dataList.hrmApprovalCarboncopies && dataList.hrmApprovalCarboncopies.length !== 0">
+          <div class="clearfix" *ngFor="let item of dataList.hrmApprovalCarboncopies" style="float: left;margin-right: 10px">
+            <span class="head">{{ item.name.substr(0,1) }}</span>
+            <span class="text">{{ item.name}}</span>
+          </div>
+        </div>
+        <div class="clearfix" *ngIf="dataList.hrmApprovalCarboncopies && dataList.hrmApprovalCarboncopies.length === 0">
+          <span class="head">无</span>
+          <span class="text"></span>
+        </div>
+      </div>
+    </div>
+    <div class="right" nz-col nzSpan="16">
+      <div class="title">
+        合同签订流程图
+      </div>
+      <div class="list">
+        <div class="clearfix">
+          <!-- <div class="head"  *ngIf="dataList.userName">{{ dataList.userName.substring(dataList.userName.length - 2) }}</div> -->
+          <div class="head"  *ngIf="dataList.userName"><img src="../../../../assets/img/people-head.png" style="width: 100%;height: 100%;" alt=""></div>
+          <div class="name"  *ngIf="dataList.userName">{{ dataList.userName.substr(0,3) }}</div>
+          <div class="state" style="color: #26dab3">发起申请</div>
+          <i></i>
+        </div>
+        <div class="clearfix" *ngFor="let item of dataList.hrmApprovalHistories;let n=index">
+          <!-- <div class="head"  *ngIf="item.name">{{ item.name.substring(item.name.length-2) }}</div> -->
+          <div class="head"  *ngIf="item.name"><img src="../../../../assets/img/people-head.png" style="width: 100%;height: 100%;" alt=""></div>
+          <div class="name" *ngIf="item.name">{{ item.name }}</div>
+          <div class="state state1" *ngIf="item.type === 0">
+            <span *ngIf="item.result === 0" style="color: #26dab3">已签订</span>
+            <span *ngIf="item.result === 1" style="color: #fbbf0e">拒签订</span>
+            <span *ngIf="item.result === 2" style="color: #da0404">未签订</span>
+          </div>
+          <div class="state state1" *ngIf="item.type === 1">
+            <span *ngIf="item.result === 0" style="color: #26dab3">已审核</span>
+            <span *ngIf="item.result === 1" style="color: #fbbf0e">不通过</span>
+            <span *ngIf="item.result === 2" style="color: #da0404">未审核</span>
+          </div>
+          <div class="state state1" *ngIf="item.type === 2">
+            <span *ngIf="item.result === 0" style="color: #26dab3">已用印</span>
+            <span *ngIf="item.result === 1" style="color: #fbbf0e">不通过</span>
+            <span *ngIf="item.result === 2" style="color: #da0404">未用印</span>
+          </div>
+          <i *ngIf="n !== dataList.hrmApprovalHistories.length-1"></i>
+          <i *ngIf="dataList.businessObject && dataList.businessObject.status === '7'"></i>
+        </div>
+        <div class="clearfix" *ngIf="dataList.businessObject && dataList.businessObject.status === '7'">
+          <div class="head"></div>
+          <div class="name"></div>
+          <div class="state"> 已完成 </div>
+          <i></i>
+        </div>
+        <div class="clearfix" *ngIf="dataList.businessObject && dataList.businessObject.status !== '7'" style="display: none;">
+          <div class="head"></div>
+          <div class="name"></div>
+          <div class="state"> 已完成 </div>
+          <i></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #titleValue>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>合同签订详情</span>
+  </ng-template>
+
+</nz-card>

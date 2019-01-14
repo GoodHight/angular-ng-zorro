@@ -1,0 +1,47 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab  [nzTitle]="nzTitle">
+          <ng-template #nzTitle>
+            <div>权限详情</div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>权限管理</span>
+  </ng-template>
+  <div nz-row>
+    <form nz-form>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-form-label nzRequired nzSm="2">权限名称</nz-form-label>
+          <nz-form-control nzSm="16">
+            {{formData.roleName}}
+          </nz-form-control>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSm="2" nzRequired nzFor="title">权限状态</nz-form-label>
+        <nz-form-control nzSm="16">
+            {{formData.roleState == '1' ? '开启' : '停用'}}
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-form-label nzRequired nzSm="2">权限范围</nz-form-label>
+          <nz-form-control nzSm="16">
+            {{formData.roleScope}}
+          </nz-form-control>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-card>
+<ng-template #tabToolBarTemplate>
+  <button nz-button [routerLink]="['/companyadmin/role']" nzType="primary">返回</button>
+</ng-template>

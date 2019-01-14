@@ -1,0 +1,77 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+      <ng-template #tab>
+        <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive,editAction]">
+          <ng-template #serachActive>
+            <div *ngIf="serachType === 1">
+              <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key" (keydown)="enterSearch($event)">
+              </nz-input-group>
+              <ng-template #suffixIconButton>
+                <button (click)="serachAction()" nz-button nzType="primary" nzSearch>
+                  <i class="anticon anticon-search"></i>
+                </button>
+              </ng-template>
+            </div>
+            <div *ngIf="serachType === 0" (click)="showSerach()">
+              <span>
+                <i class="icon iconfont icon-sousuo"></i>搜索</span>
+            </div>
+          </ng-template>
+          <ng-template #editAction>
+            <a nz-button routerLink='/personnel-admin/entry-management/list/add' style="color: #fff" nzType="primary">
+              新增待入职
+            </a> 
+          </ng-template>
+        </nz-list-item>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="tab"></ng-template>
+      <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>入职管理</span>
+      </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzFrontPagination]="false" [nzData]="reportList" [nzTotal]="q.total" [nzPageIndex]="q.pageNum" [nzPageSize]="q.pageSize"
+      [nzLoading]="loading" (nzPageIndexChange)="pageChange($event)" nzNoResult="没有数据">
+      <thead>
+        <tr>
+          <th>
+            序号
+          </th>
+          <th>姓名</th>
+          <th>手机号 </th>
+          <th>部门</th>
+          <th>职位</th>
+          <th>入职日期</th>
+          <th>入职登记表</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of ajaxTable.data let no = index">
+          <td>{{ code + no }}</td>
+          <td>{{i.name}}</td>
+          <td>{{i.phone }}</td>
+          <td>{{i.departmentName}}</td>
+          <td>{{i.position}}</td>
+          <td>{{i.entryTime | dateTrans:'YYYY年MM月dd日'}}</td>
+          <td><a (click)='ebtryForm(i.guid)'>《入职登记表》</a></td>
+          <td>
+            <a (click)="entryPost(i.guid)">办理入职</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="edit(i.guid)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="delete(i.guid)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate> 
+    </ng-template>
+  </nz-card>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="删除该条记录" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <p>删除后不可恢复</p>
+  </nz-modal>
+  <nz-modal [(nzVisible)]="isVisibles" nzTitle="办理入职" (nzOnCancel)="handleCancels()" (nzOnOk)="handleOks()">
+      <p>入职信息核对无误，确认办理入职</p>
+    </nz-modal>

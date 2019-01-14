@@ -1,0 +1,437 @@
+{
+    "app": {
+        "name": "人力资源管理SaaS服务系统",
+        "description": "Ng-zorro admin panel front-end framework"
+    },
+    "user": {
+        "name": "ZhouBo",
+        "avatar": "./assets/img/zorro.svg",
+        "email": "125639751@qq.com"
+    },
+    "menu": [
+        {
+            "text": "工作台",
+            "i18n": "main_navigation",
+            "group": true,
+            "children": [
+                {
+                    "text": "工作台",
+                    "i18n": "",
+                    "link": "/dashboard",
+                    "icon": "icon iconfont icon-gongzuotai",
+                    "reuse": false
+                },
+                {
+                    "text": "人员管理",
+                    "i18n": "",
+                    "link": "/personnel-admin/employee-info",
+                    "icon": "icon iconfont icon-renyuanguanli",
+                    "reuse": false,
+                    "children": [
+                        {
+                            "text": "企业认证",
+                            "i18n": "",
+                            "link": "/my/authenticate",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "人员管理",
+                            "i18n": "",
+                            "link": "/personnel-admin/employee-info",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "入职管理",
+                            "i18n": "",
+                            "link": "/personnel-admin/entry-management",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "离职管理",
+                            "i18n": "",
+                            "link": "/personnel-admin/leave-management",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "组织架构",
+                            "i18n": "",
+                            "link": "/organization/duty-system",
+                            "icon": "icon-target"
+                        },
+                        
+                        {
+                            "text": "汇报管理",
+                            "i18n": "",
+                            "link": "/report/",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "公告制度",
+                    "i18n": "",
+                    "link": "/news",
+                    "icon": "icon iconfont icon-gonggao",
+                    "reuse": false,
+                    "children":[{
+                        "text": "公告",
+                        "i18n": "",
+                        "link": "/news/notice",
+                        "icon": "icon-credit"
+                    },{
+                        "text": "制度",
+                        "i18n": "",
+                        "link": "/news/system",
+                        "icon": "icon-credit"
+                    }]
+                },
+                {
+                    "text": "审批管理",
+                    "i18n": "",
+                    "link": "",
+                    "icon": "icon iconfont icon-shenpiguanli",
+                    "reuse": false,
+                    "children": [
+                        {
+                            "text": "审批设置",
+                            "i18n": "",
+                            "link": "/approval/setting",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "审批记录",
+                            "i18n": "",
+                            "link": "/approval/record",
+                            "icon": "icon-film"
+                        }
+                    ]
+                },
+                {
+                    "text": "招聘管理",
+                    "i18n": "",
+                    "link": "",
+                    "icon": "icon iconfont icon-quanxianguanli",
+                    "reuse": false,
+                    "children": [
+                        {
+                            "text": "简历管理",
+                            "i18n": "",
+                            "link": "/recruit/resume",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "面试管理",
+                            "i18n": "",
+                            "link": "/recruit/interview",
+                            "icon": "icon-calculator"
+                            },
+                        {
+                            "text": "人才库",
+                            "i18n": "",
+                            "link": "/recruit/personnel",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "录用管理",
+                            "i18n": "",
+                            "link": "/recruit/hire-manage",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "招聘通知模板",
+                            "i18n": "",
+                            "link": "/recruit/notification",
+                            "icon": "icon-calculator"
+                            }
+                    ]
+                },
+                {
+                    "text": "考勤管理",
+                    "i18n": "",
+                    "link": "",
+                    "icon": "icon iconfont icon-kaoqin",
+                    "reuse": false,
+                    "children": [
+                        {
+                            "text": "考勤组管理",
+                            "i18n": "",
+                            "link": "/attendance/manage",
+                            "icon": "icon-calculator"
+                        },
+                        {
+                            "text": "考勤设置",
+                            "i18n": "",
+                            "link": "/attendance/setting",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "月度汇总",
+                            "i18n": "",
+                            "link": "/attendance/summary",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "每日统计",
+                            "i18n": "",
+                            "link": "/attendance/count",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "打卡时间表",
+                            "i18n": "",
+                            "link": "/attendance/time",
+                            "icon": "icon-film"
+                        },
+                        {
+                            "text": "原始记录",
+                            "i18n": "",
+                            "link": "/attendance/record",
+                            "icon": "icon-film"
+                        }
+                    ]
+                },
+                {
+                    "text": "区块链应用",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "",
+                    "icon": "icon iconfont icon-xinxicunzheng",
+                    "children": [
+                        {
+                            "text": "保全服务",
+                            "i18n": "",
+                            "link": "/blockchain/well",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "班级管理",
+                            "i18n": "",
+                            "link": "/blockchain/certificate",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "证书管理",
+                            "i18n": "",
+                            "link": "/blockchain/tempcertificate",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "企业存证",
+                            "i18n": "",
+                            "link": "/blockchain/companystorage",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "我的存证",
+                            "i18n": "",
+                            "link": "/blockchain/storage",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "电子合同",
+                            "i18n": "",
+                            "link": "/blockchain/electronic",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "信息存证",
+                            "i18n": "",
+                            "link": "/blockchain/info",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "权限管理",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "",
+                    "icon": "icon iconfont icon-quanxianguanli",
+                    "children": [
+                        {
+                            "text": "角色管理",
+                            "i18n": "",
+                            "link": "/admin/role",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "权限管理",
+                            "i18n": "",
+                            "link": "/admin/authority",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "个人信息管理",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "hrgly3",
+                    "icon": "icon iconfont icon-geren",
+                    "children": [
+                        {
+                            "text": "个人信息",
+                            "i18n": "",
+                            "link": "/userInfo/authentication",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "通讯信息",
+                            "i18n": "",
+                            "link": "/userInfo/message",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "从业信息",
+                            "i18n": "",
+                            "link": "/userInfo/employment",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "教育信息",
+                            "i18n": "",
+                            "link": "/userInfo/education",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "用户中心",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "",
+                    "icon": "icon iconfont icon-qukuailianyingyong",
+                    "children": [
+                        {
+                            "text": "个人资料",
+                            "i18n": "",
+                            "link": "/usercenter/index",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "账户管理",
+                            "i18n": "",
+                            "link": "/hrservice/version",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "我的培训",
+                    "i18n": "",
+                    "link": "",
+                    "icon": "icon iconfont icon-wodepeixun",
+                    "children": [
+                        {
+                            "text": "我的培训",
+                            "i18n": "",
+                            "link": "/myTrain/issue",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "我的培训",
+                            "i18n": "",
+                            "link": "/myTrain/issue",
+                            "icon": "icon-credit"
+                        },
+                        {
+                            "text": "我的证书",
+                            "i18n": "",
+                            "link": "/myTrain/approval",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "系统管理",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "hrgly3",
+                    "icon": "icon iconfont icon-qukuailianyingyong",
+                    "children": [
+                        {
+                            "text": "功能管理",
+                            "i18n": "",
+                            "link": "/sysfunc/funcmanage",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "个性化设置",
+                    "i18n": "",
+                    "acl": "hrgly5",
+                    "link": "/personalization/index",
+                    "icon": "icon iconfont icon-gexinghuashezhi"
+                },
+                {
+                    "text": "使用说明",
+                    "i18n": "",
+                    "link": "/help/index",
+                    "acl": "",
+                    "icon": "icon iconfont icon-shiyongshuoming"
+                },
+                {
+                    "text": "系统消息",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "",
+                    "icon": "icon iconfont icon-shiyongshuoming",
+                    "children": [
+                        {
+                            "text": "消息详情",
+                            "i18n": "",
+                            "link": "/message/list",
+                            "icon": "icon-credit"
+                        }
+                    ]
+                },
+                {
+                    "text": "HR常用模板",
+                    "i18n": "",
+                    "link": "",
+                    "acl": "",
+                    "icon": "icon iconfont icon-mobangongnengguanli",
+                    "children": [
+                      {
+                        "text": "人力资源规划",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/person-plan",
+                        "icon": "icon-credit"
+                      },
+                      {
+                        "text": "招聘与配置",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/recruit-configure",
+                        "icon": "icon-credit"
+                      },
+                      {
+                        "text": "培训与开发",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/train-development",
+                        "icon": "icon-credit"
+                      },
+                      {
+                        "text": "绩效管理",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/achievments",
+                        "icon": "icon-credit"
+                      },
+                      {
+                        "text": "薪酬与福利",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/pay",
+                        "icon": "icon-credit"
+                      },
+                      {
+                        "text": "劳动关系管理",
+                        "i18n": "",
+                        "link": "/hrcommonTemplate/labour-relations",
+                        "icon": "icon-credit"
+                      }
+                    ]
+                }
+            ]
+        }
+    ]
+}

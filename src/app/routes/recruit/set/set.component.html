@@ -1,0 +1,26 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="itemContentTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle><div (click)="to(i)" >{{i.tab}}</div></ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+
+    <div nz-row>
+        <section class="tab-content">
+            <router-outlet></router-outlet>
+        </section>
+    </div>
+    <ng-template #titleValue>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>账号设置</span>
+    </ng-template>
+    <ng-template #itemContentTemplate>
+        <button nz-button type="button" nzType="primary" (click)="showModalMiddle()">添加</button>
+    </ng-template>
+
+</nz-card>

@@ -1,0 +1,33 @@
+:host {
+    ::ng-deep {
+        .ant-select{
+            margin-left: 18px;
+        }
+        .icon-caidan1{
+            font-size: 25px;
+            color: #1890ff;
+        }
+        .icon-hover{
+            position: relative;
+        }
+        .icon-hover .display{
+            display: none;
+            position: absolute;
+            left: -228px;
+            top: -6px;
+            width: 285px;
+            height: 50px;
+            padding: 12px 16px;
+            border: 1px solid #e6e6e6;
+            border-radius: 5px;
+            background: #fff;
+            animation: leftmove 0.5s;
+        }
+        .icon-hover:hover .display{
+            display: block;
+        }
+        @keyframes leftmove {
+            0%{left: 0}
+            100%{left: -228px;}
+        }
+    }}

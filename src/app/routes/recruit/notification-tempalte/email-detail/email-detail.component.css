@@ -1,0 +1,26 @@
+.email-template-box .inp-box {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #666;
+  padding-left: 10px;
+  min-height: 39px;
+}
+.email-template-box span {
+  vertical-align: middle;
+}
+.email-template-box .centent_item .ant-form-item-control {
+  line-height: normal;
+}
+.email-template-box .centent_item .edui-default .edui-editor-toolbarbox {
+  box-shadow: none;
+}
+.email-template-box .centent_item .edui-default .edui-editor-toolbarboxouter {
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+.email-template-box .centent_item .upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-right: 8px;
+}

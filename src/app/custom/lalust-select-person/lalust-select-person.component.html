@@ -1,0 +1,55 @@
+<div>
+  <div nz-row [nzGutter]="8" nzHoverable="true">
+    <div nz-col nzSpan="12">
+      <div class="lalust-card-title">组织架构</div>
+      <div class="lalust-card-content">
+        <nz-tree
+          [(ngModel)]="nodes"
+          [nzCheckable]="false"
+          [nzMultiple]="false"
+          [nzDefaultExpandedKeys]="expandKeys"
+          [nzDefaultCheckedKeys]="checkedKeys"
+          [nzDefaultSelectedKeys]="selectedKeys"
+          [nzDefaultExpandAll]="expandDefault"
+          (nzClick)="mouseAction($event)"
+        >
+        </nz-tree>
+      </div>
+    </div>
+    <div nz-col nzSpan="12">
+        <div class="lalust-card-title">人员列表</div>
+        <div class="lalust-card-content">
+            <ul class="lalust-content-ul-256416">
+              <ng-container *ngIf="selectPeople.length>0; else elseTemplate">
+                <!-- select all -->
+                <li class="li-select-all-5552522">
+                  <label nz-checkbox [(ngModel)]="selectAll" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">
+                    全选
+                  </label>
+                </li>
+                <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="updateSingleChecked($event)">
+                  <li *ngFor="let item of selectPeople">
+                    <div class="lalust-li-name-2861256">{{item.name}}</div>
+                    <div class="lalust-li-position-2861256">{{item.position}}</div>
+                    <div class="lalust-li-status-2861256">  
+                      <img *ngIf="item.setStatus" src="../../../assets/img/user-status/user-status-seted.png" alt="已设置">
+                      <img *ngIf="item.boundStatus === '0'" src="../../../assets/img/user-status/user-status-not-bound.png" alt="未绑定">
+                      <img *ngIf="item.boundStatus === '2'" src="../../../assets/img/user-status/user-status-stop.png" alt="已停用">
+                    </div>
+                    <label nz-checkbox [nzValue]="item.guid" 
+                    [nzDisabled]="(item.boundStatus === '0' || item.boundStatus === '2' || item.setStatus) ? 'ture' : 'false'" 
+                    [ngModel]="item.checked"></label>
+                  </li>
+                </nz-checkbox-wrapper>
+                
+              </ng-container>
+              <ng-template #elseTemplate>
+                <li class="li-error-5552522">请选择部门.</li>
+              </ng-template>
+              
+              
+            </ul>
+        </div>
+    </div>
+  </div>
+</div>

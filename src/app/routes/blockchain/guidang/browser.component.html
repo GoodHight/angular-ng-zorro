@@ -1,0 +1,46 @@
+<!-- <a routerLink="/blockchain-detail">blockchain-detail</a> -->
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <ng-template #titleView>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>归档</span>
+    </ng-template>
+    <div nz-row>
+        <div nz-col [nzSpan]="4">
+            <nz-list class="class-list" [nzDataSource]="classes" nzBordered [nzRenderItem]="item" [nzItemLayout]="'vertical'">
+                <ng-template #item let-item>
+                    <nz-list-item [ngClass]="{'select': item.guid === currentItemGuid}" [nzContent]="item.name" (click)="selectClass(item)"></nz-list-item>
+                </ng-template>
+            </nz-list>
+        </div>
+        <div nz-col [nzSpan]="20" class="right-content">
+            <nz-card [nzBordered]="false" [nzBodyStyle]="{'padding-top': '0', 'padding-right': '0'}">
+                <nz-table #ajaxTable [nzPageSize]="pageSize" [nzPageIndex]="pageNum" [nzTotal]="pageTotal" [nzData]="dataList" [nzFrontPagination]="false" [nzLoading]="loading" nzNoResult="没有数据">
+                    <thead>
+                        <tr>
+                            <th>
+                                <span>序号</span>
+                            </th>
+                            <th>
+                                <span>学生姓名</span>
+                            </th>
+                            <th>
+                                <span>联系电话</span>
+                            </th>
+                            <th>
+                                <span>身份证号</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                        <tr *ngFor="let item of ajaxTable.data; let no = index">
+                            <td>{{ no + 1 }}</td>
+                            <td>{{item.studentName}}</td>
+                            <td>{{item.studentPhone | hiddenNumber:2 }}</td>
+                            <td>{{item.idCardNumber | hiddenNumber:2}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+</nz-card>

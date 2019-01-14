@@ -1,0 +1,63 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+  <nz-card-tab>
+    <ng-template #tab>
+      <nz-tabset [nzSelectedIndex]="0" [nzTabBarExtraContent]="tabToolBarTemplate">
+        <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+          <ng-template #nzTitle><div (click)="to(i)">{{i.tab}}</div></ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="tab"></ng-template>
+  </nz-card-tab>
+  <ng-template #titleView>
+    <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+    <span>企业子账户管理</span>
+  </ng-template>
+  <div nz-row>
+    <nz-table #basicTable [nzData]="dataList" nzNoResult="没有数据" (nzPageIndexChange)="pageChange($event, '')" [nzTotal]="q.total" [nzPageSize]="q.pageSize" [(nzPageIndex)]="q.pageNum" [nzFrontPagination]="false">
+      <thead>
+      <tr>
+        <th>
+          <span>名字</span>
+        </th>
+        <th>
+          <span>电话</span>
+        </th>
+        <th>
+          <span>工号</span>
+        </th>
+        <th>
+          <span>部门</span>
+        </th>
+        <th>
+          <span>职位</span>
+        </th>
+        <th>
+          <span>操作</span>
+        </th>
+      </tr>
+      </thead>
+      <tbody nz-tbody>
+      <tr  *ngFor="let i of dataList let no = index"  >
+        <td>{{i.employeeName}}</td>
+        <td>{{i.workPhone}}</td>
+        <td>{{ i.workNumber }}</td>
+        <td>{{i.departmentName}}</td>
+        <td>{{i.postion}}</td>
+        <td>
+          <a [routerLink]="['/companyadmin/role/setting/',i.guid]" (click)="$event.stopPropagation()">维护权限</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="$event.stopPropagation();deleteRole(i.guid)">删除</a>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定"
+            nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除企业子账户"
+            (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+    <p>确定删除嘛？</p>
+    <p>确定就点下面确定按钮！！！</p>
+  </nz-modal>
+</nz-card>
+<ng-template #tabToolBarTemplate><button nz-button [routerLink]="['/companyadmin/user/add/0']"  nzType="primary">添 加</button></ng-template>

@@ -1,0 +1,105 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>录用管理</span>
+        </ng-template>
+        <ng-template #tab>
+            <nz-list-item [nzContent]="itemContentTemplate" [nzActions]="[serachActive, selectAction]">
+    
+                <ng-template #serachActive>
+                    <div *ngIf="serachType === 1">
+                        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                            <input type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="q.searchStr" (keydown)="enterSearch($event)">
+                        </nz-input-group>
+                        <ng-template #suffixIconButton>
+                            <button (click)="serachAction()" nz-button nzType="primary" nzSearch>
+                                <i class="anticon anticon-search"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="serachType === 0" (click)="showSerach()">
+                        <span>
+                            <i class="icon iconfont icon-sousuo"></i>搜索</span>
+                    </div>
+    
+                </ng-template>
+                <ng-template #selectAction>
+                    <span [routerLink]="['/recruit/notification']" class="shezhimagin"><i class="icon iconfont icon-shezhi"></i>设置</span>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    
+    <nz-table #basicTable [nzData]="dataList"  [nzPageSize]="q.pageSize" [nzLoading]="loading"
+    [nzPageIndex]="q.pageIndex" [nzTotal]="q.totals" nzNoResult="没有数据" (nzPageIndexChange)="pageChange($event)">
+        <thead>
+        <tr>
+    
+            <th>
+                <span>姓名</span>
+            </th>
+            <th>
+                <span>手机号</span>
+            </th>
+            <th>
+                <span>应聘职位</span>
+            </th>
+            <th>
+                <span>部门</span>
+            </th>
+            <th>
+                <span>offer发送时间</span>
+            </th>
+            <th>
+                <span>入职日期</span>
+            </th>
+            <th>
+                <span>审批结果</span>
+            </th>
+            <th>
+                <span>操作</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr  *ngFor="let i of basicTable.data let no = index">
+            <td>{{i.name}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{ i.entryPostion }}</td>
+            <td>{{i.entryDepartmentName}}</td>
+            <td>{{i.offerTime | dateTrans:'YYYY-MM-dd HH:mm'}}</td>
+            <td>{{i.entryDateTime | dateTrans:'YYYY-MM-dd'}}</td>
+            <td> 
+                 <span *ngIf=" i.approvalResult === 1 && i.approvalState ===1 " style="color: #26dab3">同意 </span>
+                 <span *ngIf=" i.approvalResult === 0 && i.approvalState ===1" style="color:#0f0f0f">拒绝 </span>
+            </td>
+            <td>
+                <p  class="ulList">
+                    <a [routerLink]="['/recruit/hire-manage/details/',i.resumeId]">查看详情</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a *ngIf=" i.approvalResult === 1 && i.approvalState ===1 && i.isEntry ===0" [routerLink]="['/recruit/hire-manage/sendoffer/',i.guid]">发送Offer</a>
+                   
+                    <nz-divider nzType="vertical" *ngIf=" i.approvalResult === 1 && i.approvalState ===1 && i.isEntry ===0" ></nz-divider>
+                    <a *ngIf=" i.approvalResult === 1 && i.approvalState ===1 && i.isEntry ===0" [routerLink]="['/recruit/hire-manage/handaleemployment/', i.guid]">办理入职</a>
+                    <nz-divider nzType="vertical" *ngIf=" i.approvalResult === 1 && i.approvalState ===1 && i.isEntry ===0" ></nz-divider>
+                    <a (click)="$event.stopPropagation();showModalMiddle(i.resumeId)">放弃</a>
+                    <span  *ngIf=" i.approvalResult === 1 && i.approvalState ===1 && i.isEntry ===1 " style="color: #26dab3">(已办理入职)</span>
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <ng-template #itemContentTemplate>
+
+    </ng-template>
+</nz-card>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisibleMiddle" nzTitle="放弃简历" (nzOnCancel)="handleCancelMiddle()"
+    (nzOnOk)="handleOkMiddle()">
+    <nz-radio-group [(ngModel)]="radioValue">
+        <label nz-radio nzValue="1">已淘汰</label>
+        <label nz-radio nzValue="2">人才储备</label>
+        <label nz-radio nzValue="3">黑名单</label>
+    </nz-radio-group>
+</nz-modal>

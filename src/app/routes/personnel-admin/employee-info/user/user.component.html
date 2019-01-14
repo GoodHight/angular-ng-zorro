@@ -1,0 +1,442 @@
+<nz-card [nzBordered]="false" class="fixed-card-head" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div [routerLink]='i.key' >{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #title>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>员工信息管理</span>
+        </ng-template>
+        <ng-template #tabToolBarTemplate>
+            <button nz-button type="button" [disabled]="!form.valid" [nzLoading]="isLoadingOne" (click)="_submitForm()" nzType="primary">保存</button>
+            <button nz-button (click)="cancel()">返 回</button>
+        </ng-template>
+    </nz-card-tab>
+    <div nz-row style="position: relative;">
+        <div nz-col class="employee-update">
+            <form nz-form [formGroup]="form" (ngSubmit)="_submitForm()">
+                <div id="personal-information">
+                    <nz-form-item nz-row>
+                        <nz-form-label nzRequired nz-col [nzSm]="4">
+                            姓名
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="name" placeholder="请填写用户姓名">
+                            <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').hasError('required')">用户名不能为空！</nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nzRequired nz-col [nzSm]="4">
+                            证件类型
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-select nzAllowClear nzPlaceHolder="请选择证件类型" formControlName="idType" style="width: 100%;" (ngModelChange)="certificateChange($event)">
+                                <nz-option *ngFor="let option of selectData0" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                </nz-option>
+                            </nz-select>
+                            <nz-form-explain *ngIf="form.get('idType').dirty && form.get('idType').hasError('required')">请选择证件类型！</nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row> 
+                        <nz-form-label nzRequired nz-col [nzSm]="4">
+                            证件号
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="idNumber" placeholder="请输入证件号" >
+                            <nz-form-explain *ngIf="form.get('idNumber').dirty && form.get('idNumber').errors">
+                                <ng-container *ngIf="form.get('idNumber').hasError('required')">
+                                    请输入证件号！
+                                </ng-container>
+                                <ng-container *ngIf="form.get('idNumber').hasError('pattern')">
+                                    证件格式错误！
+                                </ng-container>
+                            </nz-form-explain>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传身份证正面
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="2">
+                            <nz-upload [nzAction]="uploaderUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[0]" [nzShowButton]="fileList[0].length < 1"
+                                [nzPreview]="handlePreview" (nzChange)="handleChange($event,0)">
+                                <i class="anticon anticon-plus"></i>
+                                <div class="ant-upload-text">点击上传</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="6">
+                            <div>上传：身份证正面及反面图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传身份证反面
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="2">
+                            <nz-upload [nzAction]="uploaderGradUrl" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[1]" [nzShowButton]="fileList[1].length < 1"
+                                [nzPreview]="handlePreview" (nzChange)="handleChange($event,1)">
+                                <i class="anticon anticon-plus"></i>
+                                <div class="ant-upload-text">点击上传</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="6">
+                            <div>上传：身份证正面及反面图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            性别
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="gender">
+                                    <label nz-radio *ngFor="let option of selectData17" [nzValue]="option.guid">{{ option.dictName }}</label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            年龄
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <input nz-input formControlName="age" placeholder="请填写用户年龄">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            出生日期
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-date-picker formControlName="birthday" [nzFormat]="dateFormat"></nz-date-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            属相
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-select nzAllowClear formControlName="zodiac" nzPlaceHolder="请选择属相">
+                                <nz-option *ngFor="let option of selectData3" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            星座
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-select formControlName="constellation" nzAllowClear nzPlaceHolder="请选择星座">
+                                    <nz-option *ngFor="let option of selectData8" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            国籍
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-select nzPlaceHolder="请选择国籍" formControlName="nationality" nzAllowClear>
+                                <nz-option *ngFor="let option of selectData1" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            籍贯
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="nativeProvinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="nativeCityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [(nzLabel)]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="nativeAreasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            户口性质
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-select nzAllowClear nzPlaceHolder="请选择户口性质" formControlName="accountsNature" style="width: 100%;">
+                                <nz-option *ngFor="let option of accountsNaturelist" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            户籍所在地
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="censusRegisterProvinceId" nzPlaceHolder="请选择省" (ngModelChange)="CitysListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShen" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="censusRegisterCityId" nzPlaceHolder="请选择市" (ngModelChange)="CountyListChange($event)" style="width: 80%;margin-right: 20%;"
+                                    nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataShi" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="3">
+                            <nz-form-control>
+                                <nz-select formControlName="censusRegisterAreasId" nzPlaceHolder="请选择区" style="width: 80%;margin-right: 20%;" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectDataQu" [nzLabel]="option.name" [nzValue]="option.code">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            详细地址
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="censusRegisterAddress" placeholder="请填写户籍所在地详细地址，注意保持与身份证上一致">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            民族
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-select formControlName="nation" nzPlaceHolder="请选择民族" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectData19" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            血型
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="blood">
+                                    <label nz-radio *ngFor="let option of selectData20" [nzValue]="option.guid">
+                                        <span>{{option.dictName}}</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            招聘渠道
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-select nzPlaceHolder="请选择招聘渠道" formControlName="recruitmentType" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectData16" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            婚姻状况
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="marriage">
+                                    <label nz-radio *ngFor="let option of selectData18" [nzValue]="option.guid">
+                                        <span>{{ option.dictName }}</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            政治面貌
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-select formControlName="politicalOutlook" nzPlaceHolder="请选择政治面貌" nzAllowClear>
+                                    <nz-option *ngFor="let option of selectData2" [nzLabel]="option.dictName" [nzValue]="option.guid">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            入党日期
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-date-picker formControlName="joinPartyTime" [nzFormat]="dateFormat"></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            存档机构
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="fileOrganization" placeholder="请填写存档机构名称">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            子女状态
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="haveChildren">
+                                    <label nz-radio [nzValue]="1">
+                                        <span>有</span>
+                                    </label>
+                                    <label nz-radio [nzValue]="0">
+                                        <span>无</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            子女有无商业保险
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="childrenCommercialInsurance">
+                                    <label nz-radio [nzValue]="1">
+                                        <span>有</span>
+                                    </label>
+                                    <label nz-radio [nzValue]="0">
+                                        <span>无</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            有无违法违纪行为
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="haveIllegal">
+                                    <label nz-radio [nzValue]="1">
+                                        <span>有</span>
+                                    </label>
+                                    <label nz-radio [nzValue]="0">
+                                        <span>无</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            有无重大病史
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <nz-radio-group formControlName="haveMedicalHistory">
+                                    <label nz-radio [nzValue]="1">
+                                        <span>有</span>
+                                    </label>
+                                    <label nz-radio [nzValue]="0">
+                                        <span>无</span>
+                                    </label>
+                                </nz-radio-group>
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            上传体检报告(图片)
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="2">
+                            <nz-upload [nzAction]="uploadertj" nzListType="picture-card" nzName="file" [(nzFileList)]="fileList[2]" [nzShowButton]="fileList[2].length < 1"
+                                [nzPreview]="handlePreview" (nzChange)="handleChange($event,2)">
+                                <i class="anticon anticon-plus"></i>
+                                <div class="ant-upload-text">点击上传</div>
+                            </nz-upload>
+                            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                                <ng-template #modalContent>
+                                    <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+                                </ng-template>
+                            </nz-modal>
+                        </nz-form-control>
+                        <nz-form-control nz-col [nzSm]="6">
+                            <div>上传：体检报告单图片； 图片所有信息需清晰可见，内容真实有效； 图片支持：jpg .jpeg .bmp .gif .png格式； 大小不超过8M。
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row>
+                        <nz-form-label nz-col [nzSm]="4">
+                            备注
+                        </nz-form-label>
+                        <nz-form-control nz-col [nzSm]="16">
+                            <nz-form-control>
+                                <input nz-input formControlName="remark" placeholder="请填写备注">
+                            </nz-form-control>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+    </div>
+</nz-card>

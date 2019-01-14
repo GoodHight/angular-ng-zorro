@@ -1,0 +1,163 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleValue">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzTabBarExtraContent]="itemContentTemplate">
+                <nz-tab [nzTitle]="'组织架构'">
+                    <ng-template #nzTitle>
+                        <div routerLinkActive="active">组织架构</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzData]="ListData" [nzLoading]="loading" [nzShowPagination]="false" [nzNoResult]="'没有数据'">
+        <thead>
+            <tr>
+                <th nzWidth="40%">部门</th>
+                <th nzWidth="30%">主管</th>
+                <th>在职人数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-data [ngForOf]="ajaxTable.data">
+                <ng-template ngFor let-item [ngForOf]="expandDataCache[data.departmentCode]">
+                    <tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)">
+                        <td [nzIndentSize]="item.level*20" [nzShowExpand]="item.children.length > 0" [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.departmentCode],item,$event)"
+                            [ngStyle]="{'padding-left': item.children.length <= 0 ? '45px' : 'auto'}">
+                            {{item.title}}
+                        </td>
+                        <td *ngIf="item.employeeName !== ''">
+                            <a (click)="setEmployeeshowModal(item.key,item.employeeName)">{{item.employeeName}}</a>
+                        </td>
+                        <td *ngIf="item.employeeName === '' && item.deptCode !== '00'">
+                            <a (click)="setEmployeeshowModal(item.key,'设置主管')">设置主管</a>
+                        </td> 
+                        <td *ngIf="item.deptCode === '00'"></td> 
+                        <td>{{item.incumbencyCount}}</td>
+                        <td>
+                            <div *ngIf="item.deptCode !== '00'">
+                                <a (click)="showModal(item.key,item.title,item.deptCode,item.level > 1 ? item.parent.key : '',item.employeeGuid,'0')">编辑</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="showModalMiddle(item.key)">删除</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="zgshowModal(item.deptCode,item.title)">查看员工</a>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </ng-template>
+        </tbody>
+    </nz-table>
+    <!-- 新增修改的弹框 -->
+    <nz-modal [(nzVisible)]="isVisible" [nzTitle]="title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkText]="'确定'"
+        [nzCancelText]="'取消'" [nzOkLoading]="isOkLoading">
+        <form nz-form [formGroup]="validateForm" [action]=" url + 'department/' + employeeId" class="login-form" (ngSubmit)="submitForm()">
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    上级部门
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                    <nz-input-group [nzSize]="'large'">
+                        <nz-select formControlName="departmentParentGuid" style="width: 100%;" placeholder="请选择" [(ngModel)]="dataList.deptParentGuid"
+                            (ngModelChange)="getEmployeeName()">
+                            <nz-option [nzLabel]="gsname" [nzValue]="asd"></nz-option>
+                            <nz-option *ngFor="let item of employeeInfo" [nzLabel]="item.departmentName" [nzValue]="item.guid"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-row>
+                <nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    部门名称
+                </nz-form-label>
+                <nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                    <input nz-input [nzSize]="'large'" formControlName="departmentName" [(ngModel)]="dataList.deptName">
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+    <ng-template #titleValue>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>组织架构</span>
+    </ng-template>
+    <ng-template #itemContentTemplate>
+        <button nz-button nzType="primary" (click)="showModal('','','','','','1')">新增</button>
+    </ng-template>
+    <!-- 删除的弹框 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="isVisibleMiddle" nzTitle="删除部门"
+        (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <p>是否确定删除该部门？</p>
+    </nz-modal>
+    <!-- 查看员工的弹框 -->
+    <nz-modal nzOkText="确定" nzCancelText="取消" nzWidth='800' [nzFooter]='null' [(nzVisible)]="zgMiddle" nzTitle="查看员工" (nzOnCancel)='zgCancelMiddle()'>
+        <div nz-row>
+            <p nz-col [nzSm]="24" style="text-align: right">
+                <input style="width: 30%" type="text" nz-input placeholder="请输入需要搜索的内容" [(ngModel)]="key">
+                <button (click)="getDepartment()" nz-button nzType="primary" nzSearch>
+                    <i class="anticon anticon-search"></i>
+                </button>
+            </p>
+            <nz-table nz-col [nzSm]="24" #basicTable nzSize="small" [nzLoading]="loading" [nzShowPagination]="false" [nzData]="departmentList"
+                nzNoResult="没有数据" style="max-height: 260px;overflow: auto;">
+                <thead>
+                    <tr>
+                        <th>
+                            <span>姓名</span>
+                        </th>
+                        <th>
+                            <span>手机号</span>
+                        </th>
+                        <th>
+                            <span>工号</span>
+                        </th>
+                        <th>
+                            <span>职位</span>
+                        </th>
+                        <th>
+                            <span>邮箱</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr *ngFor="let i of basicTable.data let no = index">
+                        <td>{{i.name}}</td>
+                        <td>{{i.phone}}</td>
+                        <td>{{ i.jobNumber}}</td>
+                        <td>{{i.position}}</td>
+                        <td>{{i.workEmail}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </nz-modal>
+    <!-- 设置主管的弹框 -->
+    <nz-modal nzWrapClassName="vertical-center-modal" nzOkText="确定" nzCancelText="取消" [(nzVisible)]="setEmployeeState" nzTitle="设置部门主管"
+        (nzOnCancel)="setEmployeesCancel()" (nzOnOk)="setEmployeesOk()">
+        <div style="width: 100%;overflow:auto;max-height: 300px; ">
+            <div nz-row>
+                已选主管：{{selectPeopleName }}
+            </div>
+            <div nz-row>
+                <div nz-col nzSpan="12" style="border-right:1px #ddd solid;min-height:100px">
+                    <nz-tree [(ngModel)]="employeeList" [nzCheckable]="false" [nzMultiple]="false" (nzClick)="mouseAction('click',$event)" (nzDblClick)="mouseAction('dblclick', $event)"
+                        (nzCheckBoxChange)="mouseAction('checkout', $event)">
+                    </nz-tree>
+                </div>
+                <div nz-col nzSpan="12" style="padding-left:20px;min-height:100px">
+                    <!-- <span *ngFor="let item of peopleData;let no = index">
+                                <label *ngIf="item.boundStatus !== '1'" nz-radio [nzValue]="item.guid" (ngModelChange)="getChecked(no)" nzDisabled [(ngModel)]="item.checked">{{ item.name }}(该用户未绑定公司)</label>
+                                <br>
+                            </span> -->
+                    <nz-radio-group [(ngModel)]="selectPeopleData" (ngModelChange)="getChecked()">
+                        <label style="width: 50%;margin-right:0 " nz-radio *ngFor="let item of peopleData;let no = index" [nzValue]="item.guid">{{ item.name }}</label>
+                    </nz-radio-group>
+                </div>
+            </div>
+        </div>
+    </nz-modal>
+    <!--<ng-template #itemContentTemplate>-->
+    <!--<div>建立企业组织架构，轻松管理部门，提高组织效率。</div>-->
+    <!--</ng-template>-->
+</nz-card>

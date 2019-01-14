@@ -1,0 +1,101 @@
+<nz-card [nzBordered]="false" [nzTitle]="titleView">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset>
+                <nz-tab [nzTitle]="nzTitle0">
+                    <ng-template #nzTitle0>
+                        <div>证书签发</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+        <ng-template #titleView>
+            <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+            <span>我的培训</span>
+        </ng-template>
+    </nz-card-tab>
+    <nz-table #ajaxTable [nzData]="dataList" [nzFrontPagination]="false" [nzTotal]="pageTotal" [nzPageIndex]="pageNum" [nzPageSize]="pageSize"
+        (nzPageIndexChange)="pageChange($event)" [nzLoading]="loading" nzNoResult="没有数据">
+        <thead>
+            <tr>
+                <th>
+                    <span>序号</span>
+                </th>
+                <th>
+                    <span>培训机构</span>
+                </th>
+                <th>
+                    <span>专业名称</span>
+                </th>
+                <th>
+                    <span>签发人</span>
+                </th>
+                <th>
+                    <span>签发时间</span>
+                </th>
+                <th>
+                    <span>状态</span>
+                </th>
+                <th>
+                    <span>操作</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody nz-tbody>
+            <tr *ngFor="let item of ajaxTable.data; let no = index">
+                <td>{{ no + 1 + (pageNum - 1) * pageSize }}</td>
+                <td>{{item.issuingAgency}}</td>
+                <td>{{item.major}}</td>
+                <td>{{item.signer }}</td>
+                <td>{{item.issuingStudentTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+                <td>
+                    <span [ngClass]="{'issue-success': item.issuingStatus === 1, 'issue-falid': item.issuingStatus === -1}">
+                        {{issueState[item.issuingStatus]}}
+                    </span>
+                </td>
+                <td>
+                    <a *ngIf="item.issuingStatus === 1" (click)="$event.stopPropagation();preview(contentPreview, item)">证书预览</a>
+                    <a *ngIf="item.issuingStatus === 0 || item.issuingStatus === 3" 
+                        (click)="$event.stopPropagation();confirm(contentConfirm, footerConfirm, item)">确认签发</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+<ng-template #contentConfirm>
+    <div nz-row>
+        <h2 style="color: red;">等待我确认</h2>
+        <div nz-col [nzSpan]="24">
+            <img src="{{previewImgSrc}}" alt="预览图" width="700" height="495">
+        </div>
+    </div>
+</ng-template>
+<ng-template #footerConfirm>
+    <button nz-button nzType="default" (click)="refuseCertificate(currentCertificateItem, refuseModalContent)">
+        拒绝
+    </button>
+    <button nz-button nzType="primary" (click)="issueCertificate(currentCertificateItem, 1)">
+        确定
+    </button>
+</ng-template>
+<ng-template #contentPreview>
+    <div nz-row #previewDiv>
+        <div nz-col [nzSpan]="24">
+            <img src="{{previewImgSrc}}" alt="预览图" width="700" height="495">
+        </div>
+        <div nz-col [nzSpan]="5">
+            <a (click)="downloadCertificate()">下载证书</a>
+        </div>
+    </div>
+</ng-template>
+<ng-template #refuseModalContent>
+    <div nz-row>
+        <nz-form-item>
+            <nz-form-label required>拒绝原因</nz-form-label>
+            <nz-form-control [nzSpan]="24">
+                <textarea row="4" nz-input [(ngModel)]="refuseReason"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+</ng-template>

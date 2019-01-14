@@ -1,0 +1,178 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content approval">
+            <nz-table #basicTable [nzPageSize]="20" [nzData]="dataSet" nzNoResult="没有数据">
+                <thead>
+                    <tr>
+                        <th>班次名称</th>
+                        <th>考勤时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr *ngFor="let v of basicTable.data">
+                        <td>{{ v.name }}</td>
+                        <td>
+                            <span>上班时间({{ v.startWorkTime | time:'HH:mm' }} - {{ v.endWorkTime | time:'HH:mm' }})</span>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <span>打卡时间({{ v.clockinStartTime | time:'HH:mm' }} - {{ v.clockinEndTime | time:'HH:mm' }})</span>
+                            <ng-container *ngIf="v.openLate === 1">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <span>迟到({{ v.lateTime | time:'HH:mm' }})</span>
+                            </ng-container>
+                            <ng-container *ngIf="v.openEarly === 1">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <span>早退({{ v.earlyTime | time:'HH:mm' }})</span>
+                            </ng-container>
+                        </td> 
+                        <td>
+                            <a (click)="openModal(2, v)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="deleteGroup(v.guid, v.name)">删除</a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </nz-table>
+        </section>
+    </div>
+    <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>考勤设置</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="openModal(1)" nzType="primary">新增</button>
+    </ng-template>
+</nz-card>
+
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" nzWidth="720" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form" nzLayout="vertical">
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="name">班次名称</nz-form-label>
+            <nz-form-control nzHasFeedback>
+                <input nz-input formControlName="name" placeholder="请输入班次名称" [(ngModel)]="viewModel.name">
+                <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">
+                    <ng-container *ngIf="form.get('name').hasError('required')">
+                        请输入班次名称
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>工作时间</nz-form-label>
+            <nz-form-control>
+                <nz-time-picker formControlName="workST" [(ngModel)]="viewModel.workST"
+                nzAllowEmpty="false" (ngModelChange)="onChangeTime(1,$event)"
+                nzFormat="HH:mm"></nz-time-picker>
+                <span class="zhi">至</span>
+                <nz-select style="width: 100px;margin-right: 15px;" (ngModelChange)="onChangeSelectToday(1,$event)"
+                 [(ngModel)]="viewModel.selectedValueWork" [ngModelOptions]="{standalone: true}" nzPlaceHolder="请选择">
+                    <nz-option nzValue="1" nzLabel="今日"></nz-option>
+                    <nz-option nzValue="0" nzLabel="次日"></nz-option>
+                </nz-select>
+                <nz-time-picker formControlName="workET" [(ngModel)]="viewModel.workET"
+                nzAllowEmpty="false" (ngModelChange)="onChangeTime(1,$event)"
+                 nzFormat="HH:mm"></nz-time-picker>
+                
+                <nz-form-explain style="color: #f00" *ngIf="form.get('workST').dirty && form.get('workST').errors">
+                    <ng-container *ngIf="form.get('workST').hasError('required')">
+                            请输入上班时间
+                    </ng-container>
+                </nz-form-explain>
+                <nz-form-explain style="color: #f00" *ngIf="form.get('workET').dirty && form.get('workET').errors">
+                    <ng-container *ngIf="form.get('workET').hasError('required')">
+                            请输入下班时间
+                    </ng-container>
+                </nz-form-explain>
+                <nz-form-explain style="color: #f00" *ngIf="timeErrorInfo.workTime">
+                    <ng-container *ngIf="timeErrorInfo.workTime">
+                            开始上班时间<strong>必须小于</strong>结束上班时间
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired>打卡范围</nz-form-label>
+            <nz-form-control>
+                <nz-time-picker formControlName="clockST" [(ngModel)]="viewModel.clockST"
+                nzAllowEmpty="false" (ngModelChange)="onChangeTime(2,$event)"
+                 nzFormat="HH:mm"></nz-time-picker>
+                <span class="zhi">至</span>
+                <nz-select style="width: 100px;margin-right: 15px;"
+                (ngModelChange)="onChangeSelectToday(2,$event)"
+                 [(ngModel)]="viewModel.selectedValueClock" [ngModelOptions]="{standalone: true}" nzPlaceHolder="请选择">
+                    <nz-option nzValue="1" nzLabel="今日"></nz-option>
+                    <nz-option nzValue="0" nzLabel="次日"></nz-option>
+                </nz-select>
+                <nz-time-picker formControlName="clockET" [(ngModel)]="viewModel.clockET"
+                nzAllowEmpty="false" (ngModelChange)="onChangeTime(2,$event)"
+                 nzFormat="HH:mm"></nz-time-picker>
+                
+                <nz-form-explain style="color: #f00" *ngIf="form.get('clockST').dirty && form.get('clockST').errors">
+                    <ng-container *ngIf="form.get('clockST').hasError('required')">
+                        请输入最早打卡时间
+                    </ng-container>
+                </nz-form-explain>
+                <nz-form-explain style="color: #f00" *ngIf="form.get('clockET').dirty && form.get('clockET').errors">
+                    <ng-container *ngIf="form.get('clockET').hasError('required')">
+                        请输入最晚打卡时间
+                    </ng-container>
+                </nz-form-explain>
+                <nz-form-explain style="color: #f00" *ngIf="timeErrorInfo.clockTime">
+                    <ng-container *ngIf="timeErrorInfo.clockTime">
+                        最早打卡时间<strong>必须小于</strong>最晚打卡时间
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label>迟到设置</nz-form-label>
+            <nz-form-control>
+                <nz-switch [(ngModel)]="viewModel.switchValueLate" nzCheckedChildren="开" nzUnCheckedChildren="关"
+                (ngModelChange)="onChangeSwitch(1,$event)"
+                 [ngModelOptions]="{standalone: true}" style="margin-right: 10px"></nz-switch>
+                <nz-time-picker [(ngModel)]="viewModel.lateTime" [ngModelOptions]="{standalone: true}"
+                nzAllowEmpty="false"
+                (ngModelChange)="onChange(1,$event)" nzFormat="HH:mm" [hidden]="!viewModel.switchValueLate"></nz-time-picker>
+                <span [hidden]="!viewModel.switchValueLate" class="zhi">超过此时间视为迟到</span>
+                <nz-form-explain style="color: #f00" *ngIf="switchShowLateError">
+                    <ng-container *ngIf="switchShowLateError">
+                        输入最迟打卡时间
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label>早退设置</nz-form-label>
+            <nz-form-control>
+                <nz-switch [(ngModel)]="viewModel.switchValueEarly" nzCheckedChildren="开" nzUnCheckedChildren="关"
+                (ngModelChange)="onChangeSwitch(2,$event)"
+                 [ngModelOptions]="{standalone: true}" style="margin-right: 10px"></nz-switch>
+                <nz-time-picker [(ngModel)]="viewModel.earlyTime" [ngModelOptions]="{standalone: true}"
+                nzAllowEmpty="false"
+                 (ngModelChange)="onChange(2,$event)" nzFormat="HH:mm" [hidden]="!viewModel.switchValueEarly"></nz-time-picker>
+                <span [hidden]="!viewModel.switchValueEarly" class="zhi">未到此时间视为早退</span>
+                <nz-form-explain style="color: #f00" *ngIf="switchShowEarlyError">
+                    <ng-container *ngIf="switchShowEarlyError">
+                        输入最早打卡时间
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+    </form>
+</nz-modal>

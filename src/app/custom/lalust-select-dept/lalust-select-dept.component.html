@@ -1,0 +1,28 @@
+<div>
+    <div nz-row [nzGutter]="8" nzHoverable="true">
+      <ul class="lalust-select-dept-ul-2546551">
+        <li *ngFor="let item of selectDept">
+          {{ item.title || item.name }}
+          <img (click)="removeSelectDept(item.key || item.guid)" src="../../../assets/img/close/close-s.png"/>
+        </li>
+      </ul>
+    </div>
+    <div nz-row [nzGutter]="8" nzHoverable="true">
+      <div nz-col class="lalust-select-dept-content-2546544551">
+        <div class="lalust-card-title">组织架构</div>
+        <div class="lalust-card-content">
+          <nz-tree
+            [(ngModel)]="nodes"
+            [nzCheckable]="false"
+            [nzMultiple]="true"
+            [nzDefaultExpandedKeys]="expandKeys"
+            [nzDefaultCheckedKeys]="checkedKeys"
+            [nzDefaultSelectedKeys]="selectedKeys"
+            [nzDefaultExpandAll]="expandDefault"
+            (nzClick)="mouseAction($event)"
+          >
+          </nz-tree>
+        </div>
+      </div>
+    </div>
+  </div>

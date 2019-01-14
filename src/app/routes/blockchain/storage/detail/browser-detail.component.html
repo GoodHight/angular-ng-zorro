@@ -1,0 +1,99 @@
+<nz-card>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">
+            <h1>区块详情</h1>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">上一个区块的哈希值</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.preHash}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">签名人</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.witnessFirst}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">签名时间</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.witnessFirstTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">签名人</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.witnessLast}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">签名时间</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.witnessLastTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">存证内容</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.depositDescription}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">区块高度</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="12">{{data.height}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">哈希值</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">{{data.dataHash}}</div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzXs]="0" [nzSm]="0" [nzLg]="8"></div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">附件哈希值</div>
+        <div nz-col [nzXs]="10" [nzSm]="10" [nzLg]="3">{{data.attachmentHash}}</div>
+    </div>
+</nz-card>
+
+<!-- <div class="flex-box">
+    <h1 class="title">
+        区块详情
+    </h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>上一个区块的哈希值</td>
+                <td>{{data.preHash}}</td>
+            </tr>
+            <tr>
+                <td>签名人</td>
+                <td>{{data.witnessFirst}}</td>
+            </tr>
+            <tr>
+                <td>签名时间</td>
+                <td>{{data.witnessFirstTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+            </tr>
+            <tr>
+                <td>签名人</td>
+                <td>{{data.witnessLast}}</td>
+            </tr>
+            <tr>
+                <td>签名时间</td>
+                <td>{{data.witnessLastTime | dateTrans:'YYYY年MM月dd日 HH:mm'}}</td>
+            </tr>
+            <tr>
+                <td>存证内容</td>
+                <td>{{data.depositDescription}}</td>
+            </tr>
+            <tr>
+                <td>区块高度</td>
+                <td>{{data.height}}</td>
+            </tr>
+            <tr>
+                <td>哈希值</td>
+                <td>{{data.dataHash}}</td>
+            </tr>
+            <tr>
+                <td>附件哈希值</td>
+                <td>{{data.attachmentHash}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->

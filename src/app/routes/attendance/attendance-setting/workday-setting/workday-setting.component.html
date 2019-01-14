@@ -1,0 +1,102 @@
+<nz-card [nzBordered]="false" [nzTitle]="title">
+    <nz-card-tab>
+        <ng-template #tab>
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex" [nzTabBarExtraContent]="tabToolBarTemplate">
+                <nz-tab *ngFor="let i of tabs" [nzTitle]="nzTitle">
+                    <ng-template #nzTitle>
+                        <div (click)="to(i)">{{i.tab}}</div>
+                    </ng-template>
+                </nz-tab>
+            </nz-tabset>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab"></ng-template>
+    </nz-card-tab>
+    <div nz-row>
+        <section class="tab-content approval">
+            <nz-table #basicTable [nzPageSize]="20" [nzData]="dataSet" [nzLoading]="loading" nzNoResult="没有数据">
+                <thead>
+                    <tr>
+                        <th><span>工作日名称</span></th>
+                        <th><span>规则</span></th>
+                        <th><span>节假日自动排休</span></th>
+                        <th><span>操作</span></th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr *ngFor="let v of basicTable.data">
+                        <td>{{ v.name }}</td>
+                        <td>
+                            <div>
+                                <label style="display: inline-block; margin-right: 30px;color: #666666">休息</label>
+                                <ng-container *ngIf="v._rule.rest; else elseTemplateRest">
+                                    <span>{{v._rule.rest}}</span>
+                                </ng-container>
+                                <ng-template #elseTemplateRest>
+                                    <span>-</span>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="v._rule.work">
+                                <label style="display: inline-block; margin-right: 30px;color: #666666">上班</label>
+                                <ng-container *ngIf="v._rule.work; else elseTemplateWork">
+                                        <span>{{v._rule.work}}</span>
+                                </ng-container>
+                                <ng-template #elseTemplateWork>
+                                    <span>-</span>
+                                </ng-template>
+                            </div>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="v.holidayRestFlag === 0; else elseTemplate55656">
+                                是
+                            </ng-container>
+                            <ng-template #elseTemplate55656>
+                                否
+                            </ng-template>
+                            
+                        </td>
+                        <td>
+                            <a (click)="openModal(2, v)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="deleteGroup(v.guid, v.name)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </section>
+    </div>
+    <ng-template #title>
+        <nz-divider class="title_divider" nzType="vertical"></nz-divider>
+        <span>考勤设置</span>
+    </ng-template>
+    <ng-template #tabToolBarTemplate>
+        <button nz-button type="button" (click)="openModal(1)" nzType="primary">新增</button>
+    </ng-template>
+</nz-card>
+
+<nz-modal [(nzVisible)]="isVisible" [(nzTitle)]="modalTitle" nzWidth="720" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form" nzLayout="vertical">
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="name">工作日名称</nz-form-label>
+            <nz-form-control nzHasFeedback>
+                <input nz-input formControlName="name" placeholder="请输入工作日名称" [(ngModel)]="viewModel.name">
+                <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">
+                    <ng-container *ngIf="form.get('name').hasError('required')">
+                        请输入工作日名称
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label>工作时间</nz-form-label>
+            <nz-form-control>
+                <nz-checkbox-group [(ngModel)]="checkOptionsWorkday" [ngModelOptions]="{standalone: true}"
+                 (ngModelChange)="checkboxChange(checkOptionsWorkday)"></nz-checkbox-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <label nz-checkbox [(ngModel)]="checkedHoliday" [ngModelOptions]="{standalone: true}">法定节假日自动排休</label>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
